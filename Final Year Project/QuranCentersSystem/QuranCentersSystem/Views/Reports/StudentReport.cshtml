@@ -1,0 +1,121 @@
+﻿@model QuranCentersSystem.Models.Student
+
+@{
+    ViewData["Title"] = "تقرير متابعة الحفظ";
+    var memorizations = ViewBag.Memorizations as List<QuranCentersSystem.Models.Memorization>;
+}
+
+<div class="container-fluid" dir="rtl">
+    <div class="d-flex justify-content-between align-items-center mb-4 border-bottom pb-3">
+        <div>
+            <h4 class="text-success fw-bold m-0">تقرير متابعة الحفظ والمراجعة</h4>
+            <small class="text-muted">منظومة إتقان لتحفيظ القرآن الكريم</small>
+        </div>
+        <button class="btn btn-gold" onclick="window.print()">
+            <i class="bi bi-printer"></i> طباعة التقرير
+        </button>
+    </div>
+
+    <div class="card shadow-sm border-0 mb-4 bg-white rounded-3">
+        <div class="card-body p-4">
+            <div class="row align-items-center">
+                <div class="col-md-2 text-center">
+                    <div class="bg-light p-4 rounded-circle d-inline-block">
+                        <i class="bi bi-person-bounding-box text-success" style="font-size: 3.5rem;"></i>
+                    </div>
+                </div>
+                <div class="col-md-5">
+                    <h3 class="fw-bold text-dark mb-1">@Model.Name</h3>
+                    <p class="text-muted mb-2">تاريخ الانضمام: @Model.JoinDate.ToShortDateString()</p>
+                    <span class="badge @(Model.Status == "نشط" ? "bg-success" : "bg-secondary") rounded-pill px-3 py-2">
+                        @Model.Status
+                    </span>
+                </div>
+                <div class="col-md-5 border-start">
+                    <div class="ps-4">
+                        <p class="mb-2"><strong>الحلقة الحالية:</strong> @(Model.Circle?.Name ?? "غير محدد")</p>
+
+                        @* التعديل هنا: جلب المعلم من خلال الحلقة المتربطة بالطالب *@
+                        <p class="mb-2"><strong>المحفظ المشرف:</strong> @(Model.Circle?.Teacher?.Name ?? "غير محدد")</p>
+
+                        <p class="mb-0"><strong>عدد أيام الحضور هذا الشهر:</strong> 22 يوم (مثال)</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="card shadow-sm border-0 bg-white rounded-3">
+        <div class="card-header bg-white border-bottom p-4">
+            <h5 class="fw-bold text-dark m-0">سجل التسميع والمراجعة الأخير</h5>
+        </div>
+        <div class="card-body p-0">
+            @if (memorizations != null && memorizations.Any())
+            {
+                <table class="table table-hover mb-0">
+                    <thead class="bg-light">
+                        <tr>
+                            <th class="py-3">التاريخ</th>
+                            <th class="py-3">السورة</th>
+                            <th class="py-3">من آية</th>
+                            <th class="py-3">إلى آية</th>
+                            <th class="py-3">التقييم</th>
+                            <th class="py-3">ملاحظات المعلم</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @foreach (var item in memorizations)
+                        {
+                            <tr>
+                                <td>@item.Date.ToShortDateString()</td>
+                                <td class="fw-bold text-success">@item.SurahName</td>
+                                <td>@item.FromAyah</td>
+                                <td>@item.ToAyah</td>
+                                <td>
+                                    @if (item.Grade == "ممتاز")
+                                    {
+                                        <span class="badge bg-success bg-opacity-10 text-success rounded-pill px-3">@item.Grade</span>
+                                    }
+                                    else if (item.Grade == "جيد جداً")
+                                    {
+                                        <span class="badge bg-primary bg-opacity-10 text-primary rounded-pill px-3">@item.Grade</span>
+                                    }
+                                    else
+                                    {
+                                        <span class="badge bg-warning bg-opacity-10 text-warning rounded-pill px-3">@item.Grade</span>
+                                    }
+                                </td>
+                                <td class="text-muted">@item.Notes</td>
+                            </tr>
+                        }
+                    </tbody>
+                </table>
+            }
+            else
+            {
+                <div class="text-center p-5">
+                    <i class="bi bi-folder-x text-muted" style="font-size: 3rem;"></i>
+                    <p class="text-muted mt-2">لا توجد سجلات تسميع مسجلة لهذا الطالب حتى الآن.</p>
+                </div>
+            }
+        </div>
+    </div>
+</div>
+
+<style>
+    @@media print {
+        .sidebar, .top-header, .btn-gold, .btn-group, .text-end {
+            display: none !important;
+        }
+
+        .main-content {
+            margin-right: 0 !important;
+            padding: 0 !important;
+        }
+
+        .card {
+            border: 1px solid #ddd !important;
+            box-shadow: none !important;
+        }
+    }
+</style>

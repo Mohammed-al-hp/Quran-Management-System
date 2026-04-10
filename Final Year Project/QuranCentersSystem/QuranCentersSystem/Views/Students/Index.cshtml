@@ -1,0 +1,174 @@
+﻿@model IEnumerable<QuranCentersSystem.Models.Student>
+
+@{
+    ViewData["Title"] = "إدارة الطلاب";
+}
+
+<div class="container-fluid py-4" dir="rtl">
+    <div class="card shadow-sm border-0 bg-white p-4 rounded" style="border-radius: 15px !important;">
+
+        @* العنوان وزر الإضافة *@
+        <div class="d-flex justify-content-between align-items-center mb-4 border-bottom pb-3">
+            <div>
+                <h4 class="m-0 text-success fw-bold">إدارة شؤون الطلاب</h4>
+                <p class="text-muted mb-0 small">عرض وتصفية بيانات طلاب المركز</p>
+            </div>
+            <a asp-controller="Students" asp-action="Create" class="btn btn-success d-flex align-items-center gap-2 px-4">
+                <i class="bi bi-person-plus-fill"></i> إضافة طالب جديد
+            </a>
+        </div>
+
+        @* 🟢 قسم التصفية والبحث الجديد 🟢 *@
+        <div class="row g-3 mb-4">
+            <div class="col-md-5">
+                <label class="form-label small fw-bold text-muted">البحث السريع:</label>
+                <div class="input-group">
+                    <span class="input-group-text bg-light border-end-0">
+                        <i class="bi bi-search text-muted"></i>
+                    </span>
+                    <input type="text" id="searchInput" class="form-control border-start-0 bg-light" placeholder="ابحث باسم الطالب...">
+                </div>
+            </div>
+
+            <div class="col-md-4">
+                <label class="form-label small fw-bold text-muted">تصفية حسب الحلقة:</label>
+                <form method="get" asp-action="Index" id="filterForm">
+                    <select name="circleId" class="form-select bg-light" onchange="document.getElementById('filterForm').submit()">
+                        <option value="">-- عرض جميع الحلقات --</option>
+                        @foreach (var circle in (IEnumerable<QuranCentersSystem.Models.Circle>)ViewBag.Circles)
+                        {
+                            <!option value="@circle.Id" @(ViewBag.SelectedCircle == circle.Id ? "selected" : "")>
+                            @circle.Name
+                            </!option>
+                        }
+                    </select>
+                </form>
+            </div>
+
+            <div class="col-md-3 d-flex align-items-end justify-content-md-end gap-2">
+                <a asp-action="Index" class="btn btn-outline-secondary" title="إعادة تعيين">
+                    <i class="bi bi-arrow-clockwise"></i>
+                </a>
+                <button class="btn btn-outline-dark px-3" onclick="window.print()">
+                    <i class="bi bi-printer"></i> طباعة
+                </button>
+            </div>
+        </div>
+
+        @* الجدول *@
+        <div class="table-responsive">
+            <table class="table table-hover align-middle" id="studentsTable">
+                <thead class="bg-light">
+                    <tr>
+                        <th class="py-3">اسم الطالب</th>
+                        <th class="py-3 text-center">تاريخ الانضمام</th>
+                        <th class="py-3 text-center">الحلقة</th>
+                        <th class="py-3 text-center">الحالة</th>
+                        <th class="py-3 text-start">الإجراءات</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @if (!Model.Any())
+                    {
+                        <tr>
+                            <td colspan="5" class="text-center py-5 text-muted">
+                                <i class="bi bi-info-circle d-block mb-2" style="font-size: 2rem;"></i>
+                                لا يوجد طلاب مضافين في هذه الحلقة حالياً.
+                            </td>
+                        </tr>
+                    }
+                    else
+                    {
+                        @foreach (var item in Model)
+                        {
+                            <tr>
+                                <td class="fw-bold text-dark">@item.Name</td>
+                                <td class="text-center text-muted">@item.JoinDate.ToShortDateString()</td>
+                                <td class="text-center">
+                                    <span class="badge bg-soft-success text-success px-3 py-2">
+                                        @(item.Circle?.Name ?? "بدون حلقة")
+                                    </span>
+                                </td>
+                                <td class="text-center">
+                                    @if (item.Status == "نشط")
+                                    {
+                                        <span class="badge bg-success rounded-pill px-3">نشط</span>
+                                    }
+                                    else
+                                    {
+                                        <span class="badge bg-secondary rounded-pill px-3">غير نشط</span>
+                                    }
+                                </td>
+                                <td>
+                                    <div class="d-flex justify-content-start gap-2">
+                                        <a asp-action="Edit" asp-route-id="@item.Id" class="btn btn-sm btn-outline-warning rounded-circle" title="تعديل">
+                                            <i class="bi bi-pencil"></i>
+                                        </a>
+
+                                        <a asp-controller="Reports" asp-action="StudentReport" asp-route-id="@item.Id" class="btn btn-sm btn-outline-info rounded-circle" title="تقرير شامل">
+                                            <i class="bi bi-file-earmark-pdf"></i>
+                                        </a>
+
+                                        @if (User.IsInRole("Admin") || User.IsInRole("مدير النظام"))
+                                        {
+                                            <form asp-action="Delete" asp-route-id="@item.Id" method="post" onsubmit="return confirm('هل أنت متأكد من حذف هذا الطالب نهائياً؟')">
+                                                @Html.AntiForgeryToken()
+                                                <button type="submit" class="btn btn-sm btn-outline-danger rounded-circle" title="حذف">
+                                                    <i class="bi bi-trash"></i>
+                                                </button>
+                                            </form>
+                                        }
+                                    </div>
+                                </td>
+                            </tr>
+                        }
+                    }
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+
+<style>
+    /* تنسيقات جمالية إضافية */
+    .bg-soft-success {
+        background-color: #e8f5e9;
+        border: 1px solid #c8e6c9;
+    }
+    .table thead th {
+        font-size: 0.85rem;
+        text-transform: uppercase;
+        letter-spacing: 0.5px;
+        border-bottom: 2px solid #f8f9fa;
+    }
+    .btn-sm.rounded-circle {
+        width: 32px;
+        height: 32px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+    }
+    @@media print {
+        .btn, .input-group, #filterForm, label, .text-muted { display: none !important; }
+        .card { border: none !important; box-shadow: none !important; }
+        .text-success { color: black !important; }
+    }
+</style>
+
+@section Scripts {
+    <script>
+        // البحث السريع بالاسم (JavaScript)
+        document.getElementById("searchInput").addEventListener("keyup", function () {
+            var filter = this.value.toLowerCase();
+            var rows = document.querySelectorAll("#studentsTable tbody tr");
+
+            rows.forEach(row => {
+                var nameCell = row.cells[0];
+                if (nameCell) {
+                    var nameText = nameCell.textContent.toLowerCase();
+                    row.style.display = nameText.includes(filter) ? "" : "none";
+                }
+            });
+        });
+    </script>
+}

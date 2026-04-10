@@ -1,0 +1,71 @@
+﻿@model QuranCentersSystem.Models.Attendance
+
+@{
+    ViewData["Title"] = "تسجيل حضور جديد";
+}
+
+<div class="container-fluid" dir="rtl">
+    <div class="card shadow-sm border-0 mb-4 bg-white rounded-3">
+        <div class="card-body p-4">
+            <div class="d-flex justify-content-between align-items-center border-bottom pb-3 mb-4">
+                <div>
+                    <h4 class="text-success fw-bold m-0">تسجيل حضور طالب</h4>
+                    <small class="text-muted">اختر الطالب وحدد حالته اليوم</small>
+                </div>
+                <a asp-action="Index" class="btn btn-outline-secondary px-4">عودة للسجل</a>
+            </div>
+
+            <div class="row justify-content-center">
+                <div class="col-md-6">
+                    <form asp-action="Create" class="p-4 bg-light rounded-3 border">
+                        <div asp-validation-summary="ModelOnly" class="text-danger mb-3"></div>
+
+                        <div class="mb-3">
+                            <label asp-for="StudentId" class="form-label fw-bold text-secondary">اسم الطالب</label>
+                            <select asp-for="StudentId" class="form-select" asp-items="ViewBag.StudentId">
+                                <option value="">-- اختر الطالب --</option>
+                            </select>
+                            <span asp-validation-for="StudentId" class="text-danger small"></span>
+                        </div>
+
+                        <div class="mb-3">
+                            <label asp-for="Date" class="form-label fw-bold text-secondary">التاريخ</label>
+                            <input asp-for="Date" class="form-control" type="date" />
+                            <span asp-validation-for="Date" class="text-danger small"></span>
+                        </div>
+
+                        <div class="mb-3">
+                            <label asp-for="Status" class="form-label fw-bold text-secondary d-block mb-2">الحالة</label>
+                            <div class="btn-group w-100" role="group">
+                                <input type="radio" class="btn-check" name="Status" id="status1" value="حاضر" checked>
+                                <label class="btn btn-outline-success py-2" for="status1">حاضر</label>
+
+                                <input type="radio" class="btn-check" name="Status" id="status2" value="غائب">
+                                <label class="btn btn-outline-danger py-2" for="status2">غائب</label>
+
+                                <input type="radio" class="btn-check" name="Status" id="status3" value="مستأذن">
+                                <label class="btn btn-outline-warning py-2" for="status3">مستأذن</label>
+                            </div>
+                        </div>
+
+                        <div class="mb-4">
+                            <label asp-for="Notes" class="form-label fw-bold text-secondary">ملاحظات</label>
+                            <textarea asp-for="Notes" class="form-control" rows="3" placeholder="اكتب أي ملاحظة هنا (مثال: تأخر بعذر)..."></textarea>
+                            <span asp-validation-for="Notes" class="text-danger small"></span>
+                        </div>
+
+                        <div class="d-grid">
+                            <button type="submit" class="btn btn-success btn-lg fs-6">حفظ البيانات</button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    @{
+        await Html.RenderPartialAsync("_ValidationScriptsPartial");
+    }
+}

@@ -1,0 +1,22 @@
+[
+  {
+    "ContainingType": "TeachersApiController",
+    "Method": "GetTeachers",
+    "RelativePath": "api/TeachersApi",
+    "HttpMethod": "GET",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [],
+    "ReturnTypes": []
+  },
+  {
+    "ContainingType": "TeachersApiController",
+    "Method": "GetDashboardStats",
+    "RelativePath": "api/TeachersApi/stats",
+    "HttpMethod": "GET",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [],
+    "ReturnTypes": []
+  }
+]

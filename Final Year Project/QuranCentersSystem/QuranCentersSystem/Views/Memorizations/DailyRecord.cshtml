@@ -1,0 +1,133 @@
+﻿@model QuranCentersSystem.Models.Memorization
+
+@{
+    ViewData["Title"] = "نظام التتبيع المباشر";
+    var recentRecords = ViewBag.RecentRecords as List<QuranCentersSystem.Models.Memorization>;
+    var students = ViewBag.Students as List<QuranCentersSystem.Models.Student>;
+}
+
+<div class="container-fluid py-4" dir="rtl">
+
+    <div class="mb-4">
+        <h3 class="text-dark mb-1 fw-bold">التتبيع اليومي المباشر</h3>
+        <p class="text-muted mb-0">تسجيل حفظ ومراجعة الطلاب في الحلقة بشكل فوري</p>
+    </div>
+
+    @if (TempData["Success"] != null)
+    {
+        <div class="alert alert-success border-0 shadow-sm mb-4 d-flex align-items-center" role="alert" style="border-radius: 10px;">
+            <i class="bi bi-check-circle-fill me-2 fs-5"></i>
+            <div>@TempData["Success"]</div>
+        </div>
+    }
+
+    <div class="row g-4">
+
+        <div class="col-lg-7">
+            <div class="card border-0 shadow-sm" style="border-radius: 12px;">
+                <div class="card-body p-4">
+                    <h5 class="fw-bold mb-4 text-primary"><i class="bi bi-pen-fill ms-2"></i>تسجيل جديد</h5>
+
+                    <form asp-action="DailyRecord" method="post">
+                        <div asp-validation-summary="ModelOnly" class="text-danger mb-3"></div>
+
+                        <div class="mb-3">
+                            <label asp-for="StudentId" class="form-label fw-bold">اسم الطالب</label>
+                            <select asp-for="StudentId" class="form-select" style="border-radius: 8px;">
+                                <option value="">-- اختر الطالب --</option>
+                                @if (students != null)
+                                {
+                                    foreach (var std in students)
+                                    {
+                                        <option value="@std.Id">@std.Name</option>
+                                    }
+                                }
+                            </select>
+                            <span asp-validation-for="StudentId" class="text-danger small"></span>
+                        </div>
+
+                        <div class="row g-3 mb-3">
+                            <div class="col-md-4">
+                                <label asp-for="SurahName" class="form-label fw-bold">السورة</label>
+                                <input asp-for="SurahName" class="form-control" style="border-radius: 8px;" placeholder="مثلاً: البقرة" />
+                                <span asp-validation-for="SurahName" class="text-danger small"></span>
+                            </div>
+                            <div class="col-md-4">
+                                <label asp-for="FromAyah" class="form-label fw-bold">من آية</label>
+                                <input asp-for="FromAyah" type="number" class="form-control" style="border-radius: 8px;" />
+                                <span asp-validation-for="FromAyah" class="text-danger small"></span>
+                            </div>
+                            <div class="col-md-4">
+                                <label asp-for="ToAyah" class="form-label fw-bold">إلى آية</label>
+                                <input asp-for="ToAyah" type="number" class="form-control" style="border-radius: 8px;" />
+                                <span asp-validation-for="ToAyah" class="text-danger small"></span>
+                            </div>
+                        </div>
+
+                        <div class="mb-3">
+                            <label asp-for="Date" class="form-label fw-bold">التاريخ</label>
+                            <input asp-for="Date" type="date" class="form-control" style="border-radius: 8px;" value="@DateTime.Now.ToString("yyyy-MM-dd")" />
+                            <span asp-validation-for="Date" class="text-danger small"></span>
+                        </div>
+
+                        <div class="d-flex justify-content-end mt-4">
+                            <button type="submit" class="btn btn-primary px-5 py-2" style="background-color: var(--primary-green); border-color: var(--primary-green); border-radius: 8px;">
+                                <i class="bi bi-cloud-arrow-up-fill me-1"></i> حفظ التسجيل
+                            </button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-lg-5">
+            <div class="card border-0 shadow-sm" style="border-radius: 12px;">
+                <div class="card-body p-4">
+                    <div class="d-flex justify-content-between align-items-center mb-4">
+                        <h5 class="fw-bold mb-0 text-dark"><i class="bi bi-clock-history ms-2 text-warning"></i>آخر تسجيلات اليوم</h5>
+                        <span class="badge bg-light text-dark border">@recentRecords?.Count عمليات</span>
+                    </div>
+
+                    @if (recentRecords == null || !recentRecords.Any())
+                    {
+                        <div class="text-center text-muted py-5">
+                            <i class="bi bi-inbox fs-1 d-block mb-3 text-secondary"></i>
+                            <span>لم يتم تسجيل أي عمليات حفظ اليوم بعد.</span>
+                        </div>
+                    }
+                    else
+                    {
+                        <div class="table-responsive">
+                            <table class="table table-hover align-middle mb-0" style="font-size: 0.9rem;">
+                                <thead class="table-light">
+                                    <tr>
+                                        <th>الطالب</th>
+                                        <th>السورة</th>
+                                        <th>المدى</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    @foreach (var item in recentRecords)
+                                    {
+                                        <tr>
+                                            <td class="fw-bold">@item.Student?.Name</td>
+                                            <td><span class="badge bg-success-subtle text-success">@item.SurahName</span></td>
+                                            <td class="text-muted">من @item.FromAyah إلى @item.ToAyah</td>
+                                        </tr>
+                                    }
+                                </tbody>
+                            </table>
+                        </div>
+                    }
+                </div>
+            </div>
+        </div>
+
+    </div>
+</div>
+
+@section Scripts {
+    @{
+        await Html.RenderPartialAsync("_ValidationScriptsPartial");
+    }
+}

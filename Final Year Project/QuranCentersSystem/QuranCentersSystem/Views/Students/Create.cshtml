@@ -1,0 +1,122 @@
+﻿@model QuranCentersSystem.Models.Student
+
+@{
+    ViewData["Title"] = "إضافة طالب جديد";
+}
+
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/flatpickr/dist/flatpickr.min.css">
+<link rel="stylesheet" type="text/css" href="https://npmcdn.com/flatpickr/dist/themes/material_blue.css">
+
+<div class="container-fluid py-4" dir="rtl">
+
+    <div class="mb-4">
+        <h3 class="text-dark mb-1 fw-bold">إدارة الطلاب</h3>
+        <p class="text-muted mb-0">إضافة طالب جديد للمنظومة وتنسيبه لحلقة معينة</p>
+    </div>
+
+    <div class="row">
+        <div class="col-lg-10 mx-auto">
+            <div class="card border-0 shadow-sm" style="border-radius: 15px;">
+                <div class="card-body p-4 p-md-5">
+
+                    <div class="d-flex align-items-center mb-4">
+                        <div class="bg-light p-3 rounded-circle ms-3">
+                            <i class="bi bi-person-plus text-primary fs-3"></i>
+                        </div>
+                        <div>
+                            <h5 class="mb-0 fw-bold">بيانات الطالب الأساسية</h5>
+                            <small class="text-muted">يرجى ملء كافة الخانات المميزة بعلامة مطلوبة</small>
+                        </div>
+                    </div>
+
+                    <form asp-action="Create" method="post">
+                        <div asp-validation-summary="ModelOnly" class="text-danger mb-3"></div>
+
+                        <div class="row g-4 mb-4">
+                            <div class="col-md-6">
+                                <label asp-for="Name" class="form-label text-secondary fw-bold">اسم الطالب كاملاً</label>
+                                <input asp-for="Name" class="form-control" placeholder="مثلاً: محمد أحمد علي" style="border-radius: 8px;" />
+                                <span asp-validation-for="Name" class="text-danger small"></span>
+                            </div>
+
+                            <div class="col-md-6">
+                                <label asp-for="Phone" class="form-label text-secondary fw-bold">رقم هاتف الطالب</label>
+                                <input asp-for="Phone" class="form-control" placeholder="0912345678" style="border-radius: 8px;" />
+                                <span asp-validation-for="Phone" class="text-danger small"></span>
+                            </div>
+
+                            <div class="col-md-6">
+                                <label asp-for="BirthDate" class="form-label text-secondary fw-bold">تاريخ ميلاد الطالب (المواليد)</label>
+                                <input asp-for="BirthDate" type="text" id="birthDatePicker" class="form-control" placeholder="اختر تاريخ الميلاد..." style="border-radius: 8px; background-color: #fff;" readonly />
+                                <span asp-validation-for="BirthDate" class="text-danger small"></span>
+                            </div>
+
+                            <div class="col-md-6">
+                                <label asp-for="ParentPhoneNumber" class="form-label text-secondary fw-bold">رقم هاتف ولي الأمر</label>
+                                <input asp-for="ParentPhoneNumber" class="form-control" placeholder="0912345678" style="border-radius: 8px;" />
+                                <span asp-validation-for="ParentPhoneNumber" class="text-danger small"></span>
+                            </div>
+
+                            <div class="col-md-12">
+                                <label asp-for="CircleId" class="form-label text-secondary fw-bold">الحلقة التنسيبية</label>
+                                <select asp-for="CircleId" class="form-select" style="border-radius: 8px;" asp-items="ViewBag.CircleId">
+                                    <option value="">-- اختر الحلقة لتنسيب الطالب --</option>
+                                </select>
+                                <span asp-validation-for="CircleId" class="text-danger small"></span>
+                            </div>
+                        </div>
+
+                        <div class="bg-light p-4 mb-4" style="border-radius: 12px; border-right: 4px solid var(--accent-gold);">
+                            <h6 class="text-dark fw-bold mb-3"><i class="bi bi-shield-check ms-1"></i> شروط الانتساب والالتزام بالمركز</h6>
+                            <ul class="text-muted small mb-3">
+                                <li>الالتزام التام بالمواعيد المحددة لحلقات التحفيظ.</li>
+                                <li>المحافظة على الهدوء والآداب العامة داخل المركز.</li>
+                                <li>متابعة ولي الأمر المستمرة لتطور الطالب مع المحفظ.</li>
+                            </ul>
+
+                            <div class="form-check">
+                                <input class="form-check-input" type="checkbox" asp-for="AgreedToTerms" id="agreeCheck">
+                                <label class="form-check-label fw-bold text-dark" for="agreeCheck">
+                                    أقر أنا الطالب وولي أمري بالموافقة على شروط الانضمام للمركز والالتزام بها.
+                                </label>
+                                <br />
+                                <span asp-validation-for="AgreedToTerms" class="text-danger small"></span>
+                            </div>
+                        </div>
+
+                        <div class="d-flex justify-content-end gap-2">
+                            <a asp-action="Index" class="btn btn-outline-secondary px-4 py-2" style="border-radius: 8px;">
+                                <i class="bi bi-arrow-right-short"></i> إلغاء ورجوع
+                            </a>
+                            <button type="submit" class="btn btn-primary px-5 py-2 d-flex align-items-center gap-2" style="border-radius: 8px; background-color: var(--primary-green); border-color: var(--primary-green);">
+                                <i class="bi bi-save"></i>
+                                حفظ البيانات
+                            </button>
+                        </div>
+                    </form>
+
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/flatpickr"></script>
+<script src="https://cdn.jsdelivr.net/npm/flatpickr/dist/l10n/ar.js"></script>
+
+<script>
+    document.addEventListener("DOMContentLoaded", function() {
+        flatpickr("#birthDatePicker", {
+            locale: "ar", // تفعيل اللغة العربية
+            dateFormat: "Y-m-d", // صيغة التاريخ
+            maxDate: "today", // لا يسمح باختيار تاريخ في المستقبل
+            disableMobile: "true"
+        });
+    });
+</script>
+
+@section Scripts {
+    @{
+        await Html.RenderPartialAsync("_ValidationScriptsPartial");
+    }
+}

@@ -1,0 +1,78 @@
+﻿/* تعريف متغيرات الألوان الجديدة (الأخضر والذهبي) */
+:root {
+    --primary-green: #1a531a; /* أخضر غامق ورصين */
+    --secondary-green: #2a752a; /* أخضر فاتح للتفاعل */
+    --accent-gold: #c9a050; /* ذهبي مطفي فخم */
+    --bg-light: #f4f7f6; /* خلفية رمادية فاتحة جداً مريحة */
+    --text-dark: #2c3e50;
+    --sidebar-bg: #1e293b; /* نفس درجة الداكن في الصور المرسلة */
+}
+
+body {
+    background-color: var(--bg-light);
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    color: var(--text-dark);
+    direction: rtl; /* التأكد من الاتجاه من اليمين لليسار */
+}
+
+/* تنسيقات الجدول لتشبه الصور */
+.table {
+    background-color: white;
+    border-radius: 8px;
+    overflow: hidden;
+    box-shadow: 0 2px 5px rgba(0,0,0,0.05);
+}
+
+    .table thead th {
+        background-color: var(--bg-light);
+        color: var(--text-dark);
+        border-bottom: 2px solid #e2e8f0;
+        text-align: center;
+    }
+
+    .table tbody td {
+        vertical-align: middle;
+        text-align: center;
+        border-color: #f1f5f9;
+    }
+
+/* تنسيقات الأزرار بالألوان الجديدة */
+.btn-primary {
+    background-color: var(--primary-green);
+    border-color: var(--primary-green);
+}
+
+    .btn-primary:hover {
+        background-color: var(--secondary-green);
+        border-color: var(--secondary-green);
+    }
+
+.btn-gold {
+    background-color: var(--accent-gold);
+    color: white;
+    border: none;
+}
+
+    .btn-gold:hover {
+        background-color: #b08c40;
+        color: white;
+    }
+
+/* تنسيق الكروت في الـ Dashboard */
+.card-stats {
+    border: none;
+    border-radius: 10px;
+    transition: transform 0.2s;
+}
+
+    .card-stats:hover {
+        transform: translateY(-5px);
+    }
+
+/* كود تمييز الزر النشط في القائمة الجانبية */
+.nav-item .nav-link.active, .collapse-item.active {
+    background-color: #f8f9fa !important; /* لون خلفية خفيف */
+    color: #0d6efd !important; /* تلوين النص والأيقونة باللون الأزرق */
+    font-weight: bold;
+    border-right: 4px solid #0d6efd; /* خط عمودي يمين الزر */
+}

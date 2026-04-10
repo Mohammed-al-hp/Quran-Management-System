@@ -1,0 +1,137 @@
+﻿@model IEnumerable<QuranCentersSystem.Models.Teacher>
+
+@{
+    ViewData["Title"] = "إدارة المحفظين";
+}
+
+<div class="container-fluid py-4" dir="rtl">
+    <div class="card shadow-sm bg-white p-4 rounded-3 border-0">
+
+        <div class="d-flex justify-content-between align-items-center mb-4 border-bottom pb-3">
+            <div>
+                <h4 class="m-0 text-success fw-bold">إدارة المحفظين</h4>
+                <p class="text-muted small mb-0">عرض وتعديل بيانات المحفظين والحلقات</p>
+            </div>
+            <a asp-controller="Teachers" asp-action="Create" class="btn btn-success px-4">
+                <i class="bi bi-person-plus-fill"></i> إضافة محفظ جديد
+            </a>
+        </div>
+
+        <form asp-action="Index" method="get" class="row g-3 mb-4">
+            <div class="col-md-5">
+                <div class="input-group">
+                    <input type="text" name="searchTerm" class="form-control" placeholder="ابحث باسم المحفظ أو المؤهل..." value="@ViewBag.CurrentSearch">
+                    <button class="btn btn-outline-success" type="submit">
+                        <i class="bi bi-search"></i>
+                    </button>
+                </div>
+            </div>
+            <div class="col-md-3">
+                <select name="sortBy" class="form-select border-success-subtle" onchange="this.form.submit()">
+                    <option value="newest" selected="@(ViewBag.CurrentSort == "newest")">الترتيب: الأحدث أولاً</option>
+                    <option value="oldest" selected="@(ViewBag.CurrentSort == "oldest")">الترتيب: الأقدم أولاً</option>
+                    <option value="students" selected="@(ViewBag.CurrentSort == "students")">الأكثر عدداً للطلاب</option>
+                    <option value="alphabetical" selected="@(ViewBag.CurrentSort == "alphabetical")">ترتيب أبجدي (أ-ي)</option>
+                </select>
+            </div>
+            @if (!string.IsNullOrEmpty(ViewBag.CurrentSearch))
+            {
+                <div class="col-md-2">
+                    <a asp-action="Index" class="btn btn-link text-decoration-none text-muted mt-1">إلغاء البحث</a>
+                </div>
+            }
+        </form>
+
+        <div class="table-responsive">
+            <table class="table table-hover align-middle">
+                <thead class="table-light">
+                    <tr>
+                        <th class="text-center" style="width: 50px;">#</th>
+                        <th>اسم المحفظ</th>
+                        <th>رقم الهاتف</th>
+                        <th>الحلقة التابعة</th>
+                        <th class="text-center">عدد الطلاب</th>
+                        <th>المؤهل / الإجازة</th>
+                        <th class="text-center">الإجراءات</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @{
+                        int rowNo = 1;
+                    }
+                    @foreach (var item in Model)
+                    {
+                        <tr>
+                            <td class="text-center fw-bold text-muted">@rowNo</td>
+                            <td class="fw-bold text-dark">@item.Name</td>
+                            <td>@item.Phone</td>
+                            <td>
+                                @if (item.Circles != null && item.Circles.Any())
+                                {
+                                    @foreach (var circle in item.Circles)
+                                    {
+                                        <span class="badge bg-light text-primary border mb-1">@circle.Name</span>
+                                    }
+                                }
+                                else
+                                {
+                                    <span class="text-muted small">غير مسند لحلقة</span>
+                                }
+                            </td>
+                            <td class="text-center">
+                                <span class="badge rounded-pill bg-success px-3">
+                                    @(item.Circles?.Sum(c => c.Students?.Count()) ?? 0) طلاب
+                                </span>
+                            </td>
+                            <td>
+                                <span class="badge bg-warning text-dark px-2">@item.Qualification</span>
+                            </td>
+                            <td class="text-center">
+                                <div class="d-flex justify-content-center gap-2">
+                                    <a asp-action="Details" asp-route-id="@item.Id" class="btn btn-sm btn-outline-info rounded-circle" title="تفاصيل">
+                                        <i class="bi bi-eye"></i>
+                                    </a>
+                                    <a asp-action="Edit" asp-route-id="@item.Id" class="btn btn-sm btn-outline-warning rounded-circle" title="تعديل">
+                                        <i class="bi bi-pencil"></i>
+                                    </a>
+
+                                    @if (User.Identity.Name == "admin@example.com" || User.IsInRole("Admin"))
+                                    {
+                                        <form asp-action="Delete" asp-route-id="@item.Id" method="post" onsubmit="return confirm('هل أنت متأكد؟')" style="display:inline;">
+                                            @Html.AntiForgeryToken()
+                                            <button type="submit" class="btn btn-sm btn-outline-danger rounded-circle">
+                                                <i class="bi bi-trash"></i>
+                                            </button>
+                                        </form>
+                                    }
+                                </div>
+                            </td>
+                        </tr>
+                        rowNo++;
+                    }
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+
+<style>
+    .btn-sm.rounded-circle {
+        width: 32px;
+        height: 32px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+    }
+
+    .table thead th {
+        font-weight: 600;
+        color: #495057;
+        border-bottom-width: 1px;
+    }
+
+    .form-select:focus {
+        border-color: #198754;
+        box-shadow: 0 0 0 0.25rem rgba(25, 135, 84, 0.25);
+    }
+</style>
