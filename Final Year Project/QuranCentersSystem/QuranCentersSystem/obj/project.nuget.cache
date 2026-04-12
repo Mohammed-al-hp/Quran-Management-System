@@ -1,8 +1,8 @@
 {
   "version": 2,
-  "dgSpecHash": "tMay8J+Zs3A=",
+  "dgSpecHash": "PQsLpOFLEVc=",
   "success": true,
-  "projectFilePath": "C:\\Users\\pcwor\\OneDrive\\Desktop\\IT College\\Final Year Project\\QuranCentersSystem\\QuranCentersSystem\\QuranCentersSystem.csproj",
+  "projectFilePath": "C:\\Master_Project\\Final Year Project\\QuranCentersSystem\\QuranCentersSystem\\QuranCentersSystem.csproj",
   "expectedPackageFiles": [
     "C:\\Users\\pcwor\\.nuget\\packages\\azure.core\\1.38.0\\azure.core.1.38.0.nupkg.sha512",
     "C:\\Users\\pcwor\\.nuget\\packages\\azure.identity\\1.11.4\\azure.identity.1.11.4.nupkg.sha512",

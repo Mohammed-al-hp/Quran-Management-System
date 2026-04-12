@@ -1,5 +1,7 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
 
 namespace QuranCentersSystem.Models
 {
@@ -7,39 +9,38 @@ namespace QuranCentersSystem.Models
     {
         public int Id { get; set; }
 
-        [Required(ErrorMessage = "يرجى إدخال اسم الطالب")]
+        [Required(ErrorMessage = "الاسم مطلوب")]
         [Display(Name = "اسم الطالب")]
-        public string? Name { get; set; }
+        public string Name { get; set; }
 
-        [Required(ErrorMessage = "يرجى إدخال رقم هاتف الطالب")]
-        [Display(Name = "هاتف الطالب")]
-        public string? Phone { get; set; }
+        // أضف هذا الحقل لحل مشكلة FullName في التقرير
+        [Display(Name = "الاسم الكامل")]
+        public string FullName => Name;
 
-        [Required(ErrorMessage = "يرجى تحديد تاريخ الانضمام")]
-        [Display(Name = "تاريخ الانضمام")]
-        public DateTime JoinDate { get; set; } = DateTime.Now;
+        [Display(Name = "رقم الهاتف")]
+        public string Phone { get; set; }
 
-        [Required(ErrorMessage = "يرجى تحديد حالة الطالب")]
-        [Display(Name = "الحالة")]
-        public string? Status { get; set; } = "نشط";
-
-        // --- الحقول الجديدة المضافة بناءً على طلبك ---
-
-        [Required(ErrorMessage = "يرجى إدخال تاريخ ميلاد الطالب")]
-        [Display(Name = "مواليد الطالب")]
         [DataType(DataType.Date)]
+        [Display(Name = "تاريخ الميلاد")]
         public DateTime BirthDate { get; set; }
 
-        [Required(ErrorMessage = "يرجى إدخال رقم هاتف ولي الأمر")]
-        [Display(Name = "هاتف ولي الأمر")]
-        public string? ParentPhoneNumber { get; set; }
+        [Display(Name = "رقم هاتف ولي الأمر")]
+        public string ParentPhoneNumber { get; set; }
 
-        [Display(Name = "موافقة ولي الأمر والطالب على الشروط")]
         public bool AgreedToTerms { get; set; }
+        public string Status { get; set; } = "نشط";
+        public DateTime JoinDate { get; set; } = DateTime.Now;
 
-        // ربط الطالب بالحلقة
-        [Display(Name = "الحلقة")]
         public int CircleId { get; set; }
-        public virtual Circle? Circle { get; set; }
+        public virtual Circle Circle { get; set; }
+        public int? ParentId { get; set; } // جعلناه اختياري لضمان عدم تعطل البيانات القديمة
+        [ForeignKey("ParentId")]
+        public virtual Parent Parent { get; set; }
+        // أضف هذا السطر لحل أخطاء "Payments" في الـ Controller والـ Index
+        public virtual ICollection<Payment> Payments { get; set; }
+
+        // 🌟 الحل الرئيسي: إضافة هذه الأسطر لربط الجداول
+        public virtual ICollection<Attendance> Attendances { get; set; } = new List<Attendance>();
+        public virtual ICollection<Memorization> Memorizations { get; set; } = new List<Memorization>();
     }
 }

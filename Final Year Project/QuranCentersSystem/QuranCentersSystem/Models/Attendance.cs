@@ -11,7 +11,10 @@ namespace QuranCentersSystem.Models
         [DataType(DataType.Date)]
         public DateTime Date { get; set; } = DateTime.Now.Date;
 
-        public string Status { get; set; } // (حاضر، غائب، مستأذن)
+        public string Status { get; set; } // (حاضر، غائب، مستأذن، متأخر)
+
+        // 🌟 الإضافة الجديدة: لتتبع الانضباط بالدقائق
+        public int DelayMinutes { get; set; }
 
         public string Notes { get; set; }
 

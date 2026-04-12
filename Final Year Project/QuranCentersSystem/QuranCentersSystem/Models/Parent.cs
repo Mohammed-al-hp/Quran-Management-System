@@ -10,5 +10,7 @@ namespace QuranCentersSystem.Models
         public string Name { get; set; }
 
         public string Phone { get; set; }
+        // أضف هذا السطر لحل خطأ السطر 32 في الـ Controller
+        public string Email { get; set; }
     }
 }

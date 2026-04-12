@@ -17,9 +17,12 @@ namespace QuranCentersSystem.Models
         public DateTime Date { get; set; } = DateTime.Now;
 
         [Display(Name = "اليوم")]
-        public string DayName { get; set; } // الأحد، الإثنين... الخ
+        public string DayName { get; set; }
 
-        // 🟢 أعدنا الحقول القديمة هنا بصيغة تقبل الفراغ (Null) لتختفي الأخطاء
+        // 🌟 الإضافة الأولى: نوع التسميع (مهم جداً لفرز البيانات لاحقاً)
+        [Display(Name = "نوع الإنجاز")]
+        public string Type { get; set; } // (حفظ جديد، مراجعة قريبة، مراجعة بعيدة)
+
         [Display(Name = "اسم السورة")]
         public string SurahName { get; set; }
 
@@ -29,21 +32,23 @@ namespace QuranCentersSystem.Models
         [Display(Name = "آية النهاية")]
         public int? ToAyah { get; set; }
 
-        // 🔵 حقول المتابعة والأسئلة الخاصة بك
         [Display(Name = "السورة الحالية")]
         public string CurrentSurah { get; set; }
 
         [Display(Name = "مقدار المتابعة")]
-        public string Scope { get; set; } // مثلاً: من البقرة 1 إلى 50
+        public string Scope { get; set; }
 
         [Required(ErrorMessage = "يرجى تحديد التقييم")]
         [Display(Name = "التقييم")]
-        public string Grade { get; set; } // ممتاز، جيد جداً...
+        public string Grade { get; set; }
+
+        // 🌟 الإضافة الثانية: لتوليد رسوم بيانية دقيقة عن تطور الطالب
+        [Display(Name = "عدد الأخطاء")]
+        public int MistakesCount { get; set; }
 
         [Display(Name = "ملاحظات المعلم")]
         public string Notes { get; set; }
 
-        // قائمة الأسئلة المرتبطة
         public List<MemorizationQuestion> Questions { get; set; } = new List<MemorizationQuestion>();
     }
 

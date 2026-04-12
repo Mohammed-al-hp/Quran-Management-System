@@ -3,6 +3,7 @@ using Microsoft.EntityFrameworkCore;
 using QuranCentersSystem.Data;
 using QuranCentersSystem.Models;
 using System.Text.Json.Serialization;
+using Rotativa.AspNetCore;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -10,19 +11,24 @@ var builder = WebApplication.CreateBuilder(args);
 builder.Services.AddDbContext<ApplicationDbContext>(options =>
     options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection")));
 
-// --- 2. إعداد نظام الهوية مع الأدوار ---
+// --- 2. إعداد نظام الهوية (تعديل ليتناسب مع جداولك) ---
+// قمت بتغيير IdentityUser إلى ApplicationUser إذا كنت تستخدم كلاس مخصص كما ظهر في قاعدة بياناتك
 builder.Services.AddDefaultIdentity<IdentityUser>(options =>
 {
     options.SignIn.RequireConfirmedAccount = false;
+    options.Password.RequireDigit = false; // تسهيل لعملية التطوير
+    options.Password.RequiredLength = 6;
+    options.Password.RequireNonAlphanumeric = false;
+    options.Password.RequireUppercase = false;
+    options.Password.RequireLowercase = false;
 })
     .AddRoles<IdentityRole>()
     .AddEntityFrameworkStores<ApplicationDbContext>();
 
-// --- 3. إضافة دعم الـ API و CORS (التعديل الجديد) ---
-// تفعيل CORS للسماح لتطبيق Flutter بالوصول للبيانات
+// --- 3. إعداد سياسة CORS (تجميع السياسات في سياسة واحدة قوية) ---
 builder.Services.AddCors(options =>
 {
-    options.AddPolicy("FlutterPolicy", policy =>
+    options.AddPolicy("AllowFlutter", policy =>
     {
         policy.AllowAnyOrigin()
               .AllowAnyMethod()
@@ -30,7 +36,7 @@ builder.Services.AddCors(options =>
     });
 });
 
-// إضافة التحكم في الـ JSON لمنع مشاكل الحلقات التكرارية (Reference Loops)
+// إضافة التحكم في الـ JSON
 builder.Services.AddControllersWithViews()
     .AddJsonOptions(options =>
     {
@@ -56,33 +62,34 @@ if (!app.Environment.IsDevelopment())
     app.UseHsts();
 }
 
+// الترتيب هنا مهم جداً لعمل الـ API بشكل صحيح
 app.UseHttpsRedirection();
 app.UseStaticFiles();
 
 app.UseRouting();
 
-// تفعيل سياسة CORS (يجب أن تكون بعد Routing وقبل Authentication)
-app.UseCors("FlutterPolicy");
+// تفعيل CORS بعد الـ Routing وقبل الـ Auth
+app.UseCors("AllowFlutter");
 
 app.UseAuthentication();
 app.UseAuthorization();
+
+RotativaConfiguration.Setup(app.Environment.WebRootPath, "Rotativa");
 
 app.MapControllerRoute(
     name: "default",
     pattern: "{controller=Home}/{action=Index}/{id?}");
 app.MapRazorPages();
 
-// --- 5. بذر البيانات الافتراضية (Data Seeding) ---
+// --- 5. بذر البيانات (Seed Data) ---
 using (var scope = app.Services.CreateScope())
 {
     var services = scope.ServiceProvider;
-    var context = services.GetRequiredService<ApplicationDbContext>();
-    var userManager = services.GetRequiredService<UserManager<IdentityUser>>();
     var roleManager = services.GetRequiredService<RoleManager<IdentityRole>>();
+    var userManager = services.GetRequiredService<UserManager<IdentityUser>>();
 
-    context.Database.EnsureCreated();
-
-    string[] roleNames = { "Admin", "مدير النظام", "محفظ" };
+    // التأكد من الأدوار
+    string[] roleNames = { "Admin", "Teacher", "Parent" };
     foreach (var roleName in roleNames)
     {
         if (!await roleManager.RoleExistsAsync(roleName))
@@ -91,18 +98,16 @@ using (var scope = app.Services.CreateScope())
         }
     }
 
-    var adminEmail = "admin@example.com";
+    // إنشاء حساب المدير الافتراضي
+    var adminEmail = "admin@itqan.com";
     var adminUser = await userManager.FindByEmailAsync(adminEmail);
-
     if (adminUser == null)
     {
         var user = new IdentityUser { UserName = adminEmail, Email = adminEmail, EmailConfirmed = true };
         var result = await userManager.CreateAsync(user, "Admin@123");
-
         if (result.Succeeded)
         {
             await userManager.AddToRoleAsync(user, "Admin");
-            await userManager.AddToRoleAsync(user, "مدير النظام");
         }
     }
 }

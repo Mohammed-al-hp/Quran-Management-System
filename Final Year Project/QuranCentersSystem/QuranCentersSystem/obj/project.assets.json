@@ -8111,11 +8111,11 @@
   "project": {
     "version": "1.0.0",
     "restore": {
-      "projectUniqueName": "C:\\Users\\pcwor\\OneDrive\\Desktop\\IT College\\Final Year Project\\QuranCentersSystem\\QuranCentersSystem\\QuranCentersSystem.csproj",
+      "projectUniqueName": "C:\\Master_Project\\Final Year Project\\QuranCentersSystem\\QuranCentersSystem\\QuranCentersSystem.csproj",
       "projectName": "QuranCentersSystem",
-      "projectPath": "C:\\Users\\pcwor\\OneDrive\\Desktop\\IT College\\Final Year Project\\QuranCentersSystem\\QuranCentersSystem\\QuranCentersSystem.csproj",
+      "projectPath": "C:\\Master_Project\\Final Year Project\\QuranCentersSystem\\QuranCentersSystem\\QuranCentersSystem.csproj",
       "packagesPath": "C:\\Users\\pcwor\\.nuget\\packages\\",
-      "outputPath": "C:\\Users\\pcwor\\OneDrive\\Desktop\\IT College\\Final Year Project\\QuranCentersSystem\\QuranCentersSystem\\obj\\",
+      "outputPath": "C:\\Master_Project\\Final Year Project\\QuranCentersSystem\\QuranCentersSystem\\obj\\",
       "projectStyle": "PackageReference",
       "fallbackFolders": [
         "C:\\Program Files (x86)\\Microsoft Visual Studio\\Shared\\NuGetPackages"
