@@ -11,6 +11,7 @@ using Microsoft.AspNetCore.Authorization; // 👈 سطر استدعاء مكتب
 
 namespace QuranCentersSystem.Controllers
 {
+    [Authorize(Roles = "Admin,Teacher")] // يسمح للمدير والمحفظ فقط
     [Authorize] // 👈 قفل الشاشات وجعلها تتطلب تسجيل الدخول
     public class MemorizationsController : Controller
     {

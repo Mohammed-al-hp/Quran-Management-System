@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using QuranCentersSystem.Data;
@@ -6,6 +7,7 @@ using QuranCentersSystem.Models;
 
 namespace QuranCentersSystem.Controllers
 {
+    [Authorize(Roles = "Admin,Teacher")] // يسمح للمدير والمحفظ فقط
     public class AttendancesController : Controller
     {
         private readonly ApplicationDbContext _context;

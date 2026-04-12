@@ -3,6 +3,7 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using QuranCentersSystem.Data;
 
@@ -11,9 +12,11 @@ using QuranCentersSystem.Data;
 namespace QuranCentersSystem.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    partial class ApplicationDbContextModelSnapshot : ModelSnapshot
+    [Migration("20260410163937_ConnectStudentToParent")]
+    partial class ConnectStudentToParent
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -398,10 +401,6 @@ namespace QuranCentersSystem.Migrations
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
 
-                    b.Property<string>("Email")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
                     b.Property<string>("Name")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
@@ -626,7 +625,7 @@ namespace QuranCentersSystem.Migrations
             modelBuilder.Entity("QuranCentersSystem.Models.Payment", b =>
                 {
                     b.HasOne("QuranCentersSystem.Models.Student", "Student")
-                        .WithMany("Payments")
+                        .WithMany()
                         .HasForeignKey("StudentId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
@@ -666,8 +665,6 @@ namespace QuranCentersSystem.Migrations
                     b.Navigation("Attendances");
 
                     b.Navigation("Memorizations");
-
-                    b.Navigation("Payments");
                 });
 
             modelBuilder.Entity("QuranCentersSystem.Models.Teacher", b =>

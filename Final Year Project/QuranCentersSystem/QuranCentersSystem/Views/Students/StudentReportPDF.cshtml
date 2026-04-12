@@ -1,0 +1,86 @@
+﻿@model QuranCentersSystem.Models.Student
+
+@{
+    Layout = null; // التقرير لا يحتاج لشريط التنقل الخاص بالموقع
+}
+
+<html dir="rtl">
+<head>
+    <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" />
+    <style>
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            padding: 20px;
+        }
+
+        .header-box {
+            border-bottom: 2px solid #28a745;
+            margin-bottom: 30px;
+            padding-bottom: 10px;
+        }
+
+        .stat-box {
+            background: #f8f9fa;
+            border-radius: 8px;
+            padding: 15px;
+            margin-bottom: 20px;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+
+        th {
+            background-color: #28a745;
+            color: white;
+        }
+    </style>
+</head>
+<body>
+    <div class="header-box text-center">
+        <h2>تقرير متابعة طالب</h2>
+        <h4>@Model.FullName</h4>
+    </div>
+
+    <div class="row">
+        <div class="col-6">
+            <div class="stat-box">
+                <strong>إجمالي أيام الحضور:</strong> @Model.Attendances.Count(a => a.Status == "حاضر")
+            </div>
+        </div>
+        <div class="col-6">
+            <div class="stat-box">
+                <strong>آخر سورة تم حفظها:</strong> @Model.Memorizations.OrderByDescending(m => m.Date).FirstOrDefault()?.SurahName
+            </div>
+        </div>
+    </div>
+
+    <h5 class="mt-4">سجل الإنجاز الأخير</h5>
+    <table class="table table-bordered">
+        <thead>
+            <tr>
+                <th>التاريخ</th>
+                <th>نوع الإنجاز</th>
+                <th>السورة</th>
+                <th>التقييم</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var item in Model.Memorizations.OrderByDescending(m => m.Date).Take(10))
+            {
+                <tr>
+                    <td>@item.Date.ToShortDateString()</td>
+                    <td>@item.Type</td>
+                    <td>@item.SurahName (@item.Scope)</td>
+                    <td>@item.Grade</td>
+                </tr>
+            }
+        </tbody>
+    </table>
+
+    <div class="mt-5 text-start">
+        <p>ختم المركز: ........................</p>
+    </div>
+</body>
+</html>

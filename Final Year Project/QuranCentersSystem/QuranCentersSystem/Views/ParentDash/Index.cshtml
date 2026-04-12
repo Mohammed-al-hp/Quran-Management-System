@@ -1,0 +1,38 @@
+﻿@model IEnumerable<QuranCentersSystem.Models.Student>
+
+<div class="container py-4" dir="rtl">
+    <h3 class="fw-bold text-primary mb-4">مرحباً بك في بوابة أولياء الأمور</h3>
+
+    <div class="row">
+        @foreach (var child in Model)
+        {
+            <div class="col-md-6 mb-4">
+                <div class="card border-0 shadow-sm rounded-4 overflow-hidden">
+                    <div class="card-header bg-primary text-white p-3 border-0">
+                        <h5 class="mb-0"><i class="bi bi-person-badge me-2"></i> @child.Name</h5>
+                    </div>
+                    <div class="card-body p-4">
+                        <div class="row text-center mb-3">
+                            <div class="col-4 border-start">
+                                <div class="small text-muted">نسبة الحضور</div>
+                                <div class="fw-bold text-dark">@child.Attendances.Count(a => a.Status == "حاضر")</div>
+                            </div>
+                            <div class="col-4 border-start">
+                                <div class="small text-muted">آخر حفظ</div>
+                                <div class="fw-bold text-success">@child.Memorizations.LastOrDefault()?.SurahName</div>
+                            </div>
+                            <div class="col-4">
+                                <div class="small text-muted">الرسوم المدفوعة</div>
+                                <div class="fw-bold text-primary">@child.Payments.Sum(p => p.Amount) د.ل</div>
+                            </div>
+                        </div>
+                        <div class="d-grid gap-2">
+                            <a class="btn btn-outline-primary rounded-pill btn-sm">عرض التقرير المفصل</a>
+                            <a class="btn btn-outline-info rounded-pill btn-sm">عرض جدول الحفظ</a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        }
+    </div>
+</div>

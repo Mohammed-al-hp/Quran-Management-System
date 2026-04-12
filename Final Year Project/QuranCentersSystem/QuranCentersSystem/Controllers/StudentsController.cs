@@ -8,10 +8,12 @@ using Microsoft.EntityFrameworkCore;
 using QuranCentersSystem.Data;
 using QuranCentersSystem.Models;
 using Microsoft.AspNetCore.Authorization;
+using Rotativa.AspNetCore;
 
 namespace QuranCentersSystem.Controllers
 {
-    [Authorize] // قفل الشاشات وجعلها تتطلب تسجيل الدخول
+    [Authorize]
+    [Authorize(Roles = "Admin")]
     public class StudentsController : Controller
     {
         private readonly ApplicationDbContext _context;
@@ -21,17 +23,13 @@ namespace QuranCentersSystem.Controllers
             _context = context;
         }
 
-        // 1. عرض قائمة الطلاب مع دعم "الفلترة حسب الحلقة"
         public async Task<IActionResult> Index(int? circleId)
         {
-            // جلب قائمة الحلقات لعرضها في القائمة المنسدلة في الواجهة
             ViewBag.Circles = await _context.Circles.ToListAsync();
             ViewBag.SelectedCircle = circleId;
 
-            // بناء الاستعلام الأساسي مع جلب بيانات الحلقة المرتبطة
             var studentsQuery = _context.Students.Include(s => s.Circle).AsQueryable();
 
-            // تطبيق الفلترة إذا تم اختيار حلقة معينة
             if (circleId.HasValue)
             {
                 studentsQuery = studentsQuery.Where(s => s.CircleId == circleId.Value);
@@ -41,17 +39,38 @@ namespace QuranCentersSystem.Controllers
             return View(students);
         }
 
-        // 2. عرض صفحة إضافة طالب جديد (تجهيز القائمة المنسدلة)
+        public async Task<IActionResult> PrintStudentReport(int id)
+        {
+            var student = await _context.Students
+                .Include(s => s.Circle)
+                .Include(s => s.Attendances)
+                .Include(s => s.Memorizations)
+                .FirstOrDefaultAsync(m => m.Id == id);
+
+            if (student == null) return NotFound();
+
+            return new ViewAsPdf("StudentReportPDF", student)
+            {
+                FileName = "StudentReport.pdf",
+                PageSize = Rotativa.AspNetCore.Options.Size.A4,
+                PageOrientation = Rotativa.AspNetCore.Options.Orientation.Portrait,
+                CustomSwitches = "--encoding utf-8"
+            };
+        }
+
+        // 2. عرض صفحة إضافة طالب جديد (معدل لإرسال قائمة أولياء الأمور)
         public IActionResult Create()
         {
             ViewData["CircleId"] = new SelectList(_context.Circles, "Id", "Name");
+            // 🌟 إضافة قائمة أولياء الأمور
+            ViewBag.ParentId = new SelectList(_context.Set<Parent>(), "Id", "Name");
             return View();
         }
 
-        // 3. استقبال بيانات الطالب الجديد وحفظها
+        // 3. استقبال بيانات الطالب الجديد (معدل لاستقبال ParentId)
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("Id,Name,Phone,BirthDate,ParentPhoneNumber,AgreedToTerms,CircleId")] Student student)
+        public async Task<IActionResult> Create([Bind("Id,Name,Phone,BirthDate,ParentPhoneNumber,AgreedToTerms,CircleId,ParentId")] Student student)
         {
             if (!student.AgreedToTerms)
             {
@@ -69,10 +88,11 @@ namespace QuranCentersSystem.Controllers
             }
 
             ViewData["CircleId"] = new SelectList(_context.Circles, "Id", "Name", student.CircleId);
+            // 🌟 إعادة إرسال القائمة في حال فشل الـ Validation
+            ViewBag.ParentId = new SelectList(_context.Set<Parent>(), "Id", "Name", student.ParentId);
             return View(student);
         }
 
-        // 4. عرض صفحة تعديل بيانات طالب
         public async Task<IActionResult> Edit(int? id)
         {
             if (id == null) return NotFound();
@@ -81,13 +101,14 @@ namespace QuranCentersSystem.Controllers
             if (student == null) return NotFound();
 
             ViewData["CircleId"] = new SelectList(_context.Circles, "Id", "Name", student.CircleId);
+            // 🌟 إضافة قائمة أولياء الأمور عند التعديل
+            ViewBag.ParentId = new SelectList(_context.Set<Parent>(), "Id", "Name", student.ParentId);
             return View(student);
         }
 
-        // 5. حفظ التعديلات
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(int id, [Bind("Id,Name,Phone,BirthDate,ParentPhoneNumber,AgreedToTerms,CircleId,Status,JoinDate")] Student student)
+        public async Task<IActionResult> Edit(int id, [Bind("Id,Name,Phone,BirthDate,ParentPhoneNumber,AgreedToTerms,CircleId,ParentId,Status,JoinDate")] Student student)
         {
             if (id != student.Id) return NotFound();
 
@@ -106,10 +127,10 @@ namespace QuranCentersSystem.Controllers
                 return RedirectToAction(nameof(Index));
             }
             ViewData["CircleId"] = new SelectList(_context.Circles, "Id", "Name", student.CircleId);
+            ViewBag.ParentId = new SelectList(_context.Set<Parent>(), "Id", "Name", student.ParentId);
             return View(student);
         }
 
-        // 6. حذف طالب (للمدير فقط - يتم استدعاؤه مباشرة أو عبر صفحة تأكيد)
         [Authorize(Roles = "Admin")]
         public async Task<IActionResult> Delete(int? id)
         {
@@ -124,7 +145,6 @@ namespace QuranCentersSystem.Controllers
             return View(student);
         }
 
-        // تنفيذ الحذف النهائي
         [HttpPost, ActionName("Delete")]
         [ValidateAntiForgeryToken]
         [Authorize(Roles = "Admin")]

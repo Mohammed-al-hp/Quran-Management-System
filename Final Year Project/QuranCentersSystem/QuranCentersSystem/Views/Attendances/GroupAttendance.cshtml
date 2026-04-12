@@ -1,91 +1,111 @@
 ﻿@model IEnumerable<QuranCentersSystem.Models.Student>
 
 @{
-    ViewData["Title"] = "تسجيل الحضور الجماعي";
+    ViewData["Title"] = "تسجيل حضور حلقة";
 }
 
-<div class="container-fluid" dir="rtl">
-    <div class="card shadow-sm border-0 mb-4 bg-white rounded-3">
-        <div class="card-body p-4">
-            <div class="d-flex justify-content-between align-items-center border-bottom pb-3 mb-4">
-                <div>
-                    <h4 class="text-success fw-bold m-0">تسجيل الحضور الجماعي بالحلقة</h4>
-                    <small class="text-muted">اختر الحلقة وسجل حضور جميع طلابها دفعة واحدة</small>
-                </div>
-                <a asp-action="Index" class="btn btn-outline-secondary px-4">عودة للسجل</a>
-            </div>
+<div class="container-fluid py-4" dir="rtl">
+    <div class="card shadow-sm border-0 bg-white p-4 rounded" style="border-radius: 15px !important;">
 
-            <form method="get" asp-action="GroupAttendance" class="row g-3 align-items-end mb-4 bg-light p-3 rounded-3 border">
-                <div class="col-md-5">
-                    <label class="form-label fw-bold text-secondary">اختر الحلقة القرآنية</label>
-                    <select name="circleId" class="form-select" asp-items="ViewBag.Circles" onchange="this.form.submit()">
-                        <option value="">-- اختر الحلقة لعرض الطلاب --</option>
+        @* الترويسة *@
+        <div class="d-flex justify-content-between align-items-center mb-4 border-bottom pb-3">
+            <div>
+                <h4 class="m-0 text-primary fw-bold"><i class="bi bi-calendar-check-fill me-2"></i>تسجيل الحضور الجماعي</h4>
+                <p class="text-muted mb-0 small">اختيار الحلقة وتسجيل حالة الحضور لجميع الطلاب دفعة واحدة</p>
+            </div>
+        </div>
+
+        @* اختيار الحلقة *@
+        <div class="row mb-4 bg-light p-3 rounded mx-1">
+            <div class="col-md-6">
+                <form method="get" asp-action="GroupAttendance" id="selectCircleForm">
+                    <label class="form-label fw-bold small">اختر الحلقة لبدء التحضير:</label>
+                    <select name="circleId" class="form-select shadow-sm" onchange="this.form.submit()" asp-items="ViewBag.Circles">
+                        <option value="">-- اختر الحلقة من هنا --</option>
                     </select>
+                </form>
+            </div>
+            <div class="col-md-6 d-flex align-items-end justify-content-md-end">
+                <span class="badge bg-info p-2 px-3 shadow-sm text-white">تاريخ اليوم: @DateTime.Now.ToString("yyyy/MM/dd")</span>
+            </div>
+        </div>
+
+        @if (Model != null && Model.Any())
+        {
+            <form asp-action="SaveGroupAttendance" method="post">
+                @Html.AntiForgeryToken()
+                <input type="hidden" name="circleId" value="@ViewBag.SelectedCircleId" />
+                <input type="hidden" name="date" value="@DateTime.Now.ToString("yyyy-MM-dd")" />
+
+                <div class="table-responsive">
+                    <table class="table table-hover align-middle shadow-sm rounded overflow-hidden">
+                        <thead class="table-dark">
+                            <tr>
+                                <th class="py-3 px-4">اسم الطالب</th>
+                                <th class="py-3 text-center">حالة الحضور</th>
+                                <th class="py-3 text-center">ملاحظات سريعة</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @foreach (var student in Model)
+                            {
+                                <tr>
+                                    <td class="fw-bold px-4">@student.Name</td>
+                                    <td class="text-center">
+                                        <div class="btn-group shadow-sm" role="group">
+                                            <input type="radio" class="btn-check" name="attendanceStatus[@student.Id]" id="present_@student.Id" value="حاضر" checked>
+                                            <label class="btn btn-outline-success px-3" for="present_@student.Id">حاضر</label>
+
+                                            <input type="radio" class="btn-check" name="attendanceStatus[@student.Id]" id="absent_@student.Id" value="غائب">
+                                            <label class="btn btn-outline-danger px-3" for="absent_@student.Id">غائب</label>
+
+                                            <input type="radio" class="btn-check" name="attendanceStatus[@student.Id]" id="late_@student.Id" value="متأخر">
+                                            <label class="btn btn-outline-warning px-3" for="late_@student.Id">متأخر</label>
+                                        </div>
+                                    </td>
+                                    <td>
+                                        <input type="text" name="notes[@student.Id]" class="form-control form-control-sm border-0 bg-light" placeholder="أضف ملاحظة (اختياري)...">
+                                    </td>
+                                </tr>
+                            }
+                        </tbody>
+                    </table>
                 </div>
-                <div class="col-md-5">
-                    <label class="form-label fw-bold text-secondary">التاريخ</label>
-                    <input type="date" id="attendanceDate" class="form-control" value="@DateTime.Now.ToString("yyyy-MM-dd")" readonly />
-                </div>
-                <div class="col-md-2">
-                    <button type="submit" class="btn btn-success w-100">عرض الطلاب</button>
+
+                <div class="text-start mt-4">
+                    <button type="submit" class="btn btn-primary px-5 py-2 shadow rounded-pill">
+                        <i class="bi bi-cloud-arrow-up-fill me-2"></i> حفظ كشف الحضور
+                    </button>
                 </div>
             </form>
-
-            @if (ViewBag.SelectedCircleId != null && Model != null)
-            {
-                if (!Model.Any())
-                {
-                    <div class="alert alert-warning text-center my-4" role="alert">
-                        <i class="bi bi-exclamation-triangle me-2"></i> لا يوجد طلاب مضافين في هذه الحلقة حتى الآن!
-                    </div>
-                }
-                else
-                {
-                    <form asp-action="SaveGroupAttendance" method="post">
-                        <input type="hidden" name="circleId" value="@ViewBag.SelectedCircleId" />
-                        <input type="hidden" name="date" value="@DateTime.Now.ToString("yyyy-MM-dd")" />
-
-                        <div class="table-responsive">
-                            <table class="table table-hover align-middle">
-                                <thead class="table-light">
-                                    <tr>
-                                        <th class="py-3">اسم الطالب</th>
-                                        <th class="py-3 text-center" style="width: 300px;">حالة الحضور اليوم</th>
-                                        <th class="py-3">ملاحظات</th>
-                                    </tr>
-                                </thead>
-                                <tbody>
-                                    @foreach (var student in Model)
-                                    {
-                                        <tr>
-                                            <td class="fw-bold">@student.Name</td>
-                                            <td>
-                                                <div class="btn-group w-100" role="group">
-                                                    <input type="radio" class="btn-check" name="attendanceStatus[@student.Id]" id="present_@student.Id" value="حاضر" checked>
-                                                    <label class="btn btn-outline-success" for="present_@student.Id">حاضر</label>
-
-                                                    <input type="radio" class="btn-check" name="attendanceStatus[@student.Id]" id="absent_@student.Id" value="غائب">
-                                                    <label class="btn btn-outline-danger" for="absent_@student.Id">غائب</label>
-
-                                                    <input type="radio" class="btn-check" name="attendanceStatus[@student.Id]" id="excused_@student.Id" value="مستأذن">
-                                                    <label class="btn btn-outline-warning" for="excused_@student.Id">مستأذن</label>
-                                                </div>
-                                            </td>
-                                            <td>
-                                                <input type="text" name="notes[@student.Id]" class="form-control form-control-sm" placeholder="أضف ملاحظة إن وجدت..." />
-                                            </td>
-                                        </tr>
-                                    }
-                                </tbody>
-                            </table>
-                        </div>
-
-                        <div class="d-grid mt-4">
-                            <button type="submit" class="btn btn-success btn-lg">حفظ سجل الحضور بالكامل</button>
-                        </div>
-                    </form>
-                }
-            }
-        </div>
+        }
+        else if (ViewBag.SelectedCircleId != null)
+        {
+            <div class="alert alert-warning text-center shadow-sm">
+                <i class="bi bi-exclamation-triangle me-2"></i> لا يوجد طلاب مضافين لهذه الحلقة حالياً.
+            </div>
+        }
     </div>
 </div>
+
+<style>
+    .btn-check:checked + .btn-outline-success {
+        background-color: #198754;
+        color: white;
+    }
+
+    .btn-check:checked + .btn-outline-danger {
+        background-color: #dc3545;
+        color: white;
+    }
+
+    .btn-check:checked + .btn-outline-warning {
+        background-color: #ffc107;
+        color: black;
+    }
+
+    .table-hover tbody tr:hover {
+        background-color: #f8f9fa;
+        transition: 0.3s;
+    }
+</style>

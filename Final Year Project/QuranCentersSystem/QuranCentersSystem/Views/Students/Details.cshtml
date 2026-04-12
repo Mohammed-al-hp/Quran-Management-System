@@ -33,4 +33,7 @@
 <div>
     <a asp-action="Edit" asp-route-id="@Model?.Id">Edit</a> |
     <a asp-action="Index">Back to List</a>
+    <a asp-action="PrintStudentReport" asp-route-id="@Model.Id" class="btn btn-danger">
+        <i class="bi bi-file-pdf"></i> تحميل تقرير PDF
+    </a>
 </div>

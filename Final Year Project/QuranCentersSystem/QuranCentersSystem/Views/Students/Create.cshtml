@@ -51,6 +51,13 @@
                                 <span asp-validation-for="BirthDate" class="text-danger small"></span>
                             </div>
 
+                            <div class="mb-3">
+                                <label class="form-label">ولي الأمر</label>
+                                <select asp-for="ParentId" class="form-control" asp-items="ViewBag.ParentId">
+                                    <option value="">-- اختر ولي الأمر --</option>
+                                </select>
+                            </div>
+
                             <div class="col-md-6">
                                 <label asp-for="ParentPhoneNumber" class="form-label text-secondary fw-bold">رقم هاتف ولي الأمر</label>
                                 <input asp-for="ParentPhoneNumber" class="form-control" placeholder="0912345678" style="border-radius: 8px;" />

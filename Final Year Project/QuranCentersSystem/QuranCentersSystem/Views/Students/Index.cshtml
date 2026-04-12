@@ -13,27 +13,27 @@
                 <h4 class="m-0 text-success fw-bold">إدارة شؤون الطلاب</h4>
                 <p class="text-muted mb-0 small">عرض وتصفية بيانات طلاب المركز</p>
             </div>
-            <a asp-controller="Students" asp-action="Create" class="btn btn-success d-flex align-items-center gap-2 px-4">
+            <a asp-controller="Students" asp-action="Create" class="btn btn-success d-flex align-items-center gap-2 px-4 shadow-sm">
                 <i class="bi bi-person-plus-fill"></i> إضافة طالب جديد
             </a>
         </div>
 
-        @* 🟢 قسم التصفية والبحث الجديد 🟢 *@
+        @* قسم التصفية والبحث *@
         <div class="row g-3 mb-4">
             <div class="col-md-5">
                 <label class="form-label small fw-bold text-muted">البحث السريع:</label>
-                <div class="input-group">
-                    <span class="input-group-text bg-light border-end-0">
+                <div class="input-group shadow-sm">
+                    <span class="input-group-text bg-white border-end-0">
                         <i class="bi bi-search text-muted"></i>
                     </span>
-                    <input type="text" id="searchInput" class="form-control border-start-0 bg-light" placeholder="ابحث باسم الطالب...">
+                    <input type="text" id="searchInput" class="form-control border-start-0 bg-white" placeholder="ابحث باسم الطالب...">
                 </div>
             </div>
 
             <div class="col-md-4">
                 <label class="form-label small fw-bold text-muted">تصفية حسب الحلقة:</label>
                 <form method="get" asp-action="Index" id="filterForm">
-                    <select name="circleId" class="form-select bg-light" onchange="document.getElementById('filterForm').submit()">
+                    <select name="circleId" class="form-select bg-white shadow-sm" onchange="document.getElementById('filterForm').submit()">
                         <option value="">-- عرض جميع الحلقات --</option>
                         @foreach (var circle in (IEnumerable<QuranCentersSystem.Models.Circle>)ViewBag.Circles)
                         {
@@ -46,10 +46,10 @@
             </div>
 
             <div class="col-md-3 d-flex align-items-end justify-content-md-end gap-2">
-                <a asp-action="Index" class="btn btn-outline-secondary" title="إعادة تعيين">
+                <a asp-action="Index" class="btn btn-outline-secondary shadow-sm" title="إعادة تعيين">
                     <i class="bi bi-arrow-clockwise"></i>
                 </a>
-                <button class="btn btn-outline-dark px-3" onclick="window.print()">
+                <button class="btn btn-outline-dark px-3 shadow-sm" onclick="window.print()">
                     <i class="bi bi-printer"></i> طباعة
                 </button>
             </div>
@@ -58,19 +58,19 @@
         @* الجدول *@
         <div class="table-responsive">
             <table class="table table-hover align-middle" id="studentsTable">
-                <thead class="bg-light">
+                <thead class="table-light">
                     <tr>
-                        <th class="py-3">اسم الطالب</th>
+                        <th class="py-3 px-3">اسم الطالب</th>
                         <th class="py-3 text-center">تاريخ الانضمام</th>
                         <th class="py-3 text-center">الحلقة</th>
                         <th class="py-3 text-center">الحالة</th>
-                        <th class="py-3 text-start">الإجراءات</th>
+                        <th class="py-3 text-center" style="min-width: 150px;">الإجراءات</th>
                     </tr>
                 </thead>
                 <tbody>
                     @if (!Model.Any())
                     {
-                        <tr>
+                        <tr class="no-data-row">
                             <td colspan="5" class="text-center py-5 text-muted">
                                 <i class="bi bi-info-circle d-block mb-2" style="font-size: 2rem;"></i>
                                 لا يوجد طلاب مضافين في هذه الحلقة حالياً.
@@ -82,36 +82,37 @@
                         @foreach (var item in Model)
                         {
                             <tr>
-                                <td class="fw-bold text-dark">@item.Name</td>
+                                <td class="fw-bold text-dark px-3">@item.Name</td>
                                 <td class="text-center text-muted">@item.JoinDate.ToShortDateString()</td>
                                 <td class="text-center">
-                                    <span class="badge bg-soft-success text-success px-3 py-2">
+                                    <span class="badge bg-soft-success text-success px-3 py-2 border">
                                         @(item.Circle?.Name ?? "بدون حلقة")
                                     </span>
                                 </td>
                                 <td class="text-center">
                                     @if (item.Status == "نشط")
                                     {
-                                        <span class="badge bg-success rounded-pill px-3">نشط</span>
+                                        <span class="badge bg-success rounded-pill px-3 shadow-sm">نشط</span>
                                     }
                                     else
                                     {
-                                        <span class="badge bg-secondary rounded-pill px-3">غير نشط</span>
+                                        <span class="badge bg-secondary rounded-pill px-3 shadow-sm">غير نشط</span>
                                     }
                                 </td>
                                 <td>
-                                    <div class="d-flex justify-content-start gap-2">
+                                    <div class="d-flex justify-content-center gap-2">
                                         <a asp-action="Edit" asp-route-id="@item.Id" class="btn btn-sm btn-outline-warning rounded-circle" title="تعديل">
                                             <i class="bi bi-pencil"></i>
                                         </a>
 
-                                        <a asp-controller="Reports" asp-action="StudentReport" asp-route-id="@item.Id" class="btn btn-sm btn-outline-info rounded-circle" title="تقرير شامل">
+                                        @* 🌟 تعديل الرابط ليعمل مع دالة طباعة الـ PDF *@
+                                        <a asp-controller="Students" asp-action="PrintStudentReport" asp-route-id="@item.Id" class="btn btn-sm btn-outline-info rounded-circle" title="تحميل تقرير PDF">
                                             <i class="bi bi-file-earmark-pdf"></i>
                                         </a>
 
                                         @if (User.IsInRole("Admin") || User.IsInRole("مدير النظام"))
                                         {
-                                            <form asp-action="Delete" asp-route-id="@item.Id" method="post" onsubmit="return confirm('هل أنت متأكد من حذف هذا الطالب نهائياً؟')">
+                                            <form asp-action="Delete" asp-route-id="@item.Id" method="post" onsubmit="return confirm('هل أنت متأكد من حذف هذا الطالب نهائياً؟')" class="d-inline">
                                                 @Html.AntiForgeryToken()
                                                 <button type="submit" class="btn btn-sm btn-outline-danger rounded-circle" title="حذف">
                                                     <i class="bi bi-trash"></i>
@@ -130,45 +131,88 @@
 </div>
 
 <style>
-    /* تنسيقات جمالية إضافية */
+    /* التنسيقات الناعمة كما تظهر في الصورة */
     .bg-soft-success {
-        background-color: #e8f5e9;
-        border: 1px solid #c8e6c9;
+        background-color: #e8f5e9 !important;
+        border: 1px solid #c8e6c9 !important;
     }
+
     .table thead th {
-        font-size: 0.85rem;
-        text-transform: uppercase;
-        letter-spacing: 0.5px;
-        border-bottom: 2px solid #f8f9fa;
+        font-size: 0.9rem;
+        font-weight: 600;
+        color: #495057;
+        background-color: #f8f9fa;
+        border-bottom: 2px solid #e9ecef;
     }
+
     .btn-sm.rounded-circle {
-        width: 32px;
-        height: 32px;
+        width: 34px;
+        height: 34px;
         display: flex;
         align-items: center;
         justify-content: center;
+        transition: all 0.2s;
     }
+
+        .btn-sm.rounded-circle:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+        }
+
+    /* تحسين شكل الطباعة */
     @@media print {
-        .btn, .input-group, #filterForm, label, .text-muted { display: none !important; }
-        .card { border: none !important; box-shadow: none !important; }
-        .text-success { color: black !important; }
+        .btn, .input-group, #filterForm, label, .text-muted {
+            display: none !important;
+        }
+
+        .card {
+            border: none !important;
+            box-shadow: none !important;
+            padding: 0 !important;
+        }
+
+        .table {
+            width: 100% !important;
+            border: 1px solid #000;
+        }
+
+        th, td {
+            border: 1px solid #dee2e6 !important;
+        }
     }
 </style>
 
 @section Scripts {
     <script>
-        // البحث السريع بالاسم (JavaScript)
+        // سكريبت البحث السريع المتطور
         document.getElementById("searchInput").addEventListener("keyup", function () {
             var filter = this.value.toLowerCase();
-            var rows = document.querySelectorAll("#studentsTable tbody tr");
+            var rows = document.querySelectorAll("#studentsTable tbody tr:not(.no-data-row):not(.no-result-row)");
+            var visibleCount = 0;
 
             rows.forEach(row => {
-                var nameCell = row.cells[0];
-                if (nameCell) {
-                    var nameText = nameCell.textContent.toLowerCase();
-                    row.style.display = nameText.includes(filter) ? "" : "none";
+                var nameText = row.cells[0].textContent.toLowerCase();
+                if (nameText.includes(filter)) {
+                    row.style.display = "";
+                    visibleCount++;
+                } else {
+                    row.style.display = "none";
                 }
             });
+
+            // إظهار رسالة "لا توجد نتائج" عند البحث
+            var existingMsg = document.getElementById("noResultMsg");
+            if (visibleCount === 0 && filter !== "") {
+                if (!existingMsg) {
+                    var tbody = document.querySelector("#studentsTable tbody");
+                    var row = tbody.insertRow();
+                    row.id = "noResultMsg";
+                    row.className = "no-result-row";
+                    row.innerHTML = `<td colspan="5" class="text-center py-4 text-danger fw-bold">لا توجد نتائج بحث مطابقة لـ: "${filter}"</td>`;
+                }
+            } else if (existingMsg) {
+                existingMsg.remove();
+            }
         });
     </script>
 }

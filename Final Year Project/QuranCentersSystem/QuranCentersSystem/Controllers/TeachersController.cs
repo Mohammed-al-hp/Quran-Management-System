@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using QuranCentersSystem.Data;
@@ -8,6 +9,7 @@ using System.Threading.Tasks;
 
 namespace QuranCentersSystem.Controllers
 {
+    [Authorize(Roles = "Admin")] // يسمح للمدير فقط
     public class TeachersController : Controller
     {
         private readonly ApplicationDbContext _context;
