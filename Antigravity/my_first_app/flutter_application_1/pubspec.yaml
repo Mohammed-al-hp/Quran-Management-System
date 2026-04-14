@@ -16,7 +16,9 @@ dependencies:
   google_fonts: ^6.2.1
   syncfusion_flutter_charts: ^28.1.1
   animations: ^2.0.11
-  http: ^1.1.0  # المكتبة المطلوبة للاتصال بالسيرفر
+  http: ^1.1.0
+  flutter_secure_storage: ^9.0.0
+  mobile_scanner: ^5.1.1
 
 dev_dependencies:
   flutter_test:

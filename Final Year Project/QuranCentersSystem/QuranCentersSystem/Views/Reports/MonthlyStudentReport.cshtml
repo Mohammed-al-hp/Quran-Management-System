@@ -1,0 +1,253 @@
+@model QuranCentersSystem.Services.MonthlyReportData
+@{
+    Layout = null;
+}
+<!DOCTYPE html>
+<html dir="rtl" lang="ar">
+<head>
+    <meta charset="utf-8" />
+    <title>التقرير الشهري - @Model.StudentName</title>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body {
+            font-family: 'Segoe UI', Tahoma, Arial, sans-serif;
+            direction: rtl;
+            padding: 20px;
+            color: #333;
+            font-size: 13px;
+        }
+        .header {
+            text-align: center;
+            border-bottom: 3px solid #1D5D5D;
+            padding-bottom: 15px;
+            margin-bottom: 20px;
+        }
+        .header h1 {
+            color: #1D5D5D;
+            font-size: 24px;
+            margin-bottom: 5px;
+        }
+        .header h2 {
+            color: #C5A059;
+            font-size: 16px;
+            font-weight: normal;
+        }
+        .info-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 10px;
+            margin-bottom: 20px;
+            background: #f8f9fa;
+            padding: 15px;
+            border-radius: 8px;
+        }
+        .info-item { padding: 5px 0; }
+        .info-item strong { color: #1D5D5D; }
+        .section {
+            margin-bottom: 20px;
+        }
+        .section-title {
+            background: #1D5D5D;
+            color: white;
+            padding: 8px 15px;
+            border-radius: 5px;
+            margin-bottom: 10px;
+            font-size: 15px;
+        }
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 10px;
+            margin-bottom: 15px;
+        }
+        .stat-card {
+            text-align: center;
+            padding: 12px 8px;
+            border-radius: 8px;
+            border: 1px solid #e0e0e0;
+        }
+        .stat-card .value {
+            font-size: 22px;
+            font-weight: bold;
+            display: block;
+        }
+        .stat-card .label {
+            font-size: 11px;
+            color: #666;
+        }
+        .stat-green { background: #e8f5e9; }
+        .stat-green .value { color: #2e7d32; }
+        .stat-red { background: #ffebee; }
+        .stat-red .value { color: #c62828; }
+        .stat-blue { background: #e3f2fd; }
+        .stat-blue .value { color: #1565c0; }
+        .stat-gold { background: #fff8e1; }
+        .stat-gold .value { color: #f57f17; }
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 8px;
+        }
+        th, td {
+            border: 1px solid #ddd;
+            padding: 6px 10px;
+            text-align: right;
+            font-size: 12px;
+        }
+        th {
+            background: #1D5D5D;
+            color: white;
+            font-weight: 600;
+        }
+        tr:nth-child(even) { background: #f8f9fa; }
+        .badge {
+            display: inline-block;
+            padding: 2px 8px;
+            border-radius: 12px;
+            font-size: 11px;
+            font-weight: bold;
+            color: white;
+        }
+        .badge-success { background: #28a745; }
+        .badge-danger { background: #dc3545; }
+        .badge-primary { background: #007bff; }
+        .badge-warning { background: #ffc107; color: #333; }
+        .badge-info { background: #17a2b8; }
+        .assessment {
+            background: linear-gradient(135deg, #1D5D5D, #2a7a7a);
+            color: white;
+            padding: 15px 20px;
+            border-radius: 8px;
+            text-align: center;
+            margin-top: 15px;
+        }
+        .assessment h3 { margin-bottom: 5px; font-size: 16px; }
+        .assessment p { font-size: 14px; opacity: 0.9; }
+        .footer {
+            text-align: center;
+            margin-top: 25px;
+            padding-top: 10px;
+            border-top: 2px solid #e0e0e0;
+            color: #999;
+            font-size: 11px;
+        }
+    </style>
+</head>
+<body>
+    <div class="header">
+        <h1>🕌 نظام إتقان لإدارة مراكز التحفيظ</h1>
+        <h2>التقرير الشهري للطالب</h2>
+    </div>
+
+    <div class="info-grid">
+        <div class="info-item"><strong>اسم الطالب:</strong> @Model.StudentName</div>
+        <div class="info-item"><strong>الحلقة:</strong> @Model.CircleName</div>
+        <div class="info-item"><strong>المحفظ:</strong> @Model.TeacherName</div>
+        <div class="info-item"><strong>الشهر:</strong> @Model.Month</div>
+        <div class="info-item"><strong>تاريخ التقرير:</strong> @Model.ReportDate</div>
+        <div class="info-item"><strong>نسبة الحضور:</strong> @Model.AttendanceRate</div>
+    </div>
+
+    <!-- إحصائيات الحضور -->
+    <div class="section">
+        <div class="section-title">📊 ملخص الحضور</div>
+        <div class="stats-grid">
+            <div class="stat-card stat-blue">
+                <span class="value">@Model.TotalDays</span>
+                <span class="label">إجمالي الأيام</span>
+            </div>
+            <div class="stat-card stat-green">
+                <span class="value">@Model.PresentDays</span>
+                <span class="label">أيام الحضور</span>
+            </div>
+            <div class="stat-card stat-red">
+                <span class="value">@Model.AbsentDays</span>
+                <span class="label">أيام الغياب</span>
+            </div>
+            <div class="stat-card stat-gold">
+                <span class="value">@Model.AttendanceRate</span>
+                <span class="label">نسبة الحضور</span>
+            </div>
+        </div>
+    </div>
+
+    <!-- إحصائيات الحفظ -->
+    <div class="section">
+        <div class="section-title">📖 ملخص الحفظ والتقييم</div>
+        <div class="stats-grid">
+            <div class="stat-card stat-green">
+                <span class="value">@Model.ExcellentCount</span>
+                <span class="label">ممتاز</span>
+            </div>
+            <div class="stat-card stat-blue">
+                <span class="value">@Model.VeryGoodCount</span>
+                <span class="label">جيد جداً</span>
+            </div>
+            <div class="stat-card stat-gold">
+                <span class="value">@Model.GoodCount</span>
+                <span class="label">جيد</span>
+            </div>
+            <div class="stat-card stat-red">
+                <span class="value">@Model.FairCount</span>
+                <span class="label">مقبول</span>
+            </div>
+        </div>
+    </div>
+
+    <!-- جدول تفاصيل الحفظ -->
+    @if (Model.Memorizations != null && Model.Memorizations.Any())
+    {
+        <div class="section">
+            <div class="section-title">📝 تفاصيل سجلات الحفظ</div>
+            <table>
+                <thead>
+                    <tr>
+                        <th>التاريخ</th>
+                        <th>السورة</th>
+                        <th>النوع</th>
+                        <th>من آية</th>
+                        <th>إلى آية</th>
+                        <th>التقييم</th>
+                        <th>الأخطاء</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach (var m in Model.Memorizations)
+                    {
+                        <tr>
+                            <td>@m.Date.ToString("MM/dd")</td>
+                            <td>@m.SurahName</td>
+                            <td>@m.Type</td>
+                            <td>@m.FromAyah</td>
+                            <td>@m.ToAyah</td>
+                            <td>
+                                @{
+                                    string cls = m.Grade switch
+                                    {
+                                        "ممتاز" => "badge-success",
+                                        "جيد جداً" => "badge-primary",
+                                        "جيد" => "badge-info",
+                                        _ => "badge-warning"
+                                    };
+                                }
+                                <span class="badge @cls">@m.Grade</span>
+                            </td>
+                            <td>@m.MistakesCount</td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        </div>
+    }
+
+    <!-- التقييم الشامل -->
+    <div class="assessment">
+        <h3>🏆 التقييم الشامل</h3>
+        <p>@Model.OverallAssessment</p>
+    </div>
+
+    <div class="footer">
+        <p>تم إنشاء هذا التقرير آلياً بواسطة نظام إتقان لإدارة مراكز التحفيظ | @Model.ReportDate</p>
+    </div>
+</body>
+</html>

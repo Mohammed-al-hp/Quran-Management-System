@@ -390,6 +390,44 @@ namespace QuranCentersSystem.Migrations
                     b.ToTable("MemorizationQuestions");
                 });
 
+            modelBuilder.Entity("QuranCentersSystem.Models.Notification", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<DateTime>("CreatedAt")
+                        .HasColumnType("datetime2");
+
+                    b.Property<bool>("IsRead")
+                        .HasColumnType("bit");
+
+                    b.Property<string>("Message")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<int?>("RelatedEntityId")
+                        .HasColumnType("int");
+
+                    b.Property<string>("Title")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("Type")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("UserId")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("Notifications");
+                });
+
             modelBuilder.Entity("QuranCentersSystem.Models.Parent", b =>
                 {
                     b.Property<int>("Id")
@@ -412,7 +450,7 @@ namespace QuranCentersSystem.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("Parent");
+                    b.ToTable("Parent", (string)null);
                 });
 
             modelBuilder.Entity("QuranCentersSystem.Models.Payment", b =>
@@ -475,6 +513,9 @@ namespace QuranCentersSystem.Migrations
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
+                    b.Property<string>("ParentEmail")
+                        .HasColumnType("nvarchar(max)");
+
                     b.Property<int?>("ParentId")
                         .HasColumnType("int");
 
@@ -484,6 +525,9 @@ namespace QuranCentersSystem.Migrations
 
                     b.Property<string>("Phone")
                         .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("QrCodeToken")
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("Status")

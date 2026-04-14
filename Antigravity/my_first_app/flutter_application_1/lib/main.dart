@@ -7,6 +7,10 @@ import 'providers/quran_center_provider.dart';
 import 'screens/dashboard_screen.dart';
 import 'screens/circles_screen.dart';
 import 'screens/teachers_list_screen.dart';
+import 'screens/qr_scanner_screen.dart';
+import 'screens/notifications_screen.dart';
+import 'screens/student_progress_screen.dart';
+import 'services/api_service.dart';
 
 void main() {
   runApp(const QuranCenterApp());
@@ -121,7 +125,7 @@ class OnboardingScreen extends StatelessWidget {
   }
 }
 
-// --- واجهة تسجيل الدخول المعدلة بالربط ---
+// --- واجهة تسجيل الدخول مع JWT ---
 class LoginScreen extends StatefulWidget {
   const LoginScreen({super.key});
 
@@ -132,42 +136,64 @@ class LoginScreen extends StatefulWidget {
 class _LoginScreenState extends State<LoginScreen> {
   final TextEditingController _usernameController = TextEditingController();
   final TextEditingController _passwordController = TextEditingController();
+  final ApiService _apiService = ApiService();
   bool _isLoading = false;
 
   Future<void> _login() async {
+    if (_usernameController.text.isEmpty || _passwordController.text.isEmpty) {
+      _showError('يرجى إدخال البريد الإلكتروني وكلمة المرور');
+      return;
+    }
+
     setState(() => _isLoading = true);
     try {
-      // الرابط المسجل في مشروع الـ ASP.NET الخاص بك
-      final url = Uri.parse('https://localhost:7174/api/auth/login');
-
-      final response = await http.post(
-        url,
-        headers: {'Content-Type': 'application/json'},
-        body: jsonEncode({
-          'email': _usernameController.text, // تم التغيير هنا
-          'password': _passwordController.text,
-        }),
+      final result = await _apiService.login(
+        _usernameController.text.trim(),
+        _passwordController.text,
       );
 
-      if (response.statusCode == 200) {
-        if (mounted) {
-          Navigator.pushReplacement(
-            context,
-            MaterialPageRoute(builder: (context) => const MainScreen()),
-          );
+      if (result['success'] == true && mounted) {
+        final role = result['role'] ?? 'Student';
+
+        // التوجيه حسب الدور
+        Widget targetScreen;
+        switch (role) {
+          case 'Admin':
+            targetScreen = const MainScreen();
+            break;
+          case 'Teacher':
+            targetScreen = const TeacherMainScreen();
+            break;
+          case 'Parent':
+            targetScreen = ParentMainScreen(userId: result['userId'] ?? '');
+            break;
+          default:
+            targetScreen = const MainScreen();
         }
+
+        Navigator.pushReplacement(
+          context,
+          MaterialPageRoute(builder: (context) => targetScreen),
+        );
       } else {
-        _showError('بيانات الدخول غير صحيحة');
+        _showError(result['message'] ?? 'بيانات الدخول غير صحيحة');
       }
     } catch (e) {
-      _showError('تعذر الاتصال بالسيرفر. تأكد من تشغيله وتجاوز حماية Chrome');
+      _showError('تعذر الاتصال بالسيرفر. تأكد من تشغيله');
     } finally {
-      setState(() => _isLoading = false);
+      if (mounted) setState(() => _isLoading = false);
     }
   }
 
   void _showError(String msg) {
-    ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text(msg)));
+    ScaffoldMessenger.of(context).showSnackBar(
+      SnackBar(
+        content: Text(msg),
+        backgroundColor: Colors.red[700],
+        behavior: SnackBarBehavior.floating,
+        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
+      ),
+    );
   }
 
   @override
@@ -195,8 +221,9 @@ class _LoginScreenState extends State<LoginScreen> {
               TextFormField(
                 controller: _usernameController,
                 textAlign: TextAlign.right,
+                keyboardType: TextInputType.emailAddress,
                 decoration: InputDecoration(
-                  hintText: 'إسم المستخدم',
+                  hintText: 'البريد الإلكتروني',
                   prefixIcon: const Icon(
                     Icons.person_outline,
                     color: primaryTeal,
@@ -227,6 +254,7 @@ class _LoginScreenState extends State<LoginScreen> {
                     borderSide: BorderSide.none,
                   ),
                 ),
+                onFieldSubmitted: (_) => _login(),
               ),
               const SizedBox(height: 35),
               SizedBox(
@@ -260,7 +288,7 @@ class _LoginScreenState extends State<LoginScreen> {
   }
 }
 
-// --- الشاشة الرئيسية ---
+// --- الشاشة الرئيسية للمدير ---
 class MainScreen extends StatefulWidget {
   const MainScreen({Key? key}) : super(key: key);
   @override
@@ -271,8 +299,10 @@ class _MainScreenState extends State<MainScreen> {
   int _currentIndex = 0;
   final List<Widget> _screens = [
     const DashboardScreen(),
+    const QrScannerScreen(),
     const CirclesScreen(),
     const TeachersListScreen(),
+    const NotificationsScreen(),
   ];
 
   @override
@@ -294,6 +324,10 @@ class _MainScreenState extends State<MainScreen> {
             label: 'الرئيسية',
           ),
           BottomNavigationBarItem(
+            icon: Icon(Icons.qr_code_scanner_rounded),
+            label: 'مسح QR',
+          ),
+          BottomNavigationBarItem(
             icon: Icon(Icons.group_work_rounded),
             label: 'الحلقات',
           ),
@@ -301,7 +335,165 @@ class _MainScreenState extends State<MainScreen> {
             icon: Icon(Icons.people_alt_rounded),
             label: 'المحفظين',
           ),
+          BottomNavigationBarItem(
+            icon: Icon(Icons.notifications_rounded),
+            label: 'الإشعارات',
+          ),
         ],
+      ),
+    );
+  }
+}
+
+// --- الشاشة الرئيسية للمحفظ ---
+class TeacherMainScreen extends StatefulWidget {
+  const TeacherMainScreen({Key? key}) : super(key: key);
+  @override
+  State<TeacherMainScreen> createState() => _TeacherMainScreenState();
+}
+
+class _TeacherMainScreenState extends State<TeacherMainScreen> {
+  int _currentIndex = 0;
+  final List<Widget> _screens = [
+    const DashboardScreen(),
+    const QrScannerScreen(),
+    const CirclesScreen(),
+    const NotificationsScreen(),
+  ];
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      body: AnimatedSwitcher(
+        duration: const Duration(milliseconds: 300),
+        child: _screens[_currentIndex],
+      ),
+      bottomNavigationBar: BottomNavigationBar(
+        currentIndex: _currentIndex,
+        onTap: (index) => setState(() => _currentIndex = index),
+        selectedItemColor: const Color(0xFF1D5D5D),
+        unselectedItemColor: Colors.grey,
+        type: BottomNavigationBarType.fixed,
+        items: const [
+          BottomNavigationBarItem(
+            icon: Icon(Icons.dashboard_rounded),
+            label: 'الرئيسية',
+          ),
+          BottomNavigationBarItem(
+            icon: Icon(Icons.qr_code_scanner_rounded),
+            label: 'مسح QR',
+          ),
+          BottomNavigationBarItem(
+            icon: Icon(Icons.group_work_rounded),
+            label: 'الحلقات',
+          ),
+          BottomNavigationBarItem(
+            icon: Icon(Icons.notifications_rounded),
+            label: 'الإشعارات',
+          ),
+        ],
+      ),
+    );
+  }
+}
+
+// --- الشاشة الرئيسية لولي الأمر ---
+class ParentMainScreen extends StatelessWidget {
+  final String userId;
+  const ParentMainScreen({Key? key, required this.userId}) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    const Color primaryTeal = Color(0xFF1D5D5D);
+
+    return Scaffold(
+      appBar: AppBar(
+        title: const Text('متابعة أبنائي', style: TextStyle(fontWeight: FontWeight.bold)),
+        backgroundColor: primaryTeal,
+        foregroundColor: Colors.white,
+        actions: [
+          IconButton(
+            icon: const Icon(Icons.notifications),
+            onPressed: () => Navigator.push(
+              context,
+              MaterialPageRoute(builder: (_) => const NotificationsScreen()),
+            ),
+          ),
+          IconButton(
+            icon: const Icon(Icons.logout),
+            onPressed: () async {
+              await ApiService.logout();
+              if (context.mounted) {
+                Navigator.pushAndRemoveUntil(
+                  context,
+                  MaterialPageRoute(builder: (_) => const OnboardingScreen()),
+                  (route) => false,
+                );
+              }
+            },
+          ),
+        ],
+      ),
+      body: FutureBuilder<List<dynamic>>(
+        future: ApiService().getStudents(),
+        builder: (context, snapshot) {
+          if (snapshot.connectionState == ConnectionState.waiting) {
+            return const Center(child: CircularProgressIndicator());
+          }
+
+          final students = snapshot.data ?? [];
+          if (students.isEmpty) {
+            return Center(
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  Icon(Icons.child_care, size: 80, color: Colors.grey[300]),
+                  const SizedBox(height: 16),
+                  Text(
+                    'لم يتم ربط أي طالب بحسابك بعد',
+                    style: TextStyle(fontSize: 16, color: Colors.grey[500]),
+                  ),
+                ],
+              ),
+            );
+          }
+
+          return ListView.builder(
+            padding: const EdgeInsets.all(16),
+            itemCount: students.length,
+            itemBuilder: (context, index) {
+              final student = students[index];
+              return Card(
+                elevation: 2,
+                margin: const EdgeInsets.only(bottom: 12),
+                shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
+                child: ListTile(
+                  contentPadding: const EdgeInsets.all(16),
+                  leading: CircleAvatar(
+                    radius: 28,
+                    backgroundColor: primaryTeal.withOpacity(0.1),
+                    child: const Icon(Icons.person, color: primaryTeal, size: 30),
+                  ),
+                  title: Text(
+                    student['name'] ?? '',
+                    style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 17),
+                  ),
+                  subtitle: Text(
+                    student['circleName'] ?? 'غير محدد',
+                    style: TextStyle(color: Colors.grey[600]),
+                  ),
+                  trailing: const Icon(Icons.arrow_forward_ios, color: primaryTeal),
+                  onTap: () => Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                      builder: (_) => StudentProgressScreen(studentId: student['id']),
+                    ),
+                  ),
+                ),
+              );
+            },
+          );
+        },
       ),
     );
   }

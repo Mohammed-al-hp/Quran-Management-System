@@ -1,4 +1,4 @@
-﻿using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using QuranCentersSystem.Data;
@@ -6,6 +6,10 @@ using QuranCentersSystem.Models;
 
 namespace QuranCentersSystem.Controllers
 {
+    /// <summary>
+    /// متحكم المستخدمين - إدارة حسابات النظام (للمدير فقط)
+    /// </summary>
+    [Microsoft.AspNetCore.Authorization.Authorize(Roles = "Admin")]
     public class UsersController : Controller
     {
         private readonly ApplicationDbContext _context;

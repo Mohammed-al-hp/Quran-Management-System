@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
@@ -30,6 +30,12 @@ namespace QuranCentersSystem.Models
         public bool AgreedToTerms { get; set; }
         public string Status { get; set; } = "نشط";
         public DateTime JoinDate { get; set; } = DateTime.Now;
+
+        [Display(Name = "بريد ولي الأمر")]
+        public string? ParentEmail { get; set; }
+
+        [Display(Name = "رمز QR")]
+        public string? QrCodeToken { get; set; }
 
         public int CircleId { get; set; }
         public virtual Circle Circle { get; set; }

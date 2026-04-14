@@ -1,4 +1,4 @@
-﻿using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
@@ -89,13 +89,22 @@ namespace QuranCentersSystem.Controllers
         public async Task<IActionResult> ChildDetails(int id)
         {
             var currentUser = await _userManager.GetUserAsync(User);
+            if (currentUser == null) return Challenge();
+
             var student = await _context.Students
+                .Include(s => s.Parent)
                 .Include(s => s.Attendances)
                 .Include(s => s.Memorizations)
                 .Include(s => s.Payments)
                 .FirstOrDefaultAsync(s => s.Id == id);
 
-            if (student == null || student.Parent.Email != currentUser.Email)
+            // التحقق من وجود الطالب وأن ولي الأمر هو المالك الصحيح
+            if (student == null)
+            {
+                return NotFound();
+            }
+
+            if (student.Parent == null || student.Parent.Email != currentUser.Email)
             {
                 return Forbid();
             }

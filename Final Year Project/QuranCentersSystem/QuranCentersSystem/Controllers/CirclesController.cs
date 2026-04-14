@@ -1,4 +1,4 @@
-﻿using System.Linq;
+using System.Linq;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
@@ -7,6 +7,10 @@ using QuranCentersSystem.Models;
 
 namespace QuranCentersSystem.Controllers
 {
+    /// <summary>
+    /// متحكم الحلقات - إدارة حلقات التحفيظ (للمدير فقط)
+    /// </summary>
+    [Microsoft.AspNetCore.Authorization.Authorize(Roles = "Admin")]
     public class CirclesController : Controller
     {
         private readonly ApplicationDbContext _context;

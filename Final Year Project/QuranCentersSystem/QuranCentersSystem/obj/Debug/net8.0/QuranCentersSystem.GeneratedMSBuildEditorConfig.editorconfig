@@ -17,181 +17,193 @@ build_property._SupportedPlatformList = Linux,macOS,Windows
 build_property._SupportedPlatformList = Linux,macOS,Windows
 build_property.RootNamespace = QuranCentersSystem
 build_property.RootNamespace = QuranCentersSystem
-build_property.ProjectDir = C:\Master_Project\Final Year Project\QuranCentersSystem\QuranCentersSystem\
+build_property.ProjectDir = C:\New folder (2)\Quran-Management-System\Final Year Project\QuranCentersSystem\QuranCentersSystem\
 build_property.EnableComHosting = 
 build_property.EnableGeneratedComInterfaceComImportInterop = 
 build_property.RazorLangVersion = 8.0
 build_property.SupportLocalizedComponentNames = 
 build_property.GenerateRazorMetadataSourceChecksumAttributes = 
-build_property.MSBuildProjectDirectory = C:\Master_Project\Final Year Project\QuranCentersSystem\QuranCentersSystem
+build_property.MSBuildProjectDirectory = C:\New folder (2)\Quran-Management-System\Final Year Project\QuranCentersSystem\QuranCentersSystem
 build_property._RazorSourceGeneratorDebug = 
 build_property.EffectiveAnalysisLevelStyle = 8.0
 build_property.EnableCodeStyleSeverity = 
 
-[C:/Master_Project/Final Year Project/QuranCentersSystem/QuranCentersSystem/Areas/Identity/Pages/Account/Login.cshtml]
+[C:/New folder (2)/Quran-Management-System/Final Year Project/QuranCentersSystem/QuranCentersSystem/Areas/Identity/Pages/Account/Login.cshtml]
 build_metadata.AdditionalFiles.TargetPath = QXJlYXNcSWRlbnRpdHlcUGFnZXNcQWNjb3VudFxMb2dpbi5jc2h0bWw=
 build_metadata.AdditionalFiles.CssScope = 
 
-[C:/Master_Project/Final Year Project/QuranCentersSystem/QuranCentersSystem/Areas/Identity/Pages/Account/Register.cshtml]
+[C:/New folder (2)/Quran-Management-System/Final Year Project/QuranCentersSystem/QuranCentersSystem/Areas/Identity/Pages/Account/Register.cshtml]
 build_metadata.AdditionalFiles.TargetPath = QXJlYXNcSWRlbnRpdHlcUGFnZXNcQWNjb3VudFxSZWdpc3Rlci5jc2h0bWw=
 build_metadata.AdditionalFiles.CssScope = 
 
-[C:/Master_Project/Final Year Project/QuranCentersSystem/QuranCentersSystem/Areas/Identity/Pages/Account/_ViewImports.cshtml]
+[C:/New folder (2)/Quran-Management-System/Final Year Project/QuranCentersSystem/QuranCentersSystem/Areas/Identity/Pages/Account/_ViewImports.cshtml]
 build_metadata.AdditionalFiles.TargetPath = QXJlYXNcSWRlbnRpdHlcUGFnZXNcQWNjb3VudFxfVmlld0ltcG9ydHMuY3NodG1s
 build_metadata.AdditionalFiles.CssScope = 
 
-[C:/Master_Project/Final Year Project/QuranCentersSystem/QuranCentersSystem/Areas/Identity/Pages/_ValidationScriptsPartial.cshtml]
+[C:/New folder (2)/Quran-Management-System/Final Year Project/QuranCentersSystem/QuranCentersSystem/Areas/Identity/Pages/_ValidationScriptsPartial.cshtml]
 build_metadata.AdditionalFiles.TargetPath = QXJlYXNcSWRlbnRpdHlcUGFnZXNcX1ZhbGlkYXRpb25TY3JpcHRzUGFydGlhbC5jc2h0bWw=
 build_metadata.AdditionalFiles.CssScope = 
 
-[C:/Master_Project/Final Year Project/QuranCentersSystem/QuranCentersSystem/Areas/Identity/Pages/_ViewImports.cshtml]
+[C:/New folder (2)/Quran-Management-System/Final Year Project/QuranCentersSystem/QuranCentersSystem/Areas/Identity/Pages/_ViewImports.cshtml]
 build_metadata.AdditionalFiles.TargetPath = QXJlYXNcSWRlbnRpdHlcUGFnZXNcX1ZpZXdJbXBvcnRzLmNzaHRtbA==
 build_metadata.AdditionalFiles.CssScope = 
 
-[C:/Master_Project/Final Year Project/QuranCentersSystem/QuranCentersSystem/Areas/Identity/Pages/_ViewStart.cshtml]
+[C:/New folder (2)/Quran-Management-System/Final Year Project/QuranCentersSystem/QuranCentersSystem/Areas/Identity/Pages/_ViewStart.cshtml]
 build_metadata.AdditionalFiles.TargetPath = QXJlYXNcSWRlbnRpdHlcUGFnZXNcX1ZpZXdTdGFydC5jc2h0bWw=
 build_metadata.AdditionalFiles.CssScope = 
 
-[C:/Master_Project/Final Year Project/QuranCentersSystem/QuranCentersSystem/Views/Attendances/Create.cshtml]
+[C:/New folder (2)/Quran-Management-System/Final Year Project/QuranCentersSystem/QuranCentersSystem/Views/Attendances/Create.cshtml]
 build_metadata.AdditionalFiles.TargetPath = Vmlld3NcQXR0ZW5kYW5jZXNcQ3JlYXRlLmNzaHRtbA==
 build_metadata.AdditionalFiles.CssScope = 
 
-[C:/Master_Project/Final Year Project/QuranCentersSystem/QuranCentersSystem/Views/Attendances/GroupAttendance.cshtml]
+[C:/New folder (2)/Quran-Management-System/Final Year Project/QuranCentersSystem/QuranCentersSystem/Views/Attendances/GroupAttendance.cshtml]
 build_metadata.AdditionalFiles.TargetPath = Vmlld3NcQXR0ZW5kYW5jZXNcR3JvdXBBdHRlbmRhbmNlLmNzaHRtbA==
 build_metadata.AdditionalFiles.CssScope = 
 
-[C:/Master_Project/Final Year Project/QuranCentersSystem/QuranCentersSystem/Views/Attendances/Index.cshtml]
+[C:/New folder (2)/Quran-Management-System/Final Year Project/QuranCentersSystem/QuranCentersSystem/Views/Attendances/Index.cshtml]
 build_metadata.AdditionalFiles.TargetPath = Vmlld3NcQXR0ZW5kYW5jZXNcSW5kZXguY3NodG1s
 build_metadata.AdditionalFiles.CssScope = 
 
-[C:/Master_Project/Final Year Project/QuranCentersSystem/QuranCentersSystem/Views/Circles/Create.cshtml]
+[C:/New folder (2)/Quran-Management-System/Final Year Project/QuranCentersSystem/QuranCentersSystem/Views/Circles/Create.cshtml]
 build_metadata.AdditionalFiles.TargetPath = Vmlld3NcQ2lyY2xlc1xDcmVhdGUuY3NodG1s
 build_metadata.AdditionalFiles.CssScope = 
 
-[C:/Master_Project/Final Year Project/QuranCentersSystem/QuranCentersSystem/Views/Circles/Index.cshtml]
+[C:/New folder (2)/Quran-Management-System/Final Year Project/QuranCentersSystem/QuranCentersSystem/Views/Circles/Index.cshtml]
 build_metadata.AdditionalFiles.TargetPath = Vmlld3NcQ2lyY2xlc1xJbmRleC5jc2h0bWw=
 build_metadata.AdditionalFiles.CssScope = 
 
-[C:/Master_Project/Final Year Project/QuranCentersSystem/QuranCentersSystem/Views/Home/Index.cshtml]
+[C:/New folder (2)/Quran-Management-System/Final Year Project/QuranCentersSystem/QuranCentersSystem/Views/Home/Index.cshtml]
 build_metadata.AdditionalFiles.TargetPath = Vmlld3NcSG9tZVxJbmRleC5jc2h0bWw=
 build_metadata.AdditionalFiles.CssScope = 
 
-[C:/Master_Project/Final Year Project/QuranCentersSystem/QuranCentersSystem/Views/Home/Privacy.cshtml]
+[C:/New folder (2)/Quran-Management-System/Final Year Project/QuranCentersSystem/QuranCentersSystem/Views/Home/Privacy.cshtml]
 build_metadata.AdditionalFiles.TargetPath = Vmlld3NcSG9tZVxQcml2YWN5LmNzaHRtbA==
 build_metadata.AdditionalFiles.CssScope = 
 
-[C:/Master_Project/Final Year Project/QuranCentersSystem/QuranCentersSystem/Views/Memorizations/Create.cshtml]
+[C:/New folder (2)/Quran-Management-System/Final Year Project/QuranCentersSystem/QuranCentersSystem/Views/Home/StudentDashboard.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3NcSG9tZVxTdHVkZW50RGFzaGJvYXJkLmNzaHRtbA==
+build_metadata.AdditionalFiles.CssScope = 
+
+[C:/New folder (2)/Quran-Management-System/Final Year Project/QuranCentersSystem/QuranCentersSystem/Views/Home/TeacherDashboard.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3NcSG9tZVxUZWFjaGVyRGFzaGJvYXJkLmNzaHRtbA==
+build_metadata.AdditionalFiles.CssScope = 
+
+[C:/New folder (2)/Quran-Management-System/Final Year Project/QuranCentersSystem/QuranCentersSystem/Views/Memorizations/Create.cshtml]
 build_metadata.AdditionalFiles.TargetPath = Vmlld3NcTWVtb3JpemF0aW9uc1xDcmVhdGUuY3NodG1s
 build_metadata.AdditionalFiles.CssScope = 
 
-[C:/Master_Project/Final Year Project/QuranCentersSystem/QuranCentersSystem/Views/Memorizations/DailyRecord.cshtml]
+[C:/New folder (2)/Quran-Management-System/Final Year Project/QuranCentersSystem/QuranCentersSystem/Views/Memorizations/DailyRecord.cshtml]
 build_metadata.AdditionalFiles.TargetPath = Vmlld3NcTWVtb3JpemF0aW9uc1xEYWlseVJlY29yZC5jc2h0bWw=
 build_metadata.AdditionalFiles.CssScope = 
 
-[C:/Master_Project/Final Year Project/QuranCentersSystem/QuranCentersSystem/Views/Memorizations/Delete.cshtml]
+[C:/New folder (2)/Quran-Management-System/Final Year Project/QuranCentersSystem/QuranCentersSystem/Views/Memorizations/Delete.cshtml]
 build_metadata.AdditionalFiles.TargetPath = Vmlld3NcTWVtb3JpemF0aW9uc1xEZWxldGUuY3NodG1s
 build_metadata.AdditionalFiles.CssScope = 
 
-[C:/Master_Project/Final Year Project/QuranCentersSystem/QuranCentersSystem/Views/Memorizations/Details.cshtml]
+[C:/New folder (2)/Quran-Management-System/Final Year Project/QuranCentersSystem/QuranCentersSystem/Views/Memorizations/Details.cshtml]
 build_metadata.AdditionalFiles.TargetPath = Vmlld3NcTWVtb3JpemF0aW9uc1xEZXRhaWxzLmNzaHRtbA==
 build_metadata.AdditionalFiles.CssScope = 
 
-[C:/Master_Project/Final Year Project/QuranCentersSystem/QuranCentersSystem/Views/Memorizations/Edit.cshtml]
+[C:/New folder (2)/Quran-Management-System/Final Year Project/QuranCentersSystem/QuranCentersSystem/Views/Memorizations/Edit.cshtml]
 build_metadata.AdditionalFiles.TargetPath = Vmlld3NcTWVtb3JpemF0aW9uc1xFZGl0LmNzaHRtbA==
 build_metadata.AdditionalFiles.CssScope = 
 
-[C:/Master_Project/Final Year Project/QuranCentersSystem/QuranCentersSystem/Views/Memorizations/FollowUp.cshtml]
+[C:/New folder (2)/Quran-Management-System/Final Year Project/QuranCentersSystem/QuranCentersSystem/Views/Memorizations/FollowUp.cshtml]
 build_metadata.AdditionalFiles.TargetPath = Vmlld3NcTWVtb3JpemF0aW9uc1xGb2xsb3dVcC5jc2h0bWw=
 build_metadata.AdditionalFiles.CssScope = 
 
-[C:/Master_Project/Final Year Project/QuranCentersSystem/QuranCentersSystem/Views/Memorizations/Index.cshtml]
+[C:/New folder (2)/Quran-Management-System/Final Year Project/QuranCentersSystem/QuranCentersSystem/Views/Memorizations/Index.cshtml]
 build_metadata.AdditionalFiles.TargetPath = Vmlld3NcTWVtb3JpemF0aW9uc1xJbmRleC5jc2h0bWw=
 build_metadata.AdditionalFiles.CssScope = 
 
-[C:/Master_Project/Final Year Project/QuranCentersSystem/QuranCentersSystem/Views/ParentDash/Create.cshtml]
+[C:/New folder (2)/Quran-Management-System/Final Year Project/QuranCentersSystem/QuranCentersSystem/Views/ParentDash/Create.cshtml]
 build_metadata.AdditionalFiles.TargetPath = Vmlld3NcUGFyZW50RGFzaFxDcmVhdGUuY3NodG1s
 build_metadata.AdditionalFiles.CssScope = 
 
-[C:/Master_Project/Final Year Project/QuranCentersSystem/QuranCentersSystem/Views/ParentDash/Index.cshtml]
+[C:/New folder (2)/Quran-Management-System/Final Year Project/QuranCentersSystem/QuranCentersSystem/Views/ParentDash/Index.cshtml]
 build_metadata.AdditionalFiles.TargetPath = Vmlld3NcUGFyZW50RGFzaFxJbmRleC5jc2h0bWw=
 build_metadata.AdditionalFiles.CssScope = 
 
-[C:/Master_Project/Final Year Project/QuranCentersSystem/QuranCentersSystem/Views/Payments/Create.cshtml]
+[C:/New folder (2)/Quran-Management-System/Final Year Project/QuranCentersSystem/QuranCentersSystem/Views/Payments/Create.cshtml]
 build_metadata.AdditionalFiles.TargetPath = Vmlld3NcUGF5bWVudHNcQ3JlYXRlLmNzaHRtbA==
 build_metadata.AdditionalFiles.CssScope = 
 
-[C:/Master_Project/Final Year Project/QuranCentersSystem/QuranCentersSystem/Views/Payments/Index.cshtml]
+[C:/New folder (2)/Quran-Management-System/Final Year Project/QuranCentersSystem/QuranCentersSystem/Views/Payments/Index.cshtml]
 build_metadata.AdditionalFiles.TargetPath = Vmlld3NcUGF5bWVudHNcSW5kZXguY3NodG1s
 build_metadata.AdditionalFiles.CssScope = 
 
-[C:/Master_Project/Final Year Project/QuranCentersSystem/QuranCentersSystem/Views/Reports/StudentReport.cshtml]
+[C:/New folder (2)/Quran-Management-System/Final Year Project/QuranCentersSystem/QuranCentersSystem/Views/Reports/MonthlyStudentReport.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3NcUmVwb3J0c1xNb250aGx5U3R1ZGVudFJlcG9ydC5jc2h0bWw=
+build_metadata.AdditionalFiles.CssScope = 
+
+[C:/New folder (2)/Quran-Management-System/Final Year Project/QuranCentersSystem/QuranCentersSystem/Views/Reports/StudentReport.cshtml]
 build_metadata.AdditionalFiles.TargetPath = Vmlld3NcUmVwb3J0c1xTdHVkZW50UmVwb3J0LmNzaHRtbA==
 build_metadata.AdditionalFiles.CssScope = 
 
-[C:/Master_Project/Final Year Project/QuranCentersSystem/QuranCentersSystem/Views/Shared/Error.cshtml]
+[C:/New folder (2)/Quran-Management-System/Final Year Project/QuranCentersSystem/QuranCentersSystem/Views/Shared/Error.cshtml]
 build_metadata.AdditionalFiles.TargetPath = Vmlld3NcU2hhcmVkXEVycm9yLmNzaHRtbA==
 build_metadata.AdditionalFiles.CssScope = 
 
-[C:/Master_Project/Final Year Project/QuranCentersSystem/QuranCentersSystem/Views/Shared/_LoginPartial.cshtml]
+[C:/New folder (2)/Quran-Management-System/Final Year Project/QuranCentersSystem/QuranCentersSystem/Views/Shared/_LoginPartial.cshtml]
 build_metadata.AdditionalFiles.TargetPath = Vmlld3NcU2hhcmVkXF9Mb2dpblBhcnRpYWwuY3NodG1s
 build_metadata.AdditionalFiles.CssScope = 
 
-[C:/Master_Project/Final Year Project/QuranCentersSystem/QuranCentersSystem/Views/Shared/_ValidationScriptsPartial.cshtml]
+[C:/New folder (2)/Quran-Management-System/Final Year Project/QuranCentersSystem/QuranCentersSystem/Views/Shared/_ValidationScriptsPartial.cshtml]
 build_metadata.AdditionalFiles.TargetPath = Vmlld3NcU2hhcmVkXF9WYWxpZGF0aW9uU2NyaXB0c1BhcnRpYWwuY3NodG1s
 build_metadata.AdditionalFiles.CssScope = 
 
-[C:/Master_Project/Final Year Project/QuranCentersSystem/QuranCentersSystem/Views/Students/Create.cshtml]
+[C:/New folder (2)/Quran-Management-System/Final Year Project/QuranCentersSystem/QuranCentersSystem/Views/Students/Create.cshtml]
 build_metadata.AdditionalFiles.TargetPath = Vmlld3NcU3R1ZGVudHNcQ3JlYXRlLmNzaHRtbA==
 build_metadata.AdditionalFiles.CssScope = 
 
-[C:/Master_Project/Final Year Project/QuranCentersSystem/QuranCentersSystem/Views/Students/Delete.cshtml]
+[C:/New folder (2)/Quran-Management-System/Final Year Project/QuranCentersSystem/QuranCentersSystem/Views/Students/Delete.cshtml]
 build_metadata.AdditionalFiles.TargetPath = Vmlld3NcU3R1ZGVudHNcRGVsZXRlLmNzaHRtbA==
 build_metadata.AdditionalFiles.CssScope = 
 
-[C:/Master_Project/Final Year Project/QuranCentersSystem/QuranCentersSystem/Views/Students/Details.cshtml]
+[C:/New folder (2)/Quran-Management-System/Final Year Project/QuranCentersSystem/QuranCentersSystem/Views/Students/Details.cshtml]
 build_metadata.AdditionalFiles.TargetPath = Vmlld3NcU3R1ZGVudHNcRGV0YWlscy5jc2h0bWw=
 build_metadata.AdditionalFiles.CssScope = 
 
-[C:/Master_Project/Final Year Project/QuranCentersSystem/QuranCentersSystem/Views/Students/Edit.cshtml]
+[C:/New folder (2)/Quran-Management-System/Final Year Project/QuranCentersSystem/QuranCentersSystem/Views/Students/Edit.cshtml]
 build_metadata.AdditionalFiles.TargetPath = Vmlld3NcU3R1ZGVudHNcRWRpdC5jc2h0bWw=
 build_metadata.AdditionalFiles.CssScope = 
 
-[C:/Master_Project/Final Year Project/QuranCentersSystem/QuranCentersSystem/Views/Students/Index.cshtml]
+[C:/New folder (2)/Quran-Management-System/Final Year Project/QuranCentersSystem/QuranCentersSystem/Views/Students/Index.cshtml]
 build_metadata.AdditionalFiles.TargetPath = Vmlld3NcU3R1ZGVudHNcSW5kZXguY3NodG1s
 build_metadata.AdditionalFiles.CssScope = 
 
-[C:/Master_Project/Final Year Project/QuranCentersSystem/QuranCentersSystem/Views/Students/StudentReportPDF.cshtml]
+[C:/New folder (2)/Quran-Management-System/Final Year Project/QuranCentersSystem/QuranCentersSystem/Views/Students/StudentReportPDF.cshtml]
 build_metadata.AdditionalFiles.TargetPath = Vmlld3NcU3R1ZGVudHNcU3R1ZGVudFJlcG9ydFBERi5jc2h0bWw=
 build_metadata.AdditionalFiles.CssScope = 
 
-[C:/Master_Project/Final Year Project/QuranCentersSystem/QuranCentersSystem/Views/Teachers/Create.cshtml]
+[C:/New folder (2)/Quran-Management-System/Final Year Project/QuranCentersSystem/QuranCentersSystem/Views/Teachers/Create.cshtml]
 build_metadata.AdditionalFiles.TargetPath = Vmlld3NcVGVhY2hlcnNcQ3JlYXRlLmNzaHRtbA==
 build_metadata.AdditionalFiles.CssScope = 
 
-[C:/Master_Project/Final Year Project/QuranCentersSystem/QuranCentersSystem/Views/Teachers/Details.cshtml]
+[C:/New folder (2)/Quran-Management-System/Final Year Project/QuranCentersSystem/QuranCentersSystem/Views/Teachers/Details.cshtml]
 build_metadata.AdditionalFiles.TargetPath = Vmlld3NcVGVhY2hlcnNcRGV0YWlscy5jc2h0bWw=
 build_metadata.AdditionalFiles.CssScope = 
 
-[C:/Master_Project/Final Year Project/QuranCentersSystem/QuranCentersSystem/Views/Teachers/Edit.cshtml]
+[C:/New folder (2)/Quran-Management-System/Final Year Project/QuranCentersSystem/QuranCentersSystem/Views/Teachers/Edit.cshtml]
 build_metadata.AdditionalFiles.TargetPath = Vmlld3NcVGVhY2hlcnNcRWRpdC5jc2h0bWw=
 build_metadata.AdditionalFiles.CssScope = 
 
-[C:/Master_Project/Final Year Project/QuranCentersSystem/QuranCentersSystem/Views/Teachers/Index.cshtml]
+[C:/New folder (2)/Quran-Management-System/Final Year Project/QuranCentersSystem/QuranCentersSystem/Views/Teachers/Index.cshtml]
 build_metadata.AdditionalFiles.TargetPath = Vmlld3NcVGVhY2hlcnNcSW5kZXguY3NodG1s
 build_metadata.AdditionalFiles.CssScope = 
 
-[C:/Master_Project/Final Year Project/QuranCentersSystem/QuranCentersSystem/Views/Users/Index.cshtml]
+[C:/New folder (2)/Quran-Management-System/Final Year Project/QuranCentersSystem/QuranCentersSystem/Views/Users/Index.cshtml]
 build_metadata.AdditionalFiles.TargetPath = Vmlld3NcVXNlcnNcSW5kZXguY3NodG1s
 build_metadata.AdditionalFiles.CssScope = 
 
-[C:/Master_Project/Final Year Project/QuranCentersSystem/QuranCentersSystem/Views/_ViewImports.cshtml]
+[C:/New folder (2)/Quran-Management-System/Final Year Project/QuranCentersSystem/QuranCentersSystem/Views/_ViewImports.cshtml]
 build_metadata.AdditionalFiles.TargetPath = Vmlld3NcX1ZpZXdJbXBvcnRzLmNzaHRtbA==
 build_metadata.AdditionalFiles.CssScope = 
 
-[C:/Master_Project/Final Year Project/QuranCentersSystem/QuranCentersSystem/Views/_ViewStart.cshtml]
+[C:/New folder (2)/Quran-Management-System/Final Year Project/QuranCentersSystem/QuranCentersSystem/Views/_ViewStart.cshtml]
 build_metadata.AdditionalFiles.TargetPath = Vmlld3NcX1ZpZXdTdGFydC5jc2h0bWw=
 build_metadata.AdditionalFiles.CssScope = 
 
-[C:/Master_Project/Final Year Project/QuranCentersSystem/QuranCentersSystem/Views/Shared/_Layout.cshtml]
+[C:/New folder (2)/Quran-Management-System/Final Year Project/QuranCentersSystem/QuranCentersSystem/Views/Shared/_Layout.cshtml]
 build_metadata.AdditionalFiles.TargetPath = Vmlld3NcU2hhcmVkXF9MYXlvdXQuY3NodG1s
 build_metadata.AdditionalFiles.CssScope = b-f0r7n5smu4

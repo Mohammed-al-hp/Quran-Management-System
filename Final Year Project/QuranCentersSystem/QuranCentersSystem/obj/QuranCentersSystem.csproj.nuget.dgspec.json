@@ -1,17 +1,17 @@
 {
   "format": 1,
   "restore": {
-    "C:\\Master_Project\\Final Year Project\\QuranCentersSystem\\QuranCentersSystem\\QuranCentersSystem.csproj": {}
+    "C:\\New folder (2)\\Quran-Management-System\\Final Year Project\\QuranCentersSystem\\QuranCentersSystem\\QuranCentersSystem.csproj": {}
   },
   "projects": {
-    "C:\\Master_Project\\Final Year Project\\QuranCentersSystem\\QuranCentersSystem\\QuranCentersSystem.csproj": {
+    "C:\\New folder (2)\\Quran-Management-System\\Final Year Project\\QuranCentersSystem\\QuranCentersSystem\\QuranCentersSystem.csproj": {
       "version": "1.0.0",
       "restore": {
-        "projectUniqueName": "C:\\Master_Project\\Final Year Project\\QuranCentersSystem\\QuranCentersSystem\\QuranCentersSystem.csproj",
+        "projectUniqueName": "C:\\New folder (2)\\Quran-Management-System\\Final Year Project\\QuranCentersSystem\\QuranCentersSystem\\QuranCentersSystem.csproj",
         "projectName": "QuranCentersSystem",
-        "projectPath": "C:\\Master_Project\\Final Year Project\\QuranCentersSystem\\QuranCentersSystem\\QuranCentersSystem.csproj",
+        "projectPath": "C:\\New folder (2)\\Quran-Management-System\\Final Year Project\\QuranCentersSystem\\QuranCentersSystem\\QuranCentersSystem.csproj",
         "packagesPath": "C:\\Users\\pcwor\\.nuget\\packages\\",
-        "outputPath": "C:\\Master_Project\\Final Year Project\\QuranCentersSystem\\QuranCentersSystem\\obj\\",
+        "outputPath": "C:\\New folder (2)\\Quran-Management-System\\Final Year Project\\QuranCentersSystem\\QuranCentersSystem\\obj\\",
         "projectStyle": "PackageReference",
         "fallbackFolders": [
           "C:\\Program Files (x86)\\Microsoft Visual Studio\\Shared\\NuGetPackages"
@@ -50,6 +50,10 @@
         "net8.0": {
           "targetAlias": "net8.0",
           "dependencies": {
+            "Microsoft.AspNetCore.Authentication.JwtBearer": {
+              "target": "Package",
+              "version": "[8.0.23, )"
+            },
             "Microsoft.AspNetCore.Identity.EntityFrameworkCore": {
               "target": "Package",
               "version": "[8.0.23, )"
@@ -76,9 +80,17 @@
               "target": "Package",
               "version": "[8.0.23, )"
             },
+            "QRCoder": {
+              "target": "Package",
+              "version": "[1.6.0, )"
+            },
             "Rotativa.AspNetCore": {
               "target": "Package",
               "version": "[1.4.0, )"
+            },
+            "Swashbuckle.AspNetCore": {
+              "target": "Package",
+              "version": "[6.5.0, )"
             }
           },
           "imports": [
