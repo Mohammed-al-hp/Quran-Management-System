@@ -575,3 +575,4 @@ C:\Master_Project\Final Year Project\QuranCentersSystem\QuranCentersSystem\obj\D
 C:\Master_Project\Final Year Project\QuranCentersSystem\QuranCentersSystem\obj\Debug\net8.0\QuranCentersSystem.pdb
 C:\Master_Project\Final Year Project\QuranCentersSystem\QuranCentersSystem\obj\Debug\net8.0\QuranCentersSystem.genruntimeconfig.cache
 C:\Master_Project\Final Year Project\QuranCentersSystem\QuranCentersSystem\obj\Debug\net8.0\ref\QuranCentersSystem.dll
+C:\Master_Project\Final Year Project\QuranCentersSystem\QuranCentersSystem\bin\Debug\net8.0\Microsoft.AspNetCore.Authentication.JwtBearer.dll

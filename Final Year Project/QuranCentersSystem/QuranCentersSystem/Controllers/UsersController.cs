@@ -9,9 +9,9 @@ namespace QuranCentersSystem.Controllers
     public class UsersController : Controller
     {
         private readonly ApplicationDbContext _context;
-        private readonly UserManager<IdentityUser> _userManager;
+        private readonly UserManager<ApplicationUser> _userManager;
 
-        public UsersController(ApplicationDbContext context, UserManager<IdentityUser> userManager)
+        public UsersController(ApplicationDbContext context, UserManager<ApplicationUser> userManager)
         {
             _context = context;
             _userManager = userManager;
@@ -30,13 +30,13 @@ namespace QuranCentersSystem.Controllers
             if (ModelState.IsValid && !string.IsNullOrEmpty(Password))
             {
                 // أ- إنشاء المستخدم في نظام Identity لتشفير كلمة المرور
-                var identityUser = new IdentityUser { UserName = user.Email, Email = user.Email, EmailConfirmed = true };
-                var result = await _userManager.CreateAsync(identityUser, Password);
+                var ApplicationUser = new ApplicationUser { UserName = user.Email, Email = user.Email, EmailConfirmed = true };
+                var result = await _userManager.CreateAsync(ApplicationUser, Password);
 
                 if (result.Succeeded)
                 {
                     // ب- إسناد الدور المختار (مدير النظام أو محفظ)
-                    await _userManager.AddToRoleAsync(identityUser, user.Role);
+                    await _userManager.AddToRoleAsync(ApplicationUser, user.Role);
 
                     // ج- حفظ في جدول العرض المخصص
                     user.IsActive = true;

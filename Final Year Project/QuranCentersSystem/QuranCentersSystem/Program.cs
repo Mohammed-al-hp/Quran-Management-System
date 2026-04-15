@@ -4,6 +4,9 @@ using QuranCentersSystem.Data;
 using QuranCentersSystem.Models;
 using System.Text.Json.Serialization;
 using Rotativa.AspNetCore;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.IdentityModel.Tokens;
+using System.Text;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -11,12 +14,11 @@ var builder = WebApplication.CreateBuilder(args);
 builder.Services.AddDbContext<ApplicationDbContext>(options =>
     options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection")));
 
-// --- 2. إعداد نظام الهوية (تعديل ليتناسب مع جداولك) ---
-// قمت بتغيير IdentityUser إلى ApplicationUser إذا كنت تستخدم كلاس مخصص كما ظهر في قاعدة بياناتك
-builder.Services.AddDefaultIdentity<IdentityUser>(options =>
+// --- 2. إعداد نظام الهوية لاستخدام ApplicationUser ---
+builder.Services.AddDefaultIdentity<ApplicationUser>(options =>
 {
     options.SignIn.RequireConfirmedAccount = false;
-    options.Password.RequireDigit = false; // تسهيل لعملية التطوير
+    options.Password.RequireDigit = false;
     options.Password.RequiredLength = 6;
     options.Password.RequireNonAlphanumeric = false;
     options.Password.RequireUppercase = false;
@@ -25,7 +27,35 @@ builder.Services.AddDefaultIdentity<IdentityUser>(options =>
     .AddRoles<IdentityRole>()
     .AddEntityFrameworkStores<ApplicationDbContext>();
 
-// --- 3. إعداد سياسة CORS (تجميع السياسات في سياسة واحدة قوية) ---
+// --- 3. إعدادات JWT Authentication لـ Flutter ---
+// نجلب القيم من ملف appsettings.json الذي أعددناه
+var jwtSettings = builder.Configuration.GetSection("Jwt");
+var key = Encoding.UTF8.GetBytes(jwtSettings["Key"] ?? "YourSuperSecretKey12345_MustBeLong");
+
+// --- تعديل نظام Authentication ليدعم الويب والموبايل معاً ---
+builder.Services.AddAuthentication(options =>
+{
+    // نجعل الكوكيز هي الافتراضية للمتصفح (MVC)
+    options.DefaultScheme = IdentityConstants.ApplicationScheme;
+    options.DefaultAuthenticateScheme = IdentityConstants.ApplicationScheme;
+    options.DefaultChallengeScheme = IdentityConstants.ApplicationScheme;
+})
+.AddJwtBearer(JwtBearerDefaults.AuthenticationScheme, options =>
+{
+    // إعدادات الـ JWT الخاصة بـ Flutter (تبقى كما هي)
+    options.TokenValidationParameters = new TokenValidationParameters
+    {
+        ValidateIssuer = true,
+        ValidateAudience = true,
+        ValidateLifetime = true,
+        ValidateIssuerSigningKey = true,
+        ValidIssuer = builder.Configuration["Jwt:Issuer"],
+        ValidAudience = builder.Configuration["Jwt:Audience"],
+        IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(builder.Configuration["Jwt:Key"]))
+    };
+});
+
+// --- 4. إعداد سياسة CORS لـ Flutter ---
 builder.Services.AddCors(options =>
 {
     options.AddPolicy("AllowFlutter", policy =>
@@ -36,7 +66,6 @@ builder.Services.AddCors(options =>
     });
 });
 
-// إضافة التحكم في الـ JSON
 builder.Services.AddControllersWithViews()
     .AddJsonOptions(options =>
     {
@@ -46,29 +75,20 @@ builder.Services.AddControllersWithViews()
 
 builder.Services.AddRazorPages();
 
-builder.Services.ConfigureApplicationCookie(options =>
-{
-    options.LoginPath = "/Identity/Account/Login";
-    options.ExpireTimeSpan = TimeSpan.FromMinutes(20);
-    options.SlidingExpiration = true;
-});
-
 var app = builder.Build();
 
-// --- 4. إعدادات Middleware ---
+// --- 5. إعدادات Middleware ---
 if (!app.Environment.IsDevelopment())
 {
     app.UseExceptionHandler("/Home/Error");
     app.UseHsts();
 }
 
-// الترتيب هنا مهم جداً لعمل الـ API بشكل صحيح
 app.UseHttpsRedirection();
 app.UseStaticFiles();
-
 app.UseRouting();
 
-// تفعيل CORS بعد الـ Routing وقبل الـ Auth
+// تفعيل CORS قبل الـ Authentication
 app.UseCors("AllowFlutter");
 
 app.UseAuthentication();
@@ -81,14 +101,13 @@ app.MapControllerRoute(
     pattern: "{controller=Home}/{action=Index}/{id?}");
 app.MapRazorPages();
 
-// --- 5. بذر البيانات (Seed Data) ---
+// --- 6. بذر البيانات (Seed Data) ---
 using (var scope = app.Services.CreateScope())
 {
     var services = scope.ServiceProvider;
+    var userManager = services.GetRequiredService<UserManager<ApplicationUser>>();
     var roleManager = services.GetRequiredService<RoleManager<IdentityRole>>();
-    var userManager = services.GetRequiredService<UserManager<IdentityUser>>();
 
-    // التأكد من الأدوار
     string[] roleNames = { "Admin", "Teacher", "Parent" };
     foreach (var roleName in roleNames)
     {
@@ -98,16 +117,24 @@ using (var scope = app.Services.CreateScope())
         }
     }
 
-    // إنشاء حساب المدير الافتراضي
-    var adminEmail = "admin@itqan.com";
-    var adminUser = await userManager.FindByEmailAsync(adminEmail);
-    if (adminUser == null)
+    var adminEmail = "admin@quransystems.com";
+    var existingUser = await userManager.FindByEmailAsync(adminEmail);
+
+    if (existingUser == null)
     {
-        var user = new IdentityUser { UserName = adminEmail, Email = adminEmail, EmailConfirmed = true };
-        var result = await userManager.CreateAsync(user, "Admin@123");
+        var admin = new ApplicationUser
+        {
+            UserName = adminEmail,
+            Email = adminEmail,
+            EmailConfirmed = true,
+            Role = "Admin",
+            IsActive = true
+        };
+
+        var result = await userManager.CreateAsync(admin, "Admin@123");
         if (result.Succeeded)
         {
-            await userManager.AddToRoleAsync(user, "Admin");
+            await userManager.AddToRoleAsync(admin, "Admin");
         }
     }
 }

@@ -7,8 +7,10 @@ import 'providers/quran_center_provider.dart';
 import 'screens/dashboard_screen.dart';
 import 'screens/circles_screen.dart';
 import 'screens/teachers_list_screen.dart';
+import 'dart:io'; // أضف هذا الاستيراد في أعلى الملف
 
 void main() {
+  HttpOverrides.global = MyHttpOverrides(); // لتجاوز مشاكل الاتصال المحلي
   runApp(const QuranCenterApp());
 }
 
@@ -138,13 +140,13 @@ class _LoginScreenState extends State<LoginScreen> {
     setState(() => _isLoading = true);
     try {
       // الرابط المسجل في مشروع الـ ASP.NET الخاص بك
+      // السطر الجديد الصحيح (للمتصفح والـ HTTPS)
       final url = Uri.parse('https://localhost:7174/api/auth/login');
-
       final response = await http.post(
         url,
         headers: {'Content-Type': 'application/json'},
         body: jsonEncode({
-          'email': _usernameController.text, // تم التغيير هنا
+          'username': _usernameController.text, // يجب أن تكون username
           'password': _passwordController.text,
         }),
       );
@@ -304,5 +306,14 @@ class _MainScreenState extends State<MainScreen> {
         ],
       ),
     );
+  }
+}
+
+class MyHttpOverrides extends HttpOverrides {
+  @override
+  HttpClient createHttpClient(SecurityContext? context) {
+    return super.createHttpClient(context)
+      ..badCertificateCallback =
+          (X509Certificate cert, String host, int port) => true;
   }
 }
