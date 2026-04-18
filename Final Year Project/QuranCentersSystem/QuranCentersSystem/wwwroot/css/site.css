@@ -1,45 +1,65 @@
-﻿/* تعريف متغيرات الألوان الجديدة (الأخضر والذهبي) */
+﻿/* تعريف متغيرات الألوان للوضع الفاتح (الافتراضي) */
 :root {
-    --primary-green: #1a531a; /* أخضر غامق ورصين */
-    --secondary-green: #2a752a; /* أخضر فاتح للتفاعل */
-    --accent-gold: #c9a050; /* ذهبي مطفي فخم */
-    --bg-light: #f4f7f6; /* خلفية رمادية فاتحة جداً مريحة */
-    --text-dark: #2c3e50;
-    --sidebar-bg: #1e293b; /* نفس درجة الداكن في الصور المرسلة */
+    --primary-green: #1a531a;
+    --secondary-green: #2a752a;
+    --accent-gold: #c9a050;
+    --bg-body: #f4f7f6; /* خلفية الصفحة */
+    --bg-card: #ffffff; /* خلفية البطاقات والجدول */
+    --text-main: #2c3e50; /* لون النصوص الأساسية */
+    --sidebar-bg: #1e293b;
+    --border-color: #e2e8f0;
+    --hover-bg: #f8f9fa;
+}
+
+/* تعريف متغيرات الألوان للوضع المظلم */
+[data-bs-theme="dark"] {
+    --primary-green: #2a752a; /* تفتيح الأخضر قليلاً ليناسب الظلام */
+    --secondary-green: #3b913b;
+    --accent-gold: #d4af37;
+    --bg-body: #0f172a; /* خلفية داكنة للصفحة */
+    --bg-card: #1e293b; /* خلفية البطاقات داكنة */
+    --text-main: #f8fafc; /* نصوص بيضاء */
+    --sidebar-bg: #0b1120; /* قائمة جانبية أكثر دكنة */
+    --border-color: #334155;
+    --hover-bg: #334155;
 }
 
 body {
-    background-color: var(--bg-light);
+    background-color: var(--bg-body);
     font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-    color: var(--text-dark);
-    direction: rtl; /* التأكد من الاتجاه من اليمين لليسار */
+    color: var(--text-main);
+    direction: rtl;
+    transition: background-color 0.3s ease, color 0.3s ease;
 }
 
-/* تنسيقات الجدول لتشبه الصور */
+/* تنسيقات الجدول */
 .table {
-    background-color: white;
+    background-color: var(--bg-card);
     border-radius: 8px;
     overflow: hidden;
     box-shadow: 0 2px 5px rgba(0,0,0,0.05);
+    color: var(--text-main);
 }
 
     .table thead th {
-        background-color: var(--bg-light);
-        color: var(--text-dark);
-        border-bottom: 2px solid #e2e8f0;
+        background-color: var(--bg-body);
+        color: var(--text-main);
+        border-bottom: 2px solid var(--border-color);
         text-align: center;
     }
 
     .table tbody td {
         vertical-align: middle;
         text-align: center;
-        border-color: #f1f5f9;
+        border-color: var(--border-color);
+        color: var(--text-main);
     }
 
 /* تنسيقات الأزرار بالألوان الجديدة */
 .btn-primary {
     background-color: var(--primary-green);
     border-color: var(--primary-green);
+    color: white;
 }
 
     .btn-primary:hover {
@@ -63,6 +83,7 @@ body {
     border: none;
     border-radius: 10px;
     transition: transform 0.2s;
+    background-color: var(--bg-card);
 }
 
     .card-stats:hover {
@@ -71,8 +92,8 @@ body {
 
 /* كود تمييز الزر النشط في القائمة الجانبية */
 .nav-item .nav-link.active, .collapse-item.active {
-    background-color: #f8f9fa !important; /* لون خلفية خفيف */
-    color: #0d6efd !important; /* تلوين النص والأيقونة باللون الأزرق */
+    background-color: var(--hover-bg) !important;
+    color: #0d6efd !important;
     font-weight: bold;
-    border-right: 4px solid #0d6efd; /* خط عمودي يمين الزر */
+    border-right: 4px solid #0d6efd;
 }

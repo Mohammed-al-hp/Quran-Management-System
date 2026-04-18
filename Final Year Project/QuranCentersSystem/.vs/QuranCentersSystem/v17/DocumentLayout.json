@@ -7,20 +7,24 @@
       "RelativeMoniker": "D:0:0:{A6B7621B-A9E8-41E2-ACBB-1527585A5C88}|QuranCentersSystem\\QuranCentersSystem.csproj|solutionrelative:qurancenterssystem\\views\\home\\index.cshtml||{40D31677-CBC0-4297-A9EF-89D907823A98}"
     },
     {
-      "AbsoluteMoniker": "D:0:0:{A6B7621B-A9E8-41E2-ACBB-1527585A5C88}|QuranCentersSystem\\QuranCentersSystem.csproj|c:\\master_project\\final year project\\qurancenterssystem\\qurancenterssystem\\views\\home\\privacy.cshtml||{40D31677-CBC0-4297-A9EF-89D907823A98}",
-      "RelativeMoniker": "D:0:0:{A6B7621B-A9E8-41E2-ACBB-1527585A5C88}|QuranCentersSystem\\QuranCentersSystem.csproj|solutionrelative:qurancenterssystem\\views\\home\\privacy.cshtml||{40D31677-CBC0-4297-A9EF-89D907823A98}"
-    },
-    {
       "AbsoluteMoniker": "D:0:0:{A6B7621B-A9E8-41E2-ACBB-1527585A5C88}|QuranCentersSystem\\QuranCentersSystem.csproj|c:\\master_project\\final year project\\qurancenterssystem\\qurancenterssystem\\views\\shared\\_layout.cshtml||{40D31677-CBC0-4297-A9EF-89D907823A98}",
       "RelativeMoniker": "D:0:0:{A6B7621B-A9E8-41E2-ACBB-1527585A5C88}|QuranCentersSystem\\QuranCentersSystem.csproj|solutionrelative:qurancenterssystem\\views\\shared\\_layout.cshtml||{40D31677-CBC0-4297-A9EF-89D907823A98}"
     },
     {
-      "AbsoluteMoniker": "D:0:0:{A6B7621B-A9E8-41E2-ACBB-1527585A5C88}|QuranCentersSystem\\QuranCentersSystem.csproj|c:\\master_project\\final year project\\qurancenterssystem\\qurancenterssystem\\controllers\\circlescontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
-      "RelativeMoniker": "D:0:0:{A6B7621B-A9E8-41E2-ACBB-1527585A5C88}|QuranCentersSystem\\QuranCentersSystem.csproj|solutionrelative:qurancenterssystem\\controllers\\circlescontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+      "AbsoluteMoniker": "D:0:0:{A6B7621B-A9E8-41E2-ACBB-1527585A5C88}|QuranCentersSystem\\QuranCentersSystem.csproj|c:\\master_project\\final year project\\qurancenterssystem\\qurancenterssystem\\wwwroot\\css\\site.css||{A5401142-F49D-43DB-90B1-F57BA349E55C}",
+      "RelativeMoniker": "D:0:0:{A6B7621B-A9E8-41E2-ACBB-1527585A5C88}|QuranCentersSystem\\QuranCentersSystem.csproj|solutionrelative:qurancenterssystem\\wwwroot\\css\\site.css||{A5401142-F49D-43DB-90B1-F57BA349E55C}"
     },
     {
       "AbsoluteMoniker": "D:0:0:{A6B7621B-A9E8-41E2-ACBB-1527585A5C88}|QuranCentersSystem\\QuranCentersSystem.csproj|c:\\master_project\\final year project\\qurancenterssystem\\qurancenterssystem\\views\\circles\\index.cshtml||{40D31677-CBC0-4297-A9EF-89D907823A98}",
       "RelativeMoniker": "D:0:0:{A6B7621B-A9E8-41E2-ACBB-1527585A5C88}|QuranCentersSystem\\QuranCentersSystem.csproj|solutionrelative:qurancenterssystem\\views\\circles\\index.cshtml||{40D31677-CBC0-4297-A9EF-89D907823A98}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{A6B7621B-A9E8-41E2-ACBB-1527585A5C88}|QuranCentersSystem\\QuranCentersSystem.csproj|c:\\master_project\\final year project\\qurancenterssystem\\qurancenterssystem\\views\\home\\privacy.cshtml||{40D31677-CBC0-4297-A9EF-89D907823A98}",
+      "RelativeMoniker": "D:0:0:{A6B7621B-A9E8-41E2-ACBB-1527585A5C88}|QuranCentersSystem\\QuranCentersSystem.csproj|solutionrelative:qurancenterssystem\\views\\home\\privacy.cshtml||{40D31677-CBC0-4297-A9EF-89D907823A98}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{A6B7621B-A9E8-41E2-ACBB-1527585A5C88}|QuranCentersSystem\\QuranCentersSystem.csproj|c:\\master_project\\final year project\\qurancenterssystem\\qurancenterssystem\\controllers\\circlescontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{A6B7621B-A9E8-41E2-ACBB-1527585A5C88}|QuranCentersSystem\\QuranCentersSystem.csproj|solutionrelative:qurancenterssystem\\controllers\\circlescontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
     },
     {
       "AbsoluteMoniker": "D:0:0:{A6B7621B-A9E8-41E2-ACBB-1527585A5C88}|QuranCentersSystem\\QuranCentersSystem.csproj|c:\\master_project\\final year project\\qurancenterssystem\\qurancenterssystem\\models\\circle.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
@@ -199,10 +203,6 @@
       "RelativeMoniker": "D:0:0:{A6B7621B-A9E8-41E2-ACBB-1527585A5C88}|QuranCentersSystem\\QuranCentersSystem.csproj|solutionrelative:qurancenterssystem\\views\\memorizations\\followup.cshtml||{40D31677-CBC0-4297-A9EF-89D907823A98}"
     },
     {
-      "AbsoluteMoniker": "D:0:0:{A6B7621B-A9E8-41E2-ACBB-1527585A5C88}|QuranCentersSystem\\QuranCentersSystem.csproj|c:\\master_project\\final year project\\qurancenterssystem\\qurancenterssystem\\wwwroot\\css\\site.css||{A5401142-F49D-43DB-90B1-F57BA349E55C}",
-      "RelativeMoniker": "D:0:0:{A6B7621B-A9E8-41E2-ACBB-1527585A5C88}|QuranCentersSystem\\QuranCentersSystem.csproj|solutionrelative:qurancenterssystem\\wwwroot\\css\\site.css||{A5401142-F49D-43DB-90B1-F57BA349E55C}"
-    },
-    {
       "AbsoluteMoniker": "D:0:0:{A6B7621B-A9E8-41E2-ACBB-1527585A5C88}|QuranCentersSystem\\QuranCentersSystem.csproj|c:\\master_project\\final year project\\qurancenterssystem\\qurancenterssystem\\wwwroot\\lib\\bootstrap\\dist\\css\\bootstrap.css||{A5401142-F49D-43DB-90B1-F57BA349E55C}",
       "RelativeMoniker": "D:0:0:{A6B7621B-A9E8-41E2-ACBB-1527585A5C88}|QuranCentersSystem\\QuranCentersSystem.csproj|solutionrelative:qurancenterssystem\\wwwroot\\lib\\bootstrap\\dist\\css\\bootstrap.css||{A5401142-F49D-43DB-90B1-F57BA349E55C}"
     },
@@ -295,25 +295,8 @@
       "DocumentGroups": [
         {
           "DockedHeight": 300,
-          "SelectedChildIndex": 2,
+          "SelectedChildIndex": 0,
           "Children": [
-            {
-              "$type": "Bookmark",
-              "Name": "ST:1:0:{d212f56b-c48a-434c-a121-1c5d80b59b9f}"
-            },
-            {
-              "$type": "Document",
-              "DocumentIndex": 1,
-              "Title": "Privacy.cshtml",
-              "DocumentMoniker": "C:\\Master_Project\\Final Year Project\\QuranCentersSystem\\QuranCentersSystem\\Views\\Home\\Privacy.cshtml",
-              "RelativeDocumentMoniker": "QuranCentersSystem\\Views\\Home\\Privacy.cshtml",
-              "ToolTip": "C:\\Master_Project\\Final Year Project\\QuranCentersSystem\\QuranCentersSystem\\Views\\Home\\Privacy.cshtml",
-              "RelativeToolTip": "QuranCentersSystem\\Views\\Home\\Privacy.cshtml",
-              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA==",
-              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000759|",
-              "WhenOpened": "2026-04-18T13:31:59.999Z",
-              "EditorCaption": ""
-            },
             {
               "$type": "Document",
               "DocumentIndex": 0,
@@ -322,14 +305,14 @@
               "RelativeDocumentMoniker": "QuranCentersSystem\\Views\\Home\\Index.cshtml",
               "ToolTip": "C:\\Master_Project\\Final Year Project\\QuranCentersSystem\\QuranCentersSystem\\Views\\Home\\Index.cshtml",
               "RelativeToolTip": "QuranCentersSystem\\Views\\Home\\Index.cshtml",
-              "ViewState": "AgIAAHgAAAAAAAAAAAAgwJgAAAAIAAAAAAAAAA==",
+              "ViewState": "AgIAAH0AAAAAAAAAAAAgwJ0AAAAIAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000759|",
               "WhenOpened": "2026-03-30T16:40:49.083Z",
               "EditorCaption": ""
             },
             {
               "$type": "Document",
-              "DocumentIndex": 11,
+              "DocumentIndex": 12,
               "Title": "Student.cs",
               "DocumentMoniker": "C:\\Master_Project\\Final Year Project\\QuranCentersSystem\\QuranCentersSystem\\Models\\Student.cs",
               "RelativeDocumentMoniker": "QuranCentersSystem\\Models\\Student.cs",
@@ -341,7 +324,7 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 8,
+              "DocumentIndex": 9,
               "Title": "Edit.cshtml",
               "DocumentMoniker": "C:\\Master_Project\\Final Year Project\\QuranCentersSystem\\QuranCentersSystem\\Views\\Students\\Edit.cshtml",
               "RelativeDocumentMoniker": "QuranCentersSystem\\Views\\Students\\Edit.cshtml",
@@ -353,7 +336,7 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 13,
+              "DocumentIndex": 14,
               "Title": "AuthController.cs",
               "DocumentMoniker": "C:\\Master_Project\\Final Year Project\\QuranCentersSystem\\QuranCentersSystem\\Controllers\\AuthController.cs",
               "RelativeDocumentMoniker": "QuranCentersSystem\\Controllers\\AuthController.cs",
@@ -365,19 +348,20 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 4,
+              "DocumentIndex": 3,
               "Title": "Index.cshtml",
               "DocumentMoniker": "C:\\Master_Project\\Final Year Project\\QuranCentersSystem\\QuranCentersSystem\\Views\\Circles\\Index.cshtml",
               "RelativeDocumentMoniker": "QuranCentersSystem\\Views\\Circles\\Index.cshtml",
               "ToolTip": "C:\\Master_Project\\Final Year Project\\QuranCentersSystem\\QuranCentersSystem\\Views\\Circles\\Index.cshtml",
               "RelativeToolTip": "QuranCentersSystem\\Views\\Circles\\Index.cshtml",
-              "ViewState": "AgIAAB4AAAAAAAAAAAAgwCgAAAAGAAAAAAAAAA==",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAACoAAAAOAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000759|",
-              "WhenOpened": "2026-04-05T23:00:43.985Z"
+              "WhenOpened": "2026-04-05T23:00:43.985Z",
+              "EditorCaption": ""
             },
             {
               "$type": "Document",
-              "DocumentIndex": 7,
+              "DocumentIndex": 8,
               "Title": "Create.cshtml",
               "DocumentMoniker": "C:\\Master_Project\\Final Year Project\\QuranCentersSystem\\QuranCentersSystem\\Views\\Circles\\Create.cshtml",
               "RelativeDocumentMoniker": "QuranCentersSystem\\Views\\Circles\\Create.cshtml",
@@ -389,7 +373,7 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 5,
+              "DocumentIndex": 6,
               "Title": "Circle.cs",
               "DocumentMoniker": "C:\\Master_Project\\Final Year Project\\QuranCentersSystem\\QuranCentersSystem\\Models\\Circle.cs",
               "RelativeDocumentMoniker": "QuranCentersSystem\\Models\\Circle.cs",
@@ -401,7 +385,50 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 3,
+              "DocumentIndex": 1,
+              "Title": "_Layout.cshtml",
+              "DocumentMoniker": "C:\\Master_Project\\Final Year Project\\QuranCentersSystem\\QuranCentersSystem\\Views\\Shared\\_Layout.cshtml",
+              "RelativeDocumentMoniker": "QuranCentersSystem\\Views\\Shared\\_Layout.cshtml",
+              "ToolTip": "C:\\Master_Project\\Final Year Project\\QuranCentersSystem\\QuranCentersSystem\\Views\\Shared\\_Layout.cshtml",
+              "RelativeToolTip": "QuranCentersSystem\\Views\\Shared\\_Layout.cshtml",
+              "ViewState": "AgIAANgAAAAAAAAAAAAgwPgAAAAHAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000759|",
+              "WhenOpened": "2026-03-29T16:10:38.3Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 2,
+              "Title": "site.css",
+              "DocumentMoniker": "C:\\Master_Project\\Final Year Project\\QuranCentersSystem\\QuranCentersSystem\\wwwroot\\css\\site.css",
+              "RelativeDocumentMoniker": "QuranCentersSystem\\wwwroot\\css\\site.css",
+              "ToolTip": "C:\\Master_Project\\Final Year Project\\QuranCentersSystem\\QuranCentersSystem\\wwwroot\\css\\site.css",
+              "RelativeToolTip": "QuranCentersSystem\\wwwroot\\css\\site.css",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAGMAAAAAAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.003000|",
+              "WhenOpened": "2026-04-05T14:18:07.829Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 4,
+              "Title": "Privacy.cshtml",
+              "DocumentMoniker": "C:\\Master_Project\\Final Year Project\\QuranCentersSystem\\QuranCentersSystem\\Views\\Home\\Privacy.cshtml",
+              "RelativeDocumentMoniker": "QuranCentersSystem\\Views\\Home\\Privacy.cshtml",
+              "ToolTip": "C:\\Master_Project\\Final Year Project\\QuranCentersSystem\\QuranCentersSystem\\Views\\Home\\Privacy.cshtml",
+              "RelativeToolTip": "QuranCentersSystem\\Views\\Home\\Privacy.cshtml",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000759|",
+              "WhenOpened": "2026-04-18T13:31:59.999Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Bookmark",
+              "Name": "ST:1:0:{d212f56b-c48a-434c-a121-1c5d80b59b9f}"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 5,
               "Title": "CirclesController.cs",
               "DocumentMoniker": "C:\\Master_Project\\Final Year Project\\QuranCentersSystem\\QuranCentersSystem\\Controllers\\CirclesController.cs",
               "RelativeDocumentMoniker": "QuranCentersSystem\\Controllers\\CirclesController.cs",
@@ -413,19 +440,7 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 2,
-              "Title": "_Layout.cshtml",
-              "DocumentMoniker": "C:\\Master_Project\\Final Year Project\\QuranCentersSystem\\QuranCentersSystem\\Views\\Shared\\_Layout.cshtml",
-              "RelativeDocumentMoniker": "QuranCentersSystem\\Views\\Shared\\_Layout.cshtml",
-              "ToolTip": "C:\\Master_Project\\Final Year Project\\QuranCentersSystem\\QuranCentersSystem\\Views\\Shared\\_Layout.cshtml",
-              "RelativeToolTip": "QuranCentersSystem\\Views\\Shared\\_Layout.cshtml",
-              "ViewState": "AgIAAIUAAAAAAAAAAAAiwJ0AAAASAAAAAAAAAA==",
-              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000759|",
-              "WhenOpened": "2026-03-29T16:10:38.3Z"
-            },
-            {
-              "$type": "Document",
-              "DocumentIndex": 10,
+              "DocumentIndex": 11,
               "Title": "HomeController.cs",
               "DocumentMoniker": "C:\\Master_Project\\Final Year Project\\QuranCentersSystem\\QuranCentersSystem\\Controllers\\HomeController.cs",
               "RelativeDocumentMoniker": "QuranCentersSystem\\Controllers\\HomeController.cs",
@@ -437,7 +452,7 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 14,
+              "DocumentIndex": 15,
               "Title": "appsettings.json",
               "DocumentMoniker": "C:\\Master_Project\\Final Year Project\\QuranCentersSystem\\QuranCentersSystem\\appsettings.json",
               "RelativeDocumentMoniker": "QuranCentersSystem\\appsettings.json",
@@ -449,7 +464,7 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 9,
+              "DocumentIndex": 10,
               "Title": "Program.cs",
               "DocumentMoniker": "C:\\Master_Project\\Final Year Project\\QuranCentersSystem\\QuranCentersSystem\\Program.cs",
               "RelativeDocumentMoniker": "QuranCentersSystem\\Program.cs",
@@ -461,7 +476,7 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 17,
+              "DocumentIndex": 18,
               "Title": "_LoginPartial.cshtml",
               "DocumentMoniker": "C:\\Master_Project\\Final Year Project\\QuranCentersSystem\\QuranCentersSystem\\Views\\Shared\\_LoginPartial.cshtml",
               "RelativeDocumentMoniker": "QuranCentersSystem\\Views\\Shared\\_LoginPartial.cshtml",
@@ -473,7 +488,7 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 23,
+              "DocumentIndex": 24,
               "Title": "StudentsController.cs",
               "DocumentMoniker": "C:\\Master_Project\\Final Year Project\\QuranCentersSystem\\QuranCentersSystem\\Controllers\\StudentsController.cs",
               "RelativeDocumentMoniker": "QuranCentersSystem\\Controllers\\StudentsController.cs",
@@ -485,7 +500,7 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 12,
+              "DocumentIndex": 13,
               "Title": "TeachersController.cs",
               "DocumentMoniker": "C:\\Master_Project\\Final Year Project\\QuranCentersSystem\\QuranCentersSystem\\Controllers\\TeachersController.cs",
               "RelativeDocumentMoniker": "QuranCentersSystem\\Controllers\\TeachersController.cs",
@@ -497,7 +512,7 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 21,
+              "DocumentIndex": 22,
               "Title": "Parent.cs",
               "DocumentMoniker": "C:\\Master_Project\\Final Year Project\\QuranCentersSystem\\QuranCentersSystem\\Models\\Parent.cs",
               "RelativeDocumentMoniker": "QuranCentersSystem\\Models\\Parent.cs",
@@ -509,7 +524,7 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 15,
+              "DocumentIndex": 16,
               "Title": "AttendancesController.cs",
               "DocumentMoniker": "C:\\Master_Project\\Final Year Project\\QuranCentersSystem\\QuranCentersSystem\\Controllers\\AttendancesController.cs",
               "RelativeDocumentMoniker": "QuranCentersSystem\\Controllers\\AttendancesController.cs",
@@ -521,7 +536,7 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 25,
+              "DocumentIndex": 26,
               "Title": "Index.cshtml",
               "DocumentMoniker": "C:\\Master_Project\\Final Year Project\\QuranCentersSystem\\QuranCentersSystem\\Views\\ParentDash\\Index.cshtml",
               "RelativeDocumentMoniker": "QuranCentersSystem\\Views\\ParentDash\\Index.cshtml",
@@ -533,7 +548,7 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 16,
+              "DocumentIndex": 17,
               "Title": "ApplicationUser.cs",
               "DocumentMoniker": "C:\\Master_Project\\Final Year Project\\QuranCentersSystem\\QuranCentersSystem\\Models\\ApplicationUser.cs",
               "RelativeDocumentMoniker": "QuranCentersSystem\\Models\\ApplicationUser.cs",
@@ -545,7 +560,7 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 19,
+              "DocumentIndex": 20,
               "Title": "LoginModel.cs",
               "DocumentMoniker": "C:\\Master_Project\\Final Year Project\\QuranCentersSystem\\QuranCentersSystem\\Models\\LoginModel.cs",
               "RelativeDocumentMoniker": "QuranCentersSystem\\Models\\LoginModel.cs",
@@ -557,7 +572,7 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 20,
+              "DocumentIndex": 21,
               "Title": "ParentController.cs",
               "DocumentMoniker": "C:\\Master_Project\\Final Year Project\\QuranCentersSystem\\QuranCentersSystem\\Controllers\\ParentController.cs",
               "RelativeDocumentMoniker": "QuranCentersSystem\\Controllers\\ParentController.cs",
@@ -569,7 +584,7 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 22,
+              "DocumentIndex": 23,
               "Title": "Create.cshtml",
               "DocumentMoniker": "C:\\Master_Project\\Final Year Project\\QuranCentersSystem\\QuranCentersSystem\\Views\\ParentDash\\Create.cshtml",
               "RelativeDocumentMoniker": "QuranCentersSystem\\Views\\ParentDash\\Create.cshtml",
@@ -581,7 +596,7 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 24,
+              "DocumentIndex": 25,
               "Title": "Create.cshtml",
               "DocumentMoniker": "C:\\Master_Project\\Final Year Project\\QuranCentersSystem\\QuranCentersSystem\\Views\\Students\\Create.cshtml",
               "RelativeDocumentMoniker": "QuranCentersSystem\\Views\\Students\\Create.cshtml",
@@ -593,7 +608,7 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 30,
+              "DocumentIndex": 31,
               "Title": "TeachersApiController.cs",
               "DocumentMoniker": "C:\\Master_Project\\Final Year Project\\QuranCentersSystem\\QuranCentersSystem\\Controllers\\TeachersApiController.cs",
               "RelativeDocumentMoniker": "QuranCentersSystem\\Controllers\\TeachersApiController.cs",
@@ -605,7 +620,7 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 26,
+              "DocumentIndex": 27,
               "Title": "Memorization.cs",
               "DocumentMoniker": "C:\\Master_Project\\Final Year Project\\QuranCentersSystem\\QuranCentersSystem\\Models\\Memorization.cs",
               "RelativeDocumentMoniker": "QuranCentersSystem\\Models\\Memorization.cs",
@@ -617,7 +632,7 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 29,
+              "DocumentIndex": 30,
               "Title": "MemorizationsController.cs",
               "DocumentMoniker": "C:\\Master_Project\\Final Year Project\\QuranCentersSystem\\QuranCentersSystem\\Controllers\\MemorizationsController.cs",
               "RelativeDocumentMoniker": "QuranCentersSystem\\Controllers\\MemorizationsController.cs",
@@ -629,7 +644,7 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 28,
+              "DocumentIndex": 29,
               "Title": "PaymentsController.cs",
               "DocumentMoniker": "C:\\Master_Project\\Final Year Project\\QuranCentersSystem\\QuranCentersSystem\\Controllers\\PaymentsController.cs",
               "RelativeDocumentMoniker": "QuranCentersSystem\\Controllers\\PaymentsController.cs",
@@ -641,7 +656,7 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 27,
+              "DocumentIndex": 28,
               "Title": "Index.cshtml",
               "DocumentMoniker": "C:\\Master_Project\\Final Year Project\\QuranCentersSystem\\QuranCentersSystem\\Views\\Payments\\Index.cshtml",
               "RelativeDocumentMoniker": "QuranCentersSystem\\Views\\Payments\\Index.cshtml",
@@ -653,7 +668,7 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 31,
+              "DocumentIndex": 32,
               "Title": "Create.cshtml",
               "DocumentMoniker": "C:\\Master_Project\\Final Year Project\\QuranCentersSystem\\QuranCentersSystem\\Views\\Payments\\Create.cshtml",
               "RelativeDocumentMoniker": "QuranCentersSystem\\Views\\Payments\\Create.cshtml",
@@ -665,7 +680,7 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 33,
+              "DocumentIndex": 34,
               "Title": "Payment.cs",
               "DocumentMoniker": "C:\\Master_Project\\Final Year Project\\QuranCentersSystem\\QuranCentersSystem\\Models\\Payment.cs",
               "RelativeDocumentMoniker": "QuranCentersSystem\\Models\\Payment.cs",
@@ -677,7 +692,7 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 34,
+              "DocumentIndex": 35,
               "Title": "Create.cshtml",
               "DocumentMoniker": "C:\\Master_Project\\Final Year Project\\QuranCentersSystem\\QuranCentersSystem\\Views\\Memorizations\\Create.cshtml",
               "RelativeDocumentMoniker": "QuranCentersSystem\\Views\\Memorizations\\Create.cshtml",
@@ -689,7 +704,7 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 32,
+              "DocumentIndex": 33,
               "Title": "ApplicationDbContext.cs",
               "DocumentMoniker": "C:\\Master_Project\\Final Year Project\\QuranCentersSystem\\QuranCentersSystem\\Data\\ApplicationDbContext.cs",
               "RelativeDocumentMoniker": "QuranCentersSystem\\Data\\ApplicationDbContext.cs",
@@ -701,7 +716,7 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 35,
+              "DocumentIndex": 36,
               "Title": "GroupAttendance.cshtml",
               "DocumentMoniker": "C:\\Master_Project\\Final Year Project\\QuranCentersSystem\\QuranCentersSystem\\Views\\Attendances\\GroupAttendance.cshtml",
               "RelativeDocumentMoniker": "QuranCentersSystem\\Views\\Attendances\\GroupAttendance.cshtml",
@@ -713,7 +728,7 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 36,
+              "DocumentIndex": 37,
               "Title": "Attendance.cs",
               "DocumentMoniker": "C:\\Master_Project\\Final Year Project\\QuranCentersSystem\\QuranCentersSystem\\Models\\Attendance.cs",
               "RelativeDocumentMoniker": "QuranCentersSystem\\Models\\Attendance.cs",
@@ -725,7 +740,7 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 38,
+              "DocumentIndex": 39,
               "Title": "StudentReport.cshtml",
               "DocumentMoniker": "C:\\Master_Project\\Final Year Project\\QuranCentersSystem\\QuranCentersSystem\\Views\\Reports\\StudentReport.cshtml",
               "RelativeDocumentMoniker": "QuranCentersSystem\\Views\\Reports\\StudentReport.cshtml",
@@ -737,7 +752,7 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 41,
+              "DocumentIndex": 42,
               "Title": "Details.cshtml",
               "DocumentMoniker": "C:\\Master_Project\\Final Year Project\\QuranCentersSystem\\QuranCentersSystem\\Views\\Students\\Details.cshtml",
               "RelativeDocumentMoniker": "QuranCentersSystem\\Views\\Students\\Details.cshtml",
@@ -749,7 +764,7 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 37,
+              "DocumentIndex": 38,
               "Title": "Index.cshtml",
               "DocumentMoniker": "C:\\Master_Project\\Final Year Project\\QuranCentersSystem\\QuranCentersSystem\\Views\\Students\\Index.cshtml",
               "RelativeDocumentMoniker": "QuranCentersSystem\\Views\\Students\\Index.cshtml",
@@ -761,7 +776,7 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 39,
+              "DocumentIndex": 40,
               "Title": "StudentReportPDF.cshtml",
               "DocumentMoniker": "C:\\Master_Project\\Final Year Project\\QuranCentersSystem\\QuranCentersSystem\\Views\\Students\\StudentReportPDF.cshtml",
               "RelativeDocumentMoniker": "QuranCentersSystem\\Views\\Students\\StudentReportPDF.cshtml",
@@ -773,7 +788,7 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 40,
+              "DocumentIndex": 41,
               "Title": "wkhtmltopdf.exe",
               "DocumentMoniker": "C:\\Master_Project\\Final Year Project\\QuranCentersSystem\\QuranCentersSystem\\wwwroot\\Rotativa\\wkhtmltopdf.exe",
               "RelativeDocumentMoniker": "QuranCentersSystem\\wwwroot\\Rotativa\\wkhtmltopdf.exe",
@@ -784,7 +799,7 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 42,
+              "DocumentIndex": 43,
               "Title": "appsettings.Development.json",
               "DocumentMoniker": "C:\\Master_Project\\Final Year Project\\QuranCentersSystem\\QuranCentersSystem\\appsettings.Development.json",
               "RelativeDocumentMoniker": "QuranCentersSystem\\appsettings.Development.json",
@@ -796,7 +811,7 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 43,
+              "DocumentIndex": 44,
               "Title": "ReportsController.cs",
               "DocumentMoniker": "C:\\Master_Project\\Final Year Project\\QuranCentersSystem\\QuranCentersSystem\\Controllers\\ReportsController.cs",
               "RelativeDocumentMoniker": "QuranCentersSystem\\Controllers\\ReportsController.cs",
@@ -808,7 +823,7 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 46,
+              "DocumentIndex": 47,
               "Title": "UsersController.cs",
               "DocumentMoniker": "C:\\Master_Project\\Final Year Project\\QuranCentersSystem\\QuranCentersSystem\\Controllers\\UsersController.cs",
               "RelativeDocumentMoniker": "QuranCentersSystem\\Controllers\\UsersController.cs",
@@ -820,7 +835,7 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 45,
+              "DocumentIndex": 46,
               "Title": "Index.cshtml",
               "DocumentMoniker": "C:\\Master_Project\\Final Year Project\\QuranCentersSystem\\QuranCentersSystem\\Views\\Users\\Index.cshtml",
               "RelativeDocumentMoniker": "QuranCentersSystem\\Views\\Users\\Index.cshtml",
@@ -832,7 +847,7 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 44,
+              "DocumentIndex": 45,
               "Title": "Details.cshtml",
               "DocumentMoniker": "C:\\Master_Project\\Final Year Project\\QuranCentersSystem\\QuranCentersSystem\\Views\\Teachers\\Details.cshtml",
               "RelativeDocumentMoniker": "QuranCentersSystem\\Views\\Teachers\\Details.cshtml",
@@ -844,7 +859,7 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 47,
+              "DocumentIndex": 48,
               "Title": "DailyRecord.cshtml",
               "DocumentMoniker": "C:\\Master_Project\\Final Year Project\\QuranCentersSystem\\QuranCentersSystem\\Views\\Memorizations\\DailyRecord.cshtml",
               "RelativeDocumentMoniker": "QuranCentersSystem\\Views\\Memorizations\\DailyRecord.cshtml",
@@ -856,7 +871,7 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 48,
+              "DocumentIndex": 49,
               "Title": "FollowUp.cshtml",
               "DocumentMoniker": "C:\\Master_Project\\Final Year Project\\QuranCentersSystem\\QuranCentersSystem\\Views\\Memorizations\\FollowUp.cshtml",
               "RelativeDocumentMoniker": "QuranCentersSystem\\Views\\Memorizations\\FollowUp.cshtml",
@@ -865,18 +880,6 @@
               "ViewState": "AgIAAGwAAAAAAAAAAAAwwIAAAAAJAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000759|",
               "WhenOpened": "2026-04-06T01:00:14.942Z"
-            },
-            {
-              "$type": "Document",
-              "DocumentIndex": 49,
-              "Title": "site.css",
-              "DocumentMoniker": "C:\\Master_Project\\Final Year Project\\QuranCentersSystem\\QuranCentersSystem\\wwwroot\\css\\site.css",
-              "RelativeDocumentMoniker": "QuranCentersSystem\\wwwroot\\css\\site.css",
-              "ToolTip": "C:\\Master_Project\\Final Year Project\\QuranCentersSystem\\QuranCentersSystem\\wwwroot\\css\\site.css",
-              "RelativeToolTip": "QuranCentersSystem\\wwwroot\\css\\site.css",
-              "ViewState": "AgIAAC0AAAAAAAAAAAAiwE0AAAABAAAAAAAAAA==",
-              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.003000|",
-              "WhenOpened": "2026-04-05T14:18:07.829Z"
             },
             {
               "$type": "Document",
@@ -1070,7 +1073,7 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 6,
+              "DocumentIndex": 7,
               "Title": "Register.cshtml.cs",
               "DocumentMoniker": "C:\\Master_Project\\Final Year Project\\QuranCentersSystem\\QuranCentersSystem\\Areas\\Identity\\Pages\\Account\\Register.cshtml.cs",
               "RelativeDocumentMoniker": "QuranCentersSystem\\Areas\\Identity\\Pages\\Account\\Register.cshtml.cs",
@@ -1083,7 +1086,7 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 18,
+              "DocumentIndex": 19,
               "Title": "20260406005735_FixMemorizationFields.cs",
               "DocumentMoniker": "C:\\Master_Project\\Final Year Project\\QuranCentersSystem\\QuranCentersSystem\\Migrations\\20260406005735_FixMemorizationFields.cs",
               "RelativeDocumentMoniker": "QuranCentersSystem\\Migrations\\20260406005735_FixMemorizationFields.cs",

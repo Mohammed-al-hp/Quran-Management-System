@@ -3,7 +3,6 @@
 }
 
 <div class="container-fluid px-4" dir="rtl">
-    @* التعديل: جعل الخط باهتاً وإضافة مسافة سفلية mb-3 لإبعاده عن البطاقات *@
     <div class="pt-3 mb-3">
         <h5 class="fw-normal text-muted m-0">نظرة عامة على المركز</h5>
     </div>
@@ -11,11 +10,11 @@
     @* الصف الأول: بطاقات الإحصائيات *@
     <div class="row g-3 mb-4">
         <div class="col-md-3">
-            <div class="card h-100 shadow-sm border-0 border-start border-success border-4 rounded-3 stat-card bg-white">
+            <div class="card h-100 shadow-sm border-0 border-start border-success border-4 rounded-3 stat-card">
                 <div class="card-body d-flex align-items-center justify-content-between p-3">
                     <div>
                         <p class="text-muted small fw-bold mb-1">إجمالي الطلاب</p>
-                        <h3 class="fw-bold mb-0 text-dark">@ViewBag.StudentsCount</h3>
+                        <h3 class="fw-bold mb-0 theme-text">@ViewBag.StudentsCount</h3>
                     </div>
                     <div class="bg-success bg-opacity-10 p-3 rounded-circle">
                         <i class="bi bi-people-fill text-success fs-4"></i>
@@ -25,11 +24,11 @@
         </div>
 
         <div class="col-md-3">
-            <div class="card h-100 shadow-sm border-0 border-start border-primary border-4 rounded-3 stat-card bg-white">
+            <div class="card h-100 shadow-sm border-0 border-start border-primary border-4 rounded-3 stat-card">
                 <div class="card-body d-flex align-items-center justify-content-between p-3">
                     <div>
                         <p class="text-muted small fw-bold mb-1">إجمالي المحفظين</p>
-                        <h2 class="fw-bold mb-0 text-dark">@ViewBag.TeachersCount</h2>
+                        <h2 class="fw-bold mb-0 theme-text">@ViewBag.TeachersCount</h2>
                     </div>
                     <div class="bg-primary bg-opacity-10 p-3 rounded-circle">
                         <i class="bi bi-person-badge-fill text-primary fs-4"></i>
@@ -39,11 +38,11 @@
         </div>
 
         <div class="col-md-3">
-            <div class="card h-100 shadow-sm border-0 border-start border-warning border-4 rounded-3 stat-card bg-white">
+            <div class="card h-100 shadow-sm border-0 border-start border-warning border-4 rounded-3 stat-card">
                 <div class="card-body d-flex align-items-center justify-content-between p-3">
                     <div>
                         <p class="text-muted small fw-bold mb-1">عدد الحلقات</p>
-                        <h2 class="fw-bold mb-0 text-dark">@ViewBag.CirclesCount</h2>
+                        <h2 class="fw-bold mb-0 theme-text">@ViewBag.CirclesCount</h2>
                     </div>
                     <div class="bg-warning bg-opacity-10 p-3 rounded-circle">
                         <i class="bi bi-mortarboard-fill text-warning fs-4"></i>
@@ -53,11 +52,11 @@
         </div>
 
         <div class="col-md-3">
-            <div class="card h-100 shadow-sm border-0 border-start border-danger border-4 rounded-3 stat-card bg-white">
+            <div class="card h-100 shadow-sm border-0 border-start border-danger border-4 rounded-3 stat-card">
                 <div class="card-body d-flex align-items-center justify-content-between p-3">
                     <div>
                         <p class="text-muted small fw-bold mb-1">حضور اليوم</p>
-                        <h2 class="fw-bold mb-0 text-dark">@ViewBag.TodayAttendance</h2>
+                        <h2 class="fw-bold mb-0 theme-text">@ViewBag.TodayAttendance</h2>
                     </div>
                     <div class="bg-danger bg-opacity-10 p-3 rounded-circle">
                         <i class="bi bi-calendar-check-fill text-danger fs-4"></i>
@@ -72,11 +71,11 @@
     <div class="row g-3 mb-4">
         <div class="col-md-4">
             <a asp-controller="Students" asp-action="Create" class="text-decoration-none shadow-hover">
-                <div class="card border-0 shadow-sm p-3 h-100 action-card bg-white">
+                <div class="card border-0 shadow-sm p-3 h-100 action-card">
                     <div class="d-flex align-items-center justify-content-between">
                         <div class="d-flex align-items-center">
                             <i class="bi bi-person-plus text-success fs-5 me-3"></i>
-                            <h6 class="mb-0 fw-bold text-dark">تسجيل طالب جديد</h6>
+                            <h6 class="mb-0 fw-bold theme-text">تسجيل طالب جديد</h6>
                         </div>
                         <i class="bi bi-chevron-left text-muted small"></i>
                     </div>
@@ -86,11 +85,11 @@
 
         <div class="col-md-4">
             <a asp-controller="Attendances" asp-action="GroupAttendance" class="text-decoration-none shadow-hover">
-                <div class="card border-0 shadow-sm p-3 h-100 action-card bg-white">
+                <div class="card border-0 shadow-sm p-3 h-100 action-card">
                     <div class="d-flex align-items-center justify-content-between">
                         <div class="d-flex align-items-center">
                             <i class="bi bi-check2-circle text-primary fs-5 me-3"></i>
-                            <h6 class="mb-0 fw-bold text-dark">تسجيل حضور حلقة</h6>
+                            <h6 class="mb-0 fw-bold theme-text">تسجيل حضور حلقة</h6>
                         </div>
                         <i class="bi bi-chevron-left text-muted small"></i>
                     </div>
@@ -100,11 +99,11 @@
 
         <div class="col-md-4">
             <a asp-controller="Memorizations" asp-action="Create" class="text-decoration-none shadow-hover">
-                <div class="card border-0 shadow-sm p-3 h-100 action-card bg-white">
+                <div class="card border-0 shadow-sm p-3 h-100 action-card">
                     <div class="d-flex align-items-center justify-content-between">
                         <div class="d-flex align-items-center">
                             <i class="bi bi-journal-plus text-warning fs-5 me-3"></i>
-                            <h6 class="mb-0 fw-bold text-dark">إضافة ورد حفظ</h6>
+                            <h6 class="mb-0 fw-bold theme-text">إضافة ورد حفظ</h6>
                         </div>
                         <i class="bi bi-chevron-left text-muted small"></i>
                     </div>
@@ -116,7 +115,7 @@
     @* تحليل المستويات *@
     <div class="row">
         <div class="col-12">
-            <div class="card border-0 shadow-sm p-4 mb-4 bg-white">
+            <div class="card border-0 shadow-sm p-4 mb-4" style="background-color: var(--bg-card);">
                 <h6 class="text-muted fw-bold mb-4">تحليل مستويات الطلاب (التقييمات)</h6>
                 <div style="height: 300px;">
                     <canvas id="gradesChart"></canvas>
@@ -127,14 +126,19 @@
 </div>
 
 <style>
-    /* تقليل المسافة العلوية للصفحة لرفع المحتوى لأقصى حد */
     .container-fluid {
         margin-top: -15px !important;
     }
 
+    /* استخدام متغيرات الألوان بدلاً من الألوان الثابتة */
+    .theme-text {
+        color: var(--text-main);
+    }
+
     .stat-card {
-        transition: transform 0.2s ease;
+        transition: transform 0.2s ease, background-color 0.3s ease;
         min-height: 100px;
+        background-color: var(--bg-card);
     }
 
         .stat-card:hover {
@@ -143,11 +147,12 @@
 
     .action-card {
         transition: all 0.3s ease;
+        background-color: var(--bg-card);
     }
 
         .action-card:hover {
             transform: translateY(-3px);
-            box-shadow: 0 5px 15px rgba(0,0,0,0.05) !important;
-            background-color: #fcfcfc !important;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.1) !important;
+            background-color: var(--hover-bg) !important;
         }
 </style>

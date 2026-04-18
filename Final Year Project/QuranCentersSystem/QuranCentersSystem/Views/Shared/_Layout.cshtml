@@ -8,29 +8,20 @@
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>@ViewData["Title"] - منظومة إتقان للتحفيظ</title>
+
+    <script>
+        const storedTheme = localStorage.getItem('theme');
+        const systemTheme = window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light';
+        const currentTheme = storedTheme || systemTheme;
+        document.documentElement.setAttribute('data-bs-theme', currentTheme);
+    </script>
+
     <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.rtl.min.css" />
     <link rel="stylesheet" href="~/css/site.css" asp-append-version="true" />
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.0/font/bootstrap-icons.css">
 
     <style>
-        /* تعريف متغيرات الألوان الجديدة (الأخضر والذهبي) */
-        :root {
-            --primary-green: #1a531a;
-            --secondary-green: #2a752a;
-            --accent-gold: #c9a050;
-            --bg-light: #f4f7f6;
-            --text-dark: #2c3e50;
-            --sidebar-bg: #1e293b;
-        }
-
-        body {
-            background-color: var(--bg-light);
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-            color: var(--text-dark);
-            direction: rtl;
-        }
-
-        /* تنسيقات الهيكل (Layout) */
+        /* تنسيقات الهيكل (Layout) المتغيرة */
         .sidebar {
             width: 260px;
             min-height: 100vh;
@@ -40,6 +31,7 @@
             right: 0;
             top: 0;
             z-index: 1000;
+            transition: background-color 0.3s ease;
         }
 
             .sidebar a {
@@ -48,22 +40,13 @@
                 padding: 15px 20px;
                 display: block;
                 transition: all 0.3s;
-                border-bottom: 1px solid #2d3748;
+                border-bottom: 1px solid rgba(255,255,255,0.05);
             }
 
                 .sidebar a:hover {
-                    background-color: #2d3748;
+                    background-color: rgba(255,255,255,0.1);
                     color: white;
                 }
-
-            /* كود تمييز الزر النشط في القائمة الجانبية (الأزرق) */
-            .sidebar .nav-link.active,
-            .sidebar .collapse-item.active {
-                background-color: #f8f9fa !important;
-                color: #0d6efd !important;
-                font-weight: bold;
-                border-right: 4px solid #0d6efd;
-            }
 
             .sidebar i {
                 margin-left: 10px;
@@ -73,18 +56,29 @@
         .main-content {
             margin-right: 260px;
             padding: 30px;
-            background-color: #f4f7f6;
+            background-color: var(--bg-body);
             min-height: 100vh;
             width: calc(100% - 260px);
             flex-grow: 1;
+            transition: background-color 0.3s ease;
         }
 
         .top-header {
-            background-color: white;
+            background-color: var(--bg-card);
             padding: 15px 30px;
             box-shadow: 0 2px 5px rgba(0,0,0,0.05);
             border-radius: 8px;
             margin-bottom: 30px;
+            transition: background-color 0.3s ease;
+            color: var(--text-main);
+        }
+
+        .collapse-inner {
+            background-color: var(--bg-card) !important;
+        }
+
+        .collapse-item {
+            color: var(--text-main) !important;
         }
     </style>
 </head>
@@ -125,16 +119,16 @@
                         <i class="bi bi-calendar-check"></i> الحضور والغياب
                     </a>
 
-                    <li class="nav-item">
+                    <li class="nav-item list-unstyled">
                         <a class="nav-link collapsed" href="#" data-bs-toggle="collapse" data-bs-target="#memorizationMenu" aria-expanded="false">
                             <i class="bi bi-journal-check ms-2"></i>
                             <span>متابعة الحفظ</span>
                             <i class="bi bi-chevron-down me-auto dropdown-arrow"></i>
                         </a>
                         <div id="memorizationMenu" class="collapse">
-                            <div class="bg-white py-2 collapse-inner rounded">
-                                <a class="collapse-item nav-link text-dark" asp-controller="Memorizations" asp-action="FollowUp">نظام الأسئلة</a>
-                                <a class="collapse-item nav-link text-dark" asp-controller="Memorizations" asp-action="DailyRecord">التتبيع المباشر</a>
+                            <div class="py-2 collapse-inner rounded mx-2 mt-1">
+                                <a class="collapse-item nav-link" asp-controller="Memorizations" asp-action="FollowUp">نظام الأسئلة</a>
+                                <a class="collapse-item nav-link" asp-controller="Memorizations" asp-action="DailyRecord">التتبيع المباشر</a>
                             </div>
                         </div>
                     </li>
@@ -146,7 +140,7 @@
                         <i class="bi bi-graph-up"></i> التقارير والإحصائيات
                     </a>
 
-                    <a class="nav-link text-white" asp-controller="Parents" asp-action="Index">
+                    <a class="nav-link" asp-controller="Parents" asp-action="Index">
                         <i class="bi bi-people-fill me-2"></i> إدارة أولياء الأمور
                     </a>
 
@@ -164,9 +158,13 @@
 
         <main class="main-content">
             <header class="top-header d-flex justify-content-between align-items-center">
-                <h4 class="m-0 text-dark">@ViewData["Title"]</h4>
+                <h4 class="m-0" style="color: var(--text-main);">@ViewData["Title"]</h4>
 
                 <div class="d-flex align-items-center">
+                    <button class="btn btn-link text-decoration-none me-3" id="themeToggle" type="button" aria-label="Toggle theme" style="color: var(--text-main);">
+                        <i class="bi fs-5" id="themeIcon"></i>
+                    </button>
+
                     @if (SignInManager.IsSignedIn(User))
                     {
                         <span class="me-3 text-muted">مرحباً، @UserManager.GetUserName(User)</span>
@@ -204,7 +202,6 @@
                 if (linkHref && (currentUrl === linkHref || currentUrl.startsWith(linkHref + "/"))) {
                     link.classList.add('active');
 
-                    // إذا كان الزر داخل القائمة المنسدلة، افتحها تلقائياً
                     var parentCollapse = link.closest('.collapse');
                     if (parentCollapse) {
                         parentCollapse.classList.add('show');
@@ -214,6 +211,35 @@
                         }
                     }
                 }
+            });
+        });
+    </script>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            const toggleBtn = document.getElementById('themeToggle');
+            const themeIcon = document.getElementById('themeIcon');
+            const htmlElement = document.documentElement;
+
+            const updateIcon = (theme) => {
+                if (theme === 'dark') {
+                    themeIcon.className = 'bi bi-sun-fill text-warning fs-5'; // شمس للوضع المظلم
+                } else {
+                    themeIcon.className = 'bi bi-moon-stars-fill fs-5'; // قمر للوضع الفاتح
+                }
+            };
+
+            // ضبط الأيقونة عند التحميل
+            updateIcon(htmlElement.getAttribute('data-bs-theme'));
+
+            // عند النقر على الزر
+            toggleBtn.addEventListener('click', () => {
+                const currentTheme = htmlElement.getAttribute('data-bs-theme');
+                const newTheme = currentTheme === 'dark' ? 'light' : 'dark';
+
+                htmlElement.setAttribute('data-bs-theme', newTheme);
+                localStorage.setItem('theme', newTheme);
+                updateIcon(newTheme);
             });
         });
     </script>
