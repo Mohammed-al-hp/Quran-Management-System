@@ -2,9 +2,11 @@ using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
-using QuranCentersSystem.Data;
+using QuranCenters.Infrastructure.Data;
 using QuranCentersSystem.Models;
-using QuranCentersSystem.Services;
+using QuranCenters.Core.Entities;
+using QuranCenters.Infrastructure.Identity;
+using QuranCenters.Application.Interfaces;
 using System;
 using System.Linq;
 using System.Threading.Tasks;
@@ -21,13 +23,13 @@ namespace QuranCentersSystem.Controllers.Api
     public class AttendanceApiController : ControllerBase
     {
         private readonly ApplicationDbContext _context;
-        private readonly QrCodeService _qrCodeService;
-        private readonly NotificationService _notificationService;
+        private readonly IQrCodeService _qrCodeService;
+        private readonly INotificationService _notificationService;
 
         public AttendanceApiController(
             ApplicationDbContext context,
-            QrCodeService qrCodeService,
-            NotificationService notificationService)
+            IQrCodeService qrCodeService,
+            INotificationService notificationService)
         {
             _context = context;
             _qrCodeService = qrCodeService;

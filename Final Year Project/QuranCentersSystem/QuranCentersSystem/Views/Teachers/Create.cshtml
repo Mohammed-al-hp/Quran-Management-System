@@ -1,37 +1,37 @@
-﻿@model QuranCentersSystem.Models.Teacher
+@model QuranCenters.Core.Entities.Teacher
 
 @{
-    ViewData["Title"] = "إضافة محفظ جديد";
+    ViewData["Title"] = "????? ???? ????";
 }
 
 <div class="container-fluid" dir="rtl">
     <div class="card shadow-sm bg-white p-4 rounded border-0">
         <div class="d-flex justify-content-between align-items-center mb-4 border-bottom pb-3">
-            <h4 class="m-0 text-success fw-bold">إضافة محفظ جديد</h4>
+            <h4 class="m-0 text-success fw-bold">????? ???? ????</h4>
             <a asp-action="Index" class="btn btn-outline-secondary">
-                <i class="bi bi-arrow-right"></i> عودة للقائمة
+                <i class="bi bi-arrow-right"></i> ???? ???????
             </a>
         </div>
 
         <div class="row justify-content-center">
             <div class="col-md-8 col-lg-6">
-                @* أضفنا enctype هنا لدعم رفع الصور *@
+                @* ????? enctype ??? ???? ??? ????? *@
                 <form asp-action="Create" method="post" enctype="multipart/form-data" class="bg-light p-4 rounded shadow-sm">
                     <div asp-validation-summary="ModelOnly" class="text-danger mb-3"></div>
 
-                    @* حقل اسم المحفظ *@
+                    @* ??? ??? ?????? *@
                     <div class="mb-3">
-                        <label asp-for="Name" class="form-label fw-bold text-secondary">اسم المحفظ</label>
+                        <label asp-for="Name" class="form-label fw-bold text-secondary">??? ??????</label>
                         <div class="input-group">
                             <span class="input-group-text"><i class="bi bi-person"></i></span>
-                            <input asp-for="Name" class="form-control" placeholder="أدخل الاسم رباعي..." />
+                            <input asp-for="Name" class="form-control" placeholder="???? ????? ?????..." />
                         </div>
                         <span asp-validation-for="Name" class="text-danger small"></span>
                     </div>
 
-                    @* حقل رقم الهاتف *@
+                    @* ??? ??? ?????? *@
                     <div class="mb-3">
-                        <label asp-for="Phone" class="form-label fw-bold text-secondary">رقم الهاتف</label>
+                        <label asp-for="Phone" class="form-label fw-bold text-secondary">??? ??????</label>
                         <div class="input-group">
                             <span class="input-group-text"><i class="bi bi-telephone"></i></span>
                             <input asp-for="Phone" class="form-control" placeholder="09xxxxxxxx" />
@@ -39,19 +39,19 @@
                         <span asp-validation-for="Phone" class="text-danger small"></span>
                     </div>
 
-                    @* حقل المؤهل / الإجازة *@
+                    @* ??? ?????? / ??????? *@
                     <div class="mb-3">
-                        <label asp-for="Qualification" class="form-label fw-bold text-secondary">المؤهل / الإجازة</label>
+                        <label asp-for="Qualification" class="form-label fw-bold text-secondary">?????? / ???????</label>
                         <div class="input-group">
                             <span class="input-group-text"><i class="bi bi-patch-check"></i></span>
-                            <input asp-for="Qualification" class="form-control" placeholder="مثال: إجازة برواية قالون / ماجستير..." />
+                            <input asp-for="Qualification" class="form-control" placeholder="????: ????? ?????? ????? / ???????..." />
                         </div>
                         <span asp-validation-for="Qualification" class="text-danger small"></span>
                     </div>
 
-                    @* حقل تاريخ الميلاد (جديد) *@
+                    @* ??? ????? ??????? (????) *@
                     <div class="mb-3">
-                        <label asp-for="BirthDate" class="form-label fw-bold text-secondary">تاريخ الميلاد</label>
+                        <label asp-for="BirthDate" class="form-label fw-bold text-secondary">????? ???????</label>
                         <div class="input-group">
                             <span class="input-group-text"><i class="bi bi-calendar-event"></i></span>
                             <input asp-for="BirthDate" type="date" class="form-control" />
@@ -59,33 +59,33 @@
                         <span asp-validation-for="BirthDate" class="text-danger small"></span>
                     </div>
 
-                    @* حقل اختيار الحلقة (جديد) *@
+                    @* ??? ?????? ?????? (????) *@
                     <div class="mb-3">
-                        <label class="form-label fw-bold text-secondary">تحديد الحلقة</label>
+                        <label class="form-label fw-bold text-secondary">????? ??????</label>
                         <div class="input-group">
                             <span class="input-group-text"><i class="bi bi-door-open"></i></span>
                             <select name="selectedCircleId" class="form-select" asp-items="ViewBag.Circles">
-                                <option value="">-- اختر حلقة (اختياري) --</option>
+                                <option value="">-- ???? ???? (???????) --</option>
                             </select>
                         </div>
                     </div>
 
-                    @* حقل صورة المحفظ (جديد) *@
+                    @* ??? ???? ?????? (????) *@
                     <div class="mb-3">
-                        <label class="form-label fw-bold text-secondary">صورة المحفظ (اختياري)</label>
+                        <label class="form-label fw-bold text-secondary">???? ?????? (???????)</label>
                         <div class="input-group">
                             <span class="input-group-text"><i class="bi bi-image"></i></span>
                             <input type="file" name="teacherImage" class="form-control" accept="image/*" />
                         </div>
-                        <div class="form-text small text-muted">يفضل اختيار صورة مربعة وبحجم أقل من 2 ميجابايت.</div>
+                        <div class="form-text small text-muted">???? ?????? ???? ????? ????? ??? ?? 2 ????????.</div>
                     </div>
 
                     <hr class="my-4">
 
-                    @* زر الحفظ *@
+                    @* ?? ????? *@
                     <div class="d-grid">
                         <button type="submit" class="btn btn-success btn-lg">
-                            <i class="bi bi-check-circle"></i> حفظ البيانات
+                            <i class="bi bi-check-circle"></i> ??? ????????
                         </button>
                     </div>
                 </form>

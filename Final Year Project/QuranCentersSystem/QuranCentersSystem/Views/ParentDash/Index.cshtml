@@ -1,7 +1,7 @@
-﻿@model IEnumerable<QuranCentersSystem.Models.Student>
+@model IEnumerable<QuranCenters.Core.Entities.Student>
 
 <div class="container py-4" dir="rtl">
-    <h3 class="fw-bold text-primary mb-4">مرحباً بك في بوابة أولياء الأمور</h3>
+    <h3 class="fw-bold text-primary mb-4">?????? ?? ?? ????? ?????? ??????</h3>
 
     <div class="row">
         @foreach (var child in Model)
@@ -14,21 +14,21 @@
                     <div class="card-body p-4">
                         <div class="row text-center mb-3">
                             <div class="col-4 border-start">
-                                <div class="small text-muted">نسبة الحضور</div>
-                                <div class="fw-bold text-dark">@child.Attendances.Count(a => a.Status == "حاضر")</div>
+                                <div class="small text-muted">???? ??????</div>
+                                <div class="fw-bold text-dark">@child.Attendances.Count(a => a.Status == "????")</div>
                             </div>
                             <div class="col-4 border-start">
-                                <div class="small text-muted">آخر حفظ</div>
+                                <div class="small text-muted">??? ???</div>
                                 <div class="fw-bold text-success">@child.Memorizations.LastOrDefault()?.SurahName</div>
                             </div>
                             <div class="col-4">
-                                <div class="small text-muted">الرسوم المدفوعة</div>
-                                <div class="fw-bold text-primary">@child.Payments.Sum(p => p.Amount) د.ل</div>
+                                <div class="small text-muted">?????? ????????</div>
+                                <div class="fw-bold text-primary">@child.Payments.Sum(p => p.Amount) ?.?</div>
                             </div>
                         </div>
                         <div class="d-grid gap-2">
-                            <a class="btn btn-outline-primary rounded-pill btn-sm">عرض التقرير المفصل</a>
-                            <a class="btn btn-outline-info rounded-pill btn-sm">عرض جدول الحفظ</a>
+                            <a class="btn btn-outline-primary rounded-pill btn-sm">??? ??????? ??????</a>
+                            <a class="btn btn-outline-info rounded-pill btn-sm">??? ???? ?????</a>
                         </div>
                     </div>
                 </div>

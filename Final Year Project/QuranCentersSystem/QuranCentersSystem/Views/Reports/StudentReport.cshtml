@@ -1,18 +1,18 @@
-﻿@model QuranCentersSystem.Models.Student
+@model QuranCenters.Core.Entities.Student
 
 @{
-    ViewData["Title"] = "تقرير متابعة الحفظ";
-    var memorizations = ViewBag.Memorizations as List<QuranCentersSystem.Models.Memorization>;
+    ViewData["Title"] = "????? ?????? ?????";
+    var memorizations = ViewBag.Memorizations as List<QuranCenters.Core.Entities.Memorization>;
 }
 
 <div class="container-fluid" dir="rtl">
     <div class="d-flex justify-content-between align-items-center mb-4 border-bottom pb-3">
         <div>
-            <h4 class="text-success fw-bold m-0">تقرير متابعة الحفظ والمراجعة</h4>
-            <small class="text-muted">منظومة إتقان لتحفيظ القرآن الكريم</small>
+            <h4 class="text-success fw-bold m-0">????? ?????? ????? ?????????</h4>
+            <small class="text-muted">?????? ????? ?????? ?????? ??????</small>
         </div>
         <button class="btn btn-gold" onclick="window.print()">
-            <i class="bi bi-printer"></i> طباعة التقرير
+            <i class="bi bi-printer"></i> ????? ???????
         </button>
     </div>
 
@@ -26,19 +26,19 @@
                 </div>
                 <div class="col-md-5">
                     <h3 class="fw-bold text-dark mb-1">@Model.Name</h3>
-                    <p class="text-muted mb-2">تاريخ الانضمام: @Model.JoinDate.ToShortDateString()</p>
-                    <span class="badge @(Model.Status == "نشط" ? "bg-success" : "bg-secondary") rounded-pill px-3 py-2">
+                    <p class="text-muted mb-2">????? ????????: @Model.JoinDate.ToShortDateString()</p>
+                    <span class="badge @(Model.Status == "???" ? "bg-success" : "bg-secondary") rounded-pill px-3 py-2">
                         @Model.Status
                     </span>
                 </div>
                 <div class="col-md-5 border-start">
                     <div class="ps-4">
-                        <p class="mb-2"><strong>الحلقة الحالية:</strong> @(Model.Circle?.Name ?? "غير محدد")</p>
+                        <p class="mb-2"><strong>?????? ???????:</strong> @(Model.Circle?.Name ?? "??? ????")</p>
 
-                        @* التعديل هنا: جلب المعلم من خلال الحلقة المتربطة بالطالب *@
-                        <p class="mb-2"><strong>المحفظ المشرف:</strong> @(Model.Circle?.Teacher?.Name ?? "غير محدد")</p>
+                        @* ??????? ???: ??? ?????? ?? ???? ?????? ???????? ??????? *@
+                        <p class="mb-2"><strong>?????? ??????:</strong> @(Model.Circle?.Teacher?.Name ?? "??? ????")</p>
 
-                        <p class="mb-0"><strong>عدد أيام الحضور هذا الشهر:</strong> 22 يوم (مثال)</p>
+                        <p class="mb-0"><strong>??? ???? ?????? ??? ?????:</strong> 22 ??? (????)</p>
                     </div>
                 </div>
             </div>
@@ -47,7 +47,7 @@
 
     <div class="card shadow-sm border-0 bg-white rounded-3">
         <div class="card-header bg-white border-bottom p-4">
-            <h5 class="fw-bold text-dark m-0">سجل التسميع والمراجعة الأخير</h5>
+            <h5 class="fw-bold text-dark m-0">??? ??????? ????????? ??????</h5>
         </div>
         <div class="card-body p-0">
             @if (memorizations != null && memorizations.Any())
@@ -55,12 +55,12 @@
                 <table class="table table-hover mb-0">
                     <thead class="bg-light">
                         <tr>
-                            <th class="py-3">التاريخ</th>
-                            <th class="py-3">السورة</th>
-                            <th class="py-3">من آية</th>
-                            <th class="py-3">إلى آية</th>
-                            <th class="py-3">التقييم</th>
-                            <th class="py-3">ملاحظات المعلم</th>
+                            <th class="py-3">???????</th>
+                            <th class="py-3">??????</th>
+                            <th class="py-3">?? ???</th>
+                            <th class="py-3">??? ???</th>
+                            <th class="py-3">???????</th>
+                            <th class="py-3">??????? ??????</th>
                         </tr>
                     </thead>
                     <tbody>
@@ -72,11 +72,11 @@
                                 <td>@item.FromAyah</td>
                                 <td>@item.ToAyah</td>
                                 <td>
-                                    @if (item.Grade == "ممتاز")
+                                    @if (item.Grade == "?????")
                                     {
                                         <span class="badge bg-success bg-opacity-10 text-success rounded-pill px-3">@item.Grade</span>
                                     }
-                                    else if (item.Grade == "جيد جداً")
+                                    else if (item.Grade == "??? ????")
                                     {
                                         <span class="badge bg-primary bg-opacity-10 text-primary rounded-pill px-3">@item.Grade</span>
                                     }
@@ -95,7 +95,7 @@
             {
                 <div class="text-center p-5">
                     <i class="bi bi-folder-x text-muted" style="font-size: 3rem;"></i>
-                    <p class="text-muted mt-2">لا توجد سجلات تسميع مسجلة لهذا الطالب حتى الآن.</p>
+                    <p class="text-muted mt-2">?? ???? ????? ????? ????? ???? ?????? ??? ????.</p>
                 </div>
             }
         </div>

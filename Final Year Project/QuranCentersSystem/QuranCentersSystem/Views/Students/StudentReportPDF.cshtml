@@ -1,7 +1,7 @@
-﻿@model QuranCentersSystem.Models.Student
+@model QuranCenters.Core.Entities.Student
 
 @{
-    Layout = null; // التقرير لا يحتاج لشريط التنقل الخاص بالموقع
+    Layout = null; // ??????? ?? ????? ????? ?????? ????? ???????
 }
 
 <html dir="rtl">
@@ -39,31 +39,31 @@
 </head>
 <body>
     <div class="header-box text-center">
-        <h2>تقرير متابعة طالب</h2>
+        <h2>????? ?????? ????</h2>
         <h4>@Model.FullName</h4>
     </div>
 
     <div class="row">
         <div class="col-6">
             <div class="stat-box">
-                <strong>إجمالي أيام الحضور:</strong> @Model.Attendances.Count(a => a.Status == "حاضر")
+                <strong>?????? ???? ??????:</strong> @Model.Attendances.Count(a => a.Status == "????")
             </div>
         </div>
         <div class="col-6">
             <div class="stat-box">
-                <strong>آخر سورة تم حفظها:</strong> @Model.Memorizations.OrderByDescending(m => m.Date).FirstOrDefault()?.SurahName
+                <strong>??? ???? ?? ?????:</strong> @Model.Memorizations.OrderByDescending(m => m.Date).FirstOrDefault()?.SurahName
             </div>
         </div>
     </div>
 
-    <h5 class="mt-4">سجل الإنجاز الأخير</h5>
+    <h5 class="mt-4">??? ??????? ??????</h5>
     <table class="table table-bordered">
         <thead>
             <tr>
-                <th>التاريخ</th>
-                <th>نوع الإنجاز</th>
-                <th>السورة</th>
-                <th>التقييم</th>
+                <th>???????</th>
+                <th>??? ???????</th>
+                <th>??????</th>
+                <th>???????</th>
             </tr>
         </thead>
         <tbody>
@@ -80,7 +80,7 @@
     </table>
 
     <div class="mt-5 text-start">
-        <p>ختم المركز: ........................</p>
+        <p>??? ??????: ........................</p>
     </div>
 </body>
 </html>

@@ -5,7 +5,7 @@ import '../models/circle_model.dart';
 import '../theme/app_theme.dart';
 
 class CirclesScreen extends StatelessWidget {
-  const CirclesScreen({Key? key}) : super(key: key);
+  const CirclesScreen({super.key});
 
   @override
   Widget build(BuildContext context) {
@@ -13,7 +13,10 @@ class CirclesScreen extends StatelessWidget {
 
     return Scaffold(
       appBar: AppBar(
-        title: const Text('إدارة الحلقات', style: TextStyle(fontWeight: FontWeight.bold)),
+        title: const Text(
+          'إدارة الحلقات',
+          style: TextStyle(fontWeight: FontWeight.bold),
+        ),
       ),
       body: GridView.builder(
         padding: const EdgeInsets.all(16),
@@ -31,8 +34,15 @@ class CirclesScreen extends StatelessWidget {
     );
   }
 
-  Widget _buildCircleCard(BuildContext context, CircleModel circle, QuranCenterProvider provider) {
-    final teacher = provider.teachers.cast<dynamic>().firstWhere((t) => t.id == circle.teacherId, orElse: () => null);
+  Widget _buildCircleCard(
+    BuildContext context,
+    CircleModel circle,
+    QuranCenterProvider provider,
+  ) {
+    final teacher = provider.teachers.cast<dynamic>().firstWhere(
+      (t) => t.id == circle.teacherId,
+      orElse: () => null,
+    );
     final teacherName = teacher?.name ?? 'غير محدد';
     final isFull = circle.currentStudents >= circle.maxCapacity;
 
@@ -45,7 +55,9 @@ class CirclesScreen extends StatelessWidget {
           Container(
             padding: const EdgeInsets.all(8),
             decoration: BoxDecoration(
-              color: isFull ? Colors.red.withOpacity(0.1) : AppTheme.lightEmerald,
+              color: isFull
+                  ? Colors.red.withOpacity(0.1)
+                  : AppTheme.lightEmerald,
               borderRadius: BorderRadius.circular(8),
             ),
             child: Icon(
@@ -73,7 +85,10 @@ class CirclesScreen extends StatelessWidget {
             children: [
               Text(
                 '${circle.currentStudents} / ${circle.maxCapacity}',
-                style: const TextStyle(fontWeight: FontWeight.w600, fontSize: 12),
+                style: const TextStyle(
+                  fontWeight: FontWeight.w600,
+                  fontSize: 12,
+                ),
               ),
               Text(
                 isFull ? 'مكتملة' : 'متاحة',

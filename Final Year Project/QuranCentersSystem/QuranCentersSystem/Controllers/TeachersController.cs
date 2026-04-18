@@ -1,15 +1,17 @@
-﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
-using QuranCentersSystem.Data;
+using QuranCenters.Infrastructure.Data;
 using QuranCentersSystem.Models;
+using QuranCenters.Core.Entities;
+using QuranCenters.Infrastructure.Identity;
 using System.Linq;
 using System.Threading.Tasks;
 
 namespace QuranCentersSystem.Controllers
 {
-    [Authorize(Roles = "Admin")] // يسمح للمدير فقط
+    [Authorize(Roles = "Admin")] // ???? ?????? ???
     public class TeachersController : Controller
     {
         private readonly ApplicationDbContext _context;
@@ -19,7 +21,7 @@ namespace QuranCentersSystem.Controllers
             _context = context;
         }
 
-        // 1. عرض قائمة المحفظين مع البحث والفرز المتقدم
+        // 1. ??? ????? ???????? ?? ????? ?????? ???????
         public async Task<IActionResult> Index(string searchTerm, string sortBy)
         {
             var query = _context.Teachers
@@ -27,20 +29,20 @@ namespace QuranCentersSystem.Controllers
                     .ThenInclude(c => c.Students)
                 .AsQueryable();
 
-            // الفلترة بالبحث
+            // ??????? ??????
             if (!string.IsNullOrWhiteSpace(searchTerm))
             {
                 query = query.Where(t => t.Name.Contains(searchTerm) || t.Qualification.Contains(searchTerm));
             }
 
-            // منطق الفرز (Sorting) - تم إصلاح "students" هنا
+            // ???? ????? (Sorting) - ?? ????? "students" ???
             query = sortBy switch
             {
                 "oldest" => query.OrderBy(t => t.Id),
-                // الإصلاح: استخدام SelectMany لجمع الطلاب ثم عدهم ككتلة واحدة
+                // ???????: ??????? SelectMany ???? ?????? ?? ???? ????? ?????
                 "students" => query.OrderByDescending(t => t.Circles.SelectMany(c => c.Students).Count()),
                 "alphabetical" => query.OrderBy(t => t.Name),
-                _ => query.OrderByDescending(t => t.Id), // الأحدث هو الافتراضي
+                _ => query.OrderByDescending(t => t.Id), // ?????? ?? ?????????
             };
 
             ViewBag.CurrentSort = sortBy;
@@ -49,28 +51,28 @@ namespace QuranCentersSystem.Controllers
             return View(await query.ToListAsync());
         }
 
-        // 1. عرض صفحة الإضافة
+        // 1. ??? ???? ???????
         public IActionResult Create()
         {
-            // جلب الحلقات لإظهارها في القائمة المنسدلة
+            // ??? ??????? ???????? ?? ??????? ????????
             ViewBag.Circles = new SelectList(_context.Circles, "Id", "Name");
             return View();
         }
 
-        // 2. معالجة بيانات الإضافة
+        // 2. ?????? ?????? ???????
         [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Create(Teacher teacher, IFormFile? teacherImage, int? selectedCircleId)
         {
             if (ModelState.IsValid)
             {
-                // معالجة رفع الصورة (إذا وُجدت)
+                // ?????? ??? ?????? (??? ?????)
                 if (teacherImage != null && teacherImage.Length > 0)
                 {
                     var fileName = Guid.NewGuid().ToString() + Path.GetExtension(teacherImage.FileName);
                     var filePath = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot/images/teachers", fileName);
 
-                    // تأكد من وجود المجلد
+                    // ???? ?? ???? ??????
                     Directory.CreateDirectory(Path.Combine(Directory.GetCurrentDirectory(), "wwwroot/images/teachers"));
 
                     using (var stream = new FileStream(filePath, FileMode.Create))
@@ -83,7 +85,7 @@ namespace QuranCentersSystem.Controllers
                 _context.Add(teacher);
                 await _context.SaveChangesAsync();
 
-                // ربط المعلم بالحلقة المختارة (إذا تم اختيار حلقة)
+                // ??? ?????? ??????? ???????? (??? ?? ?????? ????)
                 if (selectedCircleId.HasValue)
                 {
                     var circle = await _context.Circles.FindAsync(selectedCircleId);
@@ -142,7 +144,7 @@ namespace QuranCentersSystem.Controllers
             return View(teacher);
         }
 
-        // تحسين منطق الحذف لتجنب أخطاء القيود (Constraint Error)
+        // ????? ???? ????? ????? ????? ?????? (Constraint Error)
         [HttpPost, ActionName("Delete")]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> DeleteConfirmed(int id)
@@ -153,7 +155,7 @@ namespace QuranCentersSystem.Controllers
 
             if (teacher != null)
             {
-                // إذا كانت الحلقات مرتبطة بالمعلم، نقوم بفك الارتباط أولاً
+                // ??? ???? ??????? ?????? ???????? ???? ??? ???????? ?????
                 foreach (var circle in teacher.Circles)
                 {
                     circle.TeacherId = null;

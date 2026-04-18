@@ -1,41 +1,41 @@
-﻿@model IEnumerable<QuranCentersSystem.Models.Student>
+@model IEnumerable<QuranCenters.Core.Entities.Student>
 
 @{
-    ViewData["Title"] = "إدارة الطلاب";
+    ViewData["Title"] = "????? ??????";
 }
 
 <div class="container-fluid py-4" dir="rtl">
     <div class="card shadow-sm border-0 bg-white p-4 rounded" style="border-radius: 15px !important;">
 
-        @* العنوان وزر الإضافة *@
+        @* ??????? ??? ??????? *@
         <div class="d-flex justify-content-between align-items-center mb-4 border-bottom pb-3">
             <div>
-                <h4 class="m-0 text-success fw-bold">إدارة شؤون الطلاب</h4>
-                <p class="text-muted mb-0 small">عرض وتصفية بيانات طلاب المركز</p>
+                <h4 class="m-0 text-success fw-bold">????? ???? ??????</h4>
+                <p class="text-muted mb-0 small">??? ?????? ?????? ???? ??????</p>
             </div>
             <a asp-controller="Students" asp-action="Create" class="btn btn-success d-flex align-items-center gap-2 px-4 shadow-sm">
-                <i class="bi bi-person-plus-fill"></i> إضافة طالب جديد
+                <i class="bi bi-person-plus-fill"></i> ????? ???? ????
             </a>
         </div>
 
-        @* قسم التصفية والبحث *@
+        @* ??? ??????? ?????? *@
         <div class="row g-3 mb-4">
             <div class="col-md-5">
-                <label class="form-label small fw-bold text-muted">البحث السريع:</label>
+                <label class="form-label small fw-bold text-muted">????? ??????:</label>
                 <div class="input-group shadow-sm">
                     <span class="input-group-text bg-white border-end-0">
                         <i class="bi bi-search text-muted"></i>
                     </span>
-                    <input type="text" id="searchInput" class="form-control border-start-0 bg-white" placeholder="ابحث باسم الطالب...">
+                    <input type="text" id="searchInput" class="form-control border-start-0 bg-white" placeholder="???? ???? ??????...">
                 </div>
             </div>
 
             <div class="col-md-4">
-                <label class="form-label small fw-bold text-muted">تصفية حسب الحلقة:</label>
+                <label class="form-label small fw-bold text-muted">????? ??? ??????:</label>
                 <form method="get" asp-action="Index" id="filterForm">
                     <select name="circleId" class="form-select bg-white shadow-sm" onchange="document.getElementById('filterForm').submit()">
-                        <option value="">-- عرض جميع الحلقات --</option>
-                        @foreach (var circle in (IEnumerable<QuranCentersSystem.Models.Circle>)ViewBag.Circles)
+                        <option value="">-- ??? ???? ??????? --</option>
+                        @foreach (var circle in (IEnumerable<QuranCenters.Core.Entities.Circle>)ViewBag.Circles)
                         {
                             <!option value="@circle.Id" @(ViewBag.SelectedCircle == circle.Id ? "selected" : "")>
                             @circle.Name
@@ -46,25 +46,25 @@
             </div>
 
             <div class="col-md-3 d-flex align-items-end justify-content-md-end gap-2">
-                <a asp-action="Index" class="btn btn-outline-secondary shadow-sm" title="إعادة تعيين">
+                <a asp-action="Index" class="btn btn-outline-secondary shadow-sm" title="????? ?????">
                     <i class="bi bi-arrow-clockwise"></i>
                 </a>
                 <button class="btn btn-outline-dark px-3 shadow-sm" onclick="window.print()">
-                    <i class="bi bi-printer"></i> طباعة
+                    <i class="bi bi-printer"></i> ?????
                 </button>
             </div>
         </div>
 
-        @* الجدول *@
+        @* ?????? *@
         <div class="table-responsive">
             <table class="table table-hover align-middle" id="studentsTable">
                 <thead class="table-light">
                     <tr>
-                        <th class="py-3 px-3">اسم الطالب</th>
-                        <th class="py-3 text-center">تاريخ الانضمام</th>
-                        <th class="py-3 text-center">الحلقة</th>
-                        <th class="py-3 text-center">الحالة</th>
-                        <th class="py-3 text-center" style="min-width: 150px;">الإجراءات</th>
+                        <th class="py-3 px-3">??? ??????</th>
+                        <th class="py-3 text-center">????? ????????</th>
+                        <th class="py-3 text-center">??????</th>
+                        <th class="py-3 text-center">??????</th>
+                        <th class="py-3 text-center" style="min-width: 150px;">?????????</th>
                     </tr>
                 </thead>
                 <tbody>
@@ -73,7 +73,7 @@
                         <tr class="no-data-row">
                             <td colspan="5" class="text-center py-5 text-muted">
                                 <i class="bi bi-info-circle d-block mb-2" style="font-size: 2rem;"></i>
-                                لا يوجد طلاب مضافين في هذه الحلقة حالياً.
+                                ?? ???? ???? ?????? ?? ??? ?????? ??????.
                             </td>
                         </tr>
                     }
@@ -86,35 +86,35 @@
                                 <td class="text-center text-muted">@item.JoinDate.ToShortDateString()</td>
                                 <td class="text-center">
                                     <span class="badge bg-soft-success text-success px-3 py-2 border">
-                                        @(item.Circle?.Name ?? "بدون حلقة")
+                                        @(item.Circle?.Name ?? "???? ????")
                                     </span>
                                 </td>
                                 <td class="text-center">
-                                    @if (item.Status == "نشط")
+                                    @if (item.Status == "???")
                                     {
-                                        <span class="badge bg-success rounded-pill px-3 shadow-sm">نشط</span>
+                                        <span class="badge bg-success rounded-pill px-3 shadow-sm">???</span>
                                     }
                                     else
                                     {
-                                        <span class="badge bg-secondary rounded-pill px-3 shadow-sm">غير نشط</span>
+                                        <span class="badge bg-secondary rounded-pill px-3 shadow-sm">??? ???</span>
                                     }
                                 </td>
                                 <td>
                                     <div class="d-flex justify-content-center gap-2">
-                                        <a asp-action="Edit" asp-route-id="@item.Id" class="btn btn-sm btn-outline-warning rounded-circle" title="تعديل">
+                                        <a asp-action="Edit" asp-route-id="@item.Id" class="btn btn-sm btn-outline-warning rounded-circle" title="?????">
                                             <i class="bi bi-pencil"></i>
                                         </a>
 
-                                        @* 🌟 تعديل الرابط ليعمل مع دالة طباعة الـ PDF *@
-                                        <a asp-controller="Students" asp-action="PrintStudentReport" asp-route-id="@item.Id" class="btn btn-sm btn-outline-info rounded-circle" title="تحميل تقرير PDF">
+                                        @* ?? ????? ?????? ????? ?? ???? ????? ??? PDF *@
+                                        <a asp-controller="Students" asp-action="PrintStudentReport" asp-route-id="@item.Id" class="btn btn-sm btn-outline-info rounded-circle" title="????? ????? PDF">
                                             <i class="bi bi-file-earmark-pdf"></i>
                                         </a>
 
-                                        @if (User.IsInRole("Admin") || User.IsInRole("مدير النظام"))
+                                        @if (User.IsInRole("Admin") || User.IsInRole("???? ??????"))
                                         {
-                                            <form asp-action="Delete" asp-route-id="@item.Id" method="post" onsubmit="return confirm('هل أنت متأكد من حذف هذا الطالب نهائياً؟')" class="d-inline">
+                                            <form asp-action="Delete" asp-route-id="@item.Id" method="post" onsubmit="return confirm('?? ??? ????? ?? ??? ??? ?????? ????????')" class="d-inline">
                                                 @Html.AntiForgeryToken()
-                                                <button type="submit" class="btn btn-sm btn-outline-danger rounded-circle" title="حذف">
+                                                <button type="submit" class="btn btn-sm btn-outline-danger rounded-circle" title="???">
                                                     <i class="bi bi-trash"></i>
                                                 </button>
                                             </form>
@@ -131,7 +131,7 @@
 </div>
 
 <style>
-    /* التنسيقات الناعمة كما تظهر في الصورة */
+    /* ????????? ??????? ??? ???? ?? ?????? */
     .bg-soft-success {
         background-color: #e8f5e9 !important;
         border: 1px solid #c8e6c9 !important;
@@ -159,7 +159,7 @@
             box-shadow: 0 4px 8px rgba(0,0,0,0.1);
         }
 
-    /* تحسين شكل الطباعة */
+    /* ????? ??? ??????? */
     @@media print {
         .btn, .input-group, #filterForm, label, .text-muted {
             display: none !important;
@@ -184,7 +184,7 @@
 
 @section Scripts {
     <script>
-        // سكريبت البحث السريع المتطور
+        // ?????? ????? ?????? ???????
         document.getElementById("searchInput").addEventListener("keyup", function () {
             var filter = this.value.toLowerCase();
             var rows = document.querySelectorAll("#studentsTable tbody tr:not(.no-data-row):not(.no-result-row)");
@@ -200,7 +200,7 @@
                 }
             });
 
-            // إظهار رسالة "لا توجد نتائج" عند البحث
+            // ????? ????? "?? ???? ?????" ??? ?????
             var existingMsg = document.getElementById("noResultMsg");
             if (visibleCount === 0 && filter !== "") {
                 if (!existingMsg) {
@@ -208,7 +208,7 @@
                     var row = tbody.insertRow();
                     row.id = "noResultMsg";
                     row.className = "no-result-row";
-                    row.innerHTML = `<td colspan="5" class="text-center py-4 text-danger fw-bold">لا توجد نتائج بحث مطابقة لـ: "${filter}"</td>`;
+                    row.innerHTML = `<td colspan="5" class="text-center py-4 text-danger fw-bold">?? ???? ????? ??? ?????? ??: "${filter}"</td>`;
                 }
             } else if (existingMsg) {
                 existingMsg.remove();

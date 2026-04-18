@@ -1,0 +1,16 @@
+C:\New folder (2)\Quran-Management-System\Final Year Project\QuranCentersSystem\QuranCenters.Application\bin\Debug\net8.0\QuranCenters.Application.deps.json
+C:\New folder (2)\Quran-Management-System\Final Year Project\QuranCentersSystem\QuranCenters.Application\bin\Debug\net8.0\QuranCenters.Application.dll
+C:\New folder (2)\Quran-Management-System\Final Year Project\QuranCentersSystem\QuranCenters.Application\bin\Debug\net8.0\QuranCenters.Application.pdb
+C:\New folder (2)\Quran-Management-System\Final Year Project\QuranCentersSystem\QuranCenters.Application\bin\Debug\net8.0\QuranCenters.Core.dll
+C:\New folder (2)\Quran-Management-System\Final Year Project\QuranCentersSystem\QuranCenters.Application\bin\Debug\net8.0\QuranCenters.Core.pdb
+C:\New folder (2)\Quran-Management-System\Final Year Project\QuranCentersSystem\QuranCenters.Application\obj\Debug\net8.0\QuranCenters.Application.csproj.AssemblyReference.cache
+C:\New folder (2)\Quran-Management-System\Final Year Project\QuranCentersSystem\QuranCenters.Application\obj\Debug\net8.0\QuranCenters.Application.GeneratedMSBuildEditorConfig.editorconfig
+C:\New folder (2)\Quran-Management-System\Final Year Project\QuranCentersSystem\QuranCenters.Application\obj\Debug\net8.0\QuranCenters.Application.AssemblyInfoInputs.cache
+C:\New folder (2)\Quran-Management-System\Final Year Project\QuranCentersSystem\QuranCenters.Application\obj\Debug\net8.0\QuranCenters.Application.AssemblyInfo.cs
+C:\New folder (2)\Quran-Management-System\Final Year Project\QuranCentersSystem\QuranCenters.Application\obj\Debug\net8.0\QuranCenters.Application.csproj.CoreCompileInputs.cache
+C:\New folder (2)\Quran-Management-System\Final Year Project\QuranCentersSystem\QuranCenters.Application\obj\Debug\net8.0\QuranCenters.Application.sourcelink.json
+C:\New folder (2)\Quran-Management-System\Final Year Project\QuranCentersSystem\QuranCenters.Application\obj\Debug\net8.0\QuranCen.2A0E15E1.Up2Date
+C:\New folder (2)\Quran-Management-System\Final Year Project\QuranCentersSystem\QuranCenters.Application\obj\Debug\net8.0\QuranCenters.Application.dll
+C:\New folder (2)\Quran-Management-System\Final Year Project\QuranCentersSystem\QuranCenters.Application\obj\Debug\net8.0\refint\QuranCenters.Application.dll
+C:\New folder (2)\Quran-Management-System\Final Year Project\QuranCentersSystem\QuranCenters.Application\obj\Debug\net8.0\QuranCenters.Application.pdb
+C:\New folder (2)\Quran-Management-System\Final Year Project\QuranCentersSystem\QuranCenters.Application\obj\Debug\net8.0\ref\QuranCenters.Application.dll

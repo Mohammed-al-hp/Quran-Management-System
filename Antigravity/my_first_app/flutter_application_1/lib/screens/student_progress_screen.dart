@@ -6,7 +6,7 @@ import '../services/api_service.dart';
 /// تُستخدم من قبل ولي الأمر والطالب لمتابعة الأداء
 class StudentProgressScreen extends StatefulWidget {
   final int studentId;
-  const StudentProgressScreen({Key? key, required this.studentId}) : super(key: key);
+  const StudentProgressScreen({super.key, required this.studentId});
 
   @override
   State<StudentProgressScreen> createState() => _StudentProgressScreenState();
@@ -67,7 +67,9 @@ class _StudentProgressScreenState extends State<StudentProgressScreen> {
             // بطاقة معلومات الطالب
             Card(
               elevation: 2,
-              shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
+              shape: RoundedRectangleBorder(
+                borderRadius: BorderRadius.circular(16),
+              ),
               child: Padding(
                 padding: const EdgeInsets.all(20),
                 child: Column(
@@ -75,23 +77,36 @@ class _StudentProgressScreenState extends State<StudentProgressScreen> {
                     CircleAvatar(
                       radius: 35,
                       backgroundColor: primaryTeal.withOpacity(0.1),
-                      child: const Icon(Icons.person, size: 40, color: primaryTeal),
+                      child: const Icon(
+                        Icons.person,
+                        size: 40,
+                        color: primaryTeal,
+                      ),
                     ),
                     const SizedBox(height: 12),
                     Text(
                       student['name'] ?? '',
-                      style: const TextStyle(fontSize: 22, fontWeight: FontWeight.bold),
+                      style: const TextStyle(
+                        fontSize: 22,
+                        fontWeight: FontWeight.bold,
+                      ),
                     ),
                     const SizedBox(height: 4),
                     Container(
-                      padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 4),
+                      padding: const EdgeInsets.symmetric(
+                        horizontal: 16,
+                        vertical: 4,
+                      ),
                       decoration: BoxDecoration(
                         color: primaryTeal.withOpacity(0.1),
                         borderRadius: BorderRadius.circular(20),
                       ),
                       child: Text(
                         student['circleName'] ?? 'غير محدد',
-                        style: const TextStyle(color: primaryTeal, fontWeight: FontWeight.w600),
+                        style: const TextStyle(
+                          color: primaryTeal,
+                          fontWeight: FontWeight.w600,
+                        ),
                       ),
                     ),
                   ],
@@ -101,21 +116,39 @@ class _StudentProgressScreenState extends State<StudentProgressScreen> {
             const SizedBox(height: 16),
 
             // إحصائيات الحضور
-            const Text('الحضور', style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold)),
+            const Text(
+              'الحضور',
+              style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
+            ),
             const SizedBox(height: 8),
             Row(
               children: [
-                _buildStatCard('حاضر', '${attendance['present'] ?? 0}', Colors.green),
+                _buildStatCard(
+                  'حاضر',
+                  '${attendance['present'] ?? 0}',
+                  Colors.green,
+                ),
                 const SizedBox(width: 8),
-                _buildStatCard('غائب', '${attendance['absent'] ?? 0}', Colors.red),
+                _buildStatCard(
+                  'غائب',
+                  '${attendance['absent'] ?? 0}',
+                  Colors.red,
+                ),
                 const SizedBox(width: 8),
-                _buildStatCard('النسبة', attendance['attendanceRate'] ?? 'N/A', primaryTeal),
+                _buildStatCard(
+                  'النسبة',
+                  attendance['attendanceRate'] ?? 'N/A',
+                  primaryTeal,
+                ),
               ],
             ),
             const SizedBox(height: 20),
 
             // رسم بياني للتقييمات
-            const Text('توزيع التقييمات', style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold)),
+            const Text(
+              'توزيع التقييمات',
+              style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
+            ),
             const SizedBox(height: 8),
             Container(
               height: 250,
@@ -132,14 +165,33 @@ class _StudentProgressScreenState extends State<StudentProgressScreen> {
               ),
               padding: const EdgeInsets.all(12),
               child: SfCircularChart(
-                legend: const Legend(isVisible: true, position: LegendPosition.bottom),
+                legend: const Legend(
+                  isVisible: true,
+                  position: LegendPosition.bottom,
+                ),
                 series: <PieSeries<_GradeData, String>>[
                   PieSeries<_GradeData, String>(
                     dataSource: [
-                      _GradeData('ممتاز', (memorization['excellent'] ?? 0).toDouble(), Colors.green),
-                      _GradeData('جيد جداً', (memorization['veryGood'] ?? 0).toDouble(), Colors.blue),
-                      _GradeData('جيد', (memorization['good'] ?? 0).toDouble(), Colors.orange),
-                      _GradeData('مقبول', (memorization['fair'] ?? 0).toDouble(), Colors.red),
+                      _GradeData(
+                        'ممتاز',
+                        (memorization['excellent'] ?? 0).toDouble(),
+                        Colors.green,
+                      ),
+                      _GradeData(
+                        'جيد جداً',
+                        (memorization['veryGood'] ?? 0).toDouble(),
+                        Colors.blue,
+                      ),
+                      _GradeData(
+                        'جيد',
+                        (memorization['good'] ?? 0).toDouble(),
+                        Colors.orange,
+                      ),
+                      _GradeData(
+                        'مقبول',
+                        (memorization['fair'] ?? 0).toDouble(),
+                        Colors.red,
+                      ),
                     ],
                     xValueMapper: (d, _) => d.grade,
                     yValueMapper: (d, _) => d.count,
@@ -153,7 +205,10 @@ class _StudentProgressScreenState extends State<StudentProgressScreen> {
             const SizedBox(height: 20),
 
             // آخر السجلات
-            const Text('آخر سجلات الحفظ', style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold)),
+            const Text(
+              'آخر سجلات الحفظ',
+              style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
+            ),
             const SizedBox(height: 8),
             if (memorization['grades'] != null)
               ...List.generate(
@@ -162,19 +217,28 @@ class _StudentProgressScreenState extends State<StudentProgressScreen> {
                   final record = memorization['grades'][index];
                   return Card(
                     margin: const EdgeInsets.only(bottom: 8),
-                    shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(12),
+                    ),
                     child: ListTile(
                       leading: CircleAvatar(
-                        backgroundColor: _gradeColor(record['grade']).withOpacity(0.15),
+                        backgroundColor: _gradeColor(
+                          record['grade'],
+                        ).withOpacity(0.15),
                         child: Text(
                           _gradeEmoji(record['grade']),
                           style: const TextStyle(fontSize: 20),
                         ),
                       ),
                       title: Text(record['surahName'] ?? ''),
-                      subtitle: Text('${record['type'] ?? ''} • ${record['date'] ?? ''}'),
+                      subtitle: Text(
+                        '${record['type'] ?? ''} • ${record['date'] ?? ''}',
+                      ),
                       trailing: Container(
-                        padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 4),
+                        padding: const EdgeInsets.symmetric(
+                          horizontal: 12,
+                          vertical: 4,
+                        ),
                         decoration: BoxDecoration(
                           color: _gradeColor(record['grade']).withOpacity(0.15),
                           borderRadius: BorderRadius.circular(20),
@@ -211,10 +275,17 @@ class _StudentProgressScreenState extends State<StudentProgressScreen> {
           children: [
             Text(
               value,
-              style: TextStyle(fontSize: 22, fontWeight: FontWeight.bold, color: color),
+              style: TextStyle(
+                fontSize: 22,
+                fontWeight: FontWeight.bold,
+                color: color,
+              ),
             ),
             const SizedBox(height: 4),
-            Text(label, style: TextStyle(fontSize: 12, color: color.withOpacity(0.8))),
+            Text(
+              label,
+              style: TextStyle(fontSize: 12, color: color.withOpacity(0.8)),
+            ),
           ],
         ),
       ),
@@ -223,19 +294,27 @@ class _StudentProgressScreenState extends State<StudentProgressScreen> {
 
   Color _gradeColor(String? grade) {
     switch (grade) {
-      case 'ممتاز': return Colors.green;
-      case 'جيد جداً': return Colors.blue;
-      case 'جيد': return Colors.orange;
-      default: return Colors.red;
+      case 'ممتاز':
+        return Colors.green;
+      case 'جيد جداً':
+        return Colors.blue;
+      case 'جيد':
+        return Colors.orange;
+      default:
+        return Colors.red;
     }
   }
 
   String _gradeEmoji(String? grade) {
     switch (grade) {
-      case 'ممتاز': return '⭐';
-      case 'جيد جداً': return '👍';
-      case 'جيد': return '📖';
-      default: return '📝';
+      case 'ممتاز':
+        return '⭐';
+      case 'جيد جداً':
+        return '👍';
+      case 'جيد':
+        return '📖';
+      default:
+        return '📝';
     }
   }
 }

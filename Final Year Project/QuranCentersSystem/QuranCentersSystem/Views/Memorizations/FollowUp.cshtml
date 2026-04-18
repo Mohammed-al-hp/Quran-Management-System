@@ -1,14 +1,14 @@
-﻿@model QuranCentersSystem.Models.Memorization
+@model QuranCenters.Core.Entities.Memorization
 
 @{
-    ViewData["Title"] = "جلسة المتابعة والأسئلة";
+    ViewData["Title"] = "???? ???????? ????????";
 }
 
 <div class="container-fluid py-4" dir="rtl">
 
     <div class="mb-4">
-        <h3 class="text-dark mb-1 fw-bold">جلسة المتابعة والتقييم</h3>
-        <p class="text-muted mb-0">سؤال الطالب وتدوين تقييم الحفظ الأسبوعي</p>
+        <h3 class="text-dark mb-1 fw-bold">???? ???????? ????????</h3>
+        <p class="text-muted mb-0">???? ?????? ?????? ????? ????? ????????</p>
     </div>
 
     <div class="row">
@@ -20,41 +20,41 @@
 
                         <div class="row g-3 mb-4">
                             <div class="col-md-6">
-                                <label class="form-label text-secondary fw-bold">تاريخ المتابعة</label>
+                                <label class="form-label text-secondary fw-bold">????? ????????</label>
                                 <input asp-for="Date" type="date" class="form-control" style="border-radius: 8px;" />
                             </div>
                             <div class="col-md-6">
-                                <label class="form-label text-secondary fw-bold">اليوم</label>
+                                <label class="form-label text-secondary fw-bold">?????</label>
                                 <select asp-for="DayName" class="form-select" style="border-radius: 8px;">
-                                    <option value="السبت">السبت</option>
-                                    <option value="الأحد">الأحد</option>
-                                    <option value="الإثنين">الإثنين</option>
-                                    <option value="الثلاثاء">الثلاثاء</option>
-                                    <option value="الأربعاء">الأربعاء</option>
-                                    <option value="الخميس">الخميس</option>
+                                    <option value="?????">?????</option>
+                                    <option value="?????">?????</option>
+                                    <option value="???????">???????</option>
+                                    <option value="????????">????????</option>
+                                    <option value="????????">????????</option>
+                                    <option value="??????">??????</option>
                                 </select>
                             </div>
                             <div class="col-md-12">
-                                <label class="form-label text-secondary fw-bold">اسم الطالب</label>
+                                <label class="form-label text-secondary fw-bold">??? ??????</label>
                                 <select asp-for="StudentId" class="form-select" style="border-radius: 8px;" asp-items="@(new SelectList(ViewBag.Students, "Id", "Name"))">
-                                    <option value="">-- اختر الطالب --</option>
+                                    <option value="">-- ???? ?????? --</option>
                                 </select>
                             </div>
                             <div class="col-md-6">
-                                <label class="form-label text-secondary fw-bold">السورة الحالية</label>
-                                <input asp-for="CurrentSurah" class="form-control" placeholder="مثلاً: البقرة" style="border-radius: 8px;" />
+                                <label class="form-label text-secondary fw-bold">?????? ???????</label>
+                                <input asp-for="CurrentSurah" class="form-control" placeholder="?????: ??????" style="border-radius: 8px;" />
                             </div>
                             <div class="col-md-6">
-                                <label class="form-label text-secondary fw-bold">المقدار (من - إلى)</label>
-                                <input asp-for="Scope" class="form-control" placeholder="مثلاً: من 1 إلى 50" style="border-radius: 8px;" />
+                                <label class="form-label text-secondary fw-bold">??????? (?? - ???)</label>
+                                <input asp-for="Scope" class="form-control" placeholder="?????: ?? 1 ??? 50" style="border-radius: 8px;" />
                             </div>
                         </div>
 
                         <div class="mb-4">
                             <div class="d-flex justify-content-between align-items-center mb-2">
-                                <label class="form-label text-secondary fw-bold mb-0">الأسئلة والتقييم التفصيلي</label>
+                                <label class="form-label text-secondary fw-bold mb-0">??????? ???????? ????????</label>
                                 <button type="button" class="btn btn-outline-success btn-sm px-3" style="border-radius: 8px;" onclick="addQuestionField()">
-                                    <i class="bi bi-plus-lg"></i> إضافة سؤال آخر
+                                    <i class="bi bi-plus-lg"></i> ????? ???? ???
                                 </button>
                             </div>
 
@@ -62,10 +62,10 @@
                                 <div class="question-row bg-light p-3 mb-2" style="border-radius: 10px;">
                                     <div class="row g-2">
                                         <div class="col-md-7">
-                                            <input type="text" name="Questions" class="form-control" placeholder="اكتب نص السؤال أو موضع الآية..." style="border-radius: 8px;" />
+                                            <input type="text" name="Questions" class="form-control" placeholder="???? ?? ?????? ?? ???? ?????..." style="border-radius: 8px;" />
                                         </div>
                                         <div class="col-md-5">
-                                            <input type="text" name="Answers" class="form-control" placeholder="درجة الإجابة أو الملاحظة..." style="border-radius: 8px;" />
+                                            <input type="text" name="Answers" class="form-control" placeholder="???? ??????? ?? ????????..." style="border-radius: 8px;" />
                                         </div>
                                     </div>
                                 </div>
@@ -74,30 +74,30 @@
 
                         <div class="row g-3 mb-4">
                             <div class="col-md-12">
-                                <label class="form-label text-secondary fw-bold">التقييم العام للحلقة</label>
+                                <label class="form-label text-secondary fw-bold">??????? ????? ??????</label>
                                 <div class="d-flex gap-2">
-                                    <input type="radio" class="btn-check" name="Grade" id="g1" value="ممتاز" checked>
-                                    <label class="btn btn-outline-success rounded-pill px-4" for="g1">ممتاز</label>
+                                    <input type="radio" class="btn-check" name="Grade" id="g1" value="?????" checked>
+                                    <label class="btn btn-outline-success rounded-pill px-4" for="g1">?????</label>
 
-                                    <input type="radio" class="btn-check" name="Grade" id="g2" value="جيد جداً">
-                                    <label class="btn btn-outline-primary rounded-pill px-4" for="g2">جيد جداً</label>
+                                    <input type="radio" class="btn-check" name="Grade" id="g2" value="??? ????">
+                                    <label class="btn btn-outline-primary rounded-pill px-4" for="g2">??? ????</label>
 
-                                    <input type="radio" class="btn-check" name="Grade" id="g3" value="جيد">
-                                    <label class="btn btn-outline-warning rounded-pill px-4" for="g3">جيد</label>
+                                    <input type="radio" class="btn-check" name="Grade" id="g3" value="???">
+                                    <label class="btn btn-outline-warning rounded-pill px-4" for="g3">???</label>
 
-                                    <input type="radio" class="btn-check" name="Grade" id="g4" value="يحتاج لمراجعة">
-                                    <label class="btn btn-outline-danger rounded-pill px-4" for="g4">يحتاج لمراجعة</label>
+                                    <input type="radio" class="btn-check" name="Grade" id="g4" value="????? ???????">
+                                    <label class="btn btn-outline-danger rounded-pill px-4" for="g4">????? ???????</label>
                                 </div>
                             </div>
                             <div class="col-md-12">
-                                <label class="form-label text-secondary fw-bold">ملاحظات عامة</label>
-                                <textarea asp-for="Notes" class="form-control" rows="3" placeholder="أي ملاحظات أخرى حول أداء الطالب..." style="border-radius: 8px;"></textarea>
+                                <label class="form-label text-secondary fw-bold">??????? ????</label>
+                                <textarea asp-for="Notes" class="form-control" rows="3" placeholder="?? ??????? ???? ??? ???? ??????..." style="border-radius: 8px;"></textarea>
                             </div>
                         </div>
 
                         <div class="d-flex justify-content-end gap-2">
                             <button type="submit" class="btn btn-dark px-5 py-2" style="border-radius: 10px;">
-                                <i class="bi bi-save2-fill ms-1"></i> حفظ التقييم
+                                <i class="bi bi-save2-fill ms-1"></i> ??? ???????
                             </button>
                         </div>
                     </form>
@@ -117,10 +117,10 @@
         div.innerHTML = `
             <div class="row g-2">
                 <div class="col-md-7">
-                    <input type="text" name="Questions" class="form-control" placeholder="اكتب نص السؤال أو موضع الآية..." style="border-radius: 8px;" />
+                    <input type="text" name="Questions" class="form-control" placeholder="???? ?? ?????? ?? ???? ?????..." style="border-radius: 8px;" />
                 </div>
                 <div class="col-md-5">
-                    <input type="text" name="Answers" class="form-control" placeholder="درجة الإجابة أو الملاحظة..." style="border-radius: 8px;" />
+                    <input type="text" name="Answers" class="form-control" placeholder="???? ??????? ?? ????????..." style="border-radius: 8px;" />
                 </div>
             </div>
         `;

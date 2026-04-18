@@ -3,13 +3,21 @@ using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
-using QuranCentersSystem.Data;
+using QuranCenters.Infrastructure.Data;
 using QuranCentersSystem.Models;
+using QuranCenters.Core.Entities;
+using QuranCenters.Infrastructure.Identity;
 using QuranCentersSystem.Middleware;
-using QuranCentersSystem.Services;
+using QuranCenters.Application.Services;
+using QuranCenters.Infrastructure.Services;
 using System.Text;
 using System.Text.Json.Serialization;
 using Rotativa.AspNetCore;
+using QuranCenters.Core.Interfaces;
+using QuranCenters.Application.Interfaces;
+using QuranCenters.Infrastructure.Repositories;
+using QuranCenters.Infrastructure.Hubs;
+
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -118,9 +126,13 @@ builder.Services.AddSwaggerGen(c =>
 });
 
 // --- 7. تسجيل الخدمات المخصصة ---
-builder.Services.AddScoped<NotificationService>();
-builder.Services.AddScoped<QrCodeService>();
-builder.Services.AddScoped<PdfReportService>();
+builder.Services.AddScoped<INotificationService, NotificationService>();
+builder.Services.AddScoped<IQrCodeService, QrCodeService>();
+builder.Services.AddScoped<IPdfReportService, PdfReportService>();
+builder.Services.AddScoped(typeof(IRepository<>), typeof(Repository<>));
+builder.Services.AddScoped<IGamificationService, GamificationService>();
+builder.Services.AddSignalR();
+
 
 // --- 8. إعداد الكوكيز ---
 builder.Services.ConfigureApplicationCookie(options =>
@@ -167,6 +179,8 @@ app.MapControllerRoute(
     name: "default",
     pattern: "{controller=Home}/{action=Index}/{id?}");
 app.MapRazorPages();
+app.MapHub<NotificationHub>("/notificationHub");
+
 
 // --- 10. بذر البيانات (Seed Data) ---
 using (var scope = app.Services.CreateScope())

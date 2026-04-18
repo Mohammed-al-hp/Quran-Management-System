@@ -1,22 +1,22 @@
-﻿@model QuranCentersSystem.Models.Student
+@model QuranCenters.Core.Entities.Student
 
 @{
-    ViewData["Title"] = "حذف طالب";
+    ViewData["Title"] = "??? ????";
 }
 
 <div class="container-fluid" dir="rtl">
     <div class="card shadow-sm bg-white p-4 rounded border-0">
         <div class="d-flex justify-content-between align-items-center mb-4 border-bottom pb-3">
-            <h4 class="m-0 text-danger fw-bold">حذف بيانات طالب</h4>
+            <h4 class="m-0 text-danger fw-bold">??? ?????? ????</h4>
             <a asp-action="Index" class="btn btn-outline-secondary">
-                <i class="bi bi-arrow-right"></i> عودة للقائمة
+                <i class="bi bi-arrow-right"></i> ???? ???????
             </a>
         </div>
 
         <div class="alert alert-warning d-flex align-items-center" role="alert">
             <i class="bi bi-exclamation-triangle-fill me-2 fs-4"></i>
             <div>
-                <strong>تحذير:</strong> هل أنت متأكد من رغبتك في حذف هذا الطالب نهائياً؟ لا يمكن التراجع عن هذا الإجراء.
+                <strong>?????:</strong> ?? ??? ????? ?? ????? ?? ??? ??? ?????? ???????? ?? ???? ??????? ?? ??? ???????.
             </div>
         </div>
 
@@ -24,29 +24,29 @@
             <div class="col-md-8 col-lg-6">
                 <div class="bg-light p-4 rounded shadow-sm mb-4">
                     <div class="row mb-3">
-                        <div class="col-sm-4 fw-bold text-secondary">اسم الطالب:</div>
+                        <div class="col-sm-4 fw-bold text-secondary">??? ??????:</div>
                         <div class="col-sm-8 text-dark fw-bold">@Model.Name</div>
                     </div>
                     <div class="row mb-3">
-                        <div class="col-sm-4 fw-bold text-secondary">تاريخ الانضمام:</div>
+                        <div class="col-sm-4 fw-bold text-secondary">????? ????????:</div>
                         <div class="col-sm-8 text-dark">@Model.JoinDate.ToShortDateString()</div>
                     </div>
                     <div class="row mb-3">
-                        <div class="col-sm-4 fw-bold text-secondary">الحالة:</div>
+                        <div class="col-sm-4 fw-bold text-secondary">??????:</div>
                         <div class="col-sm-8">
-                            @if (Model.Status == "نشط")
+                            @if (Model.Status == "???")
                             {
-                                <span class="badge bg-success rounded-pill">نشط</span>
+                                <span class="badge bg-success rounded-pill">???</span>
                             }
                             else
                             {
-                                <span class="badge bg-secondary rounded-pill">غير نشط</span>
+                                <span class="badge bg-secondary rounded-pill">??? ???</span>
                             }
                         </div>
                     </div>
                     <div class="row">
-                        <div class="col-sm-4 fw-bold text-secondary">الحلقة:</div>
-                        <div class="col-sm-8 text-success fw-bold">@(Model.Circle?.Name ?? "غير محدد")</div>
+                        <div class="col-sm-4 fw-bold text-secondary">??????:</div>
+                        <div class="col-sm-8 text-success fw-bold">@(Model.Circle?.Name ?? "??? ????")</div>
                     </div>
                 </div>
 
@@ -54,7 +54,7 @@
                     <input type="hidden" asp-for="Id" />
                     <div class="d-grid gap-2">
                         <button type="submit" class="btn btn-danger btn-lg">
-                            <i class="bi bi-trash"></i> تأكيد الحذف النهائي
+                            <i class="bi bi-trash"></i> ????? ????? ???????
                         </button>
                     </div>
                 </form>

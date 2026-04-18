@@ -1,19 +1,19 @@
-﻿@model IEnumerable<QuranCentersSystem.Models.Student>
+@model IEnumerable<QuranCenters.Core.Entities.Student>
 
 <div class="container-fluid py-4" dir="rtl">
     <div class="card shadow-sm p-4">
         <div class="d-flex justify-content-between align-items-center mb-4">
-            <h4 class="text-success fw-bold">قائمة الطلاب</h4>
-            <a asp-action="Create" class="btn btn-success">إضافة طالب</a>
+            <h4 class="text-success fw-bold">????? ??????</h4>
+            <a asp-action="Create" class="btn btn-success">????? ????</a>
         </div>
 
         <table class="table table-hover align-middle">
             <thead class="table-light">
                 <tr>
-                    <th>الاسم</th>
-                    <th>الحلقة</th>
-                    <th>الحالة</th>
-                    <th>الإجراءات</th>
+                    <th>?????</th>
+                    <th>??????</th>
+                    <th>??????</th>
+                    <th>?????????</th>
                 </tr>
             </thead>
             <tbody>
@@ -21,19 +21,19 @@
                 {
                     <tr>
                         <td>@item.Name</td>
-                        <td>@(item.Circle?.Name ?? "غير محدد")</td>
-                        <td><span class="badge @(item.Status == "نشط" ? "bg-success" : "bg-secondary")">@item.Status</span></td>
+                        <td>@(item.Circle?.Name ?? "??? ????")</td>
+                        <td><span class="badge @(item.Status == "???" ? "bg-success" : "bg-secondary")">@item.Status</span></td>
                         <td>
                             <div class="d-flex gap-2">
-                                @* زر التعديل المتاح للجميع *@
+                                @* ?? ??????? ?????? ?????? *@
                                 <a asp-action="Edit" asp-route-id="@item.Id" class="btn btn-sm btn-outline-warning rounded-circle">
                                     <i class="bi bi-pencil"></i>
                                 </a>
 
-                                @* 🔴 تعديل الشرط لضمان ظهور زر الحذف لحسابك الحالي 🔴 *@
-                                @if (User.Identity.Name == "admin@example.com" || User.IsInRole("Admin") || User.IsInRole("مدير النظام"))
+                                @* ?? ????? ????? ????? ???? ?? ????? ?????? ?????? ?? *@
+                                @if (User.Identity.Name == "admin@example.com" || User.IsInRole("Admin") || User.IsInRole("???? ??????"))
                                 {
-                                    <form asp-action="Delete" asp-route-id="@item.Id" method="post" onsubmit="return confirm('هل أنت متأكد من حذف هذا الطالب؟')">
+                                    <form asp-action="Delete" asp-route-id="@item.Id" method="post" onsubmit="return confirm('?? ??? ????? ?? ??? ??? ???????')">
                                         @Html.AntiForgeryToken()
                                         <button type="submit" class="btn btn-sm btn-outline-danger rounded-circle">
                                             <i class="bi bi-trash"></i>

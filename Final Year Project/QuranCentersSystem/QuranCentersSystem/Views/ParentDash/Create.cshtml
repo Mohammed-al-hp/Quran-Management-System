@@ -1,7 +1,7 @@
-﻿@model QuranCentersSystem.Models.Parent
+@model QuranCenters.Core.Entities.Parent
 
 @{
-    ViewData["Title"] = "إضافة ولي أمر جديد";
+    ViewData["Title"] = "????? ??? ??? ????";
 }
 
 <div class="container-fluid py-4">
@@ -10,9 +10,9 @@
             <div class="card shadow-sm border-0 rounded-4">
                 <div class="card-header bg-white py-3 border-bottom-0">
                     <h4 class="text-primary fw-bold mb-0">
-                        <i class="fas fa-user-plus me-2"></i> إضافة ولي أمر جديد
+                        <i class="fas fa-user-plus me-2"></i> ????? ??? ??? ????
                     </h4>
-                    <p class="text-muted small mb-0">سيتم إنشاء حساب دخول تلقائي لولي الأمر باستخدام بريده الإلكتروني</p>
+                    <p class="text-muted small mb-0">???? ????? ???? ???? ?????? ???? ????? ???????? ????? ??????????</p>
                 </div>
                 <div class="card-body p-4">
                     <form asp-action="Create">
@@ -20,20 +20,20 @@
 
                         <div class="row">
                             <div class="col-md-12 mb-3">
-                                <label asp-for="Name" class="form-label fw-bold">الاسم الكامل</label>
-                                <input asp-for="Name" class="form-control rounded-3" placeholder="أدخل اسم ولي الأمر الثلاثي" />
+                                <label asp-for="Name" class="form-label fw-bold">????? ??????</label>
+                                <input asp-for="Name" class="form-control rounded-3" placeholder="???? ??? ??? ????? ???????" />
                                 <span asp-validation-for="Name" class="text-danger small"></span>
                             </div>
 
                             <div class="col-md-6 mb-3">
-                                <label asp-for="Email" class="form-label fw-bold">البريد الإلكتروني</label>
+                                <label asp-for="Email" class="form-label fw-bold">?????? ??????????</label>
                                 <input asp-for="Email" class="form-control rounded-3" type="email" placeholder="example@mail.com" />
                                 <span asp-validation-for="Email" class="text-danger small"></span>
-                                <div class="form-text text-info small">هذا البريد سيستخدم لتسجيل الدخول.</div>
+                                <div class="form-text text-info small">??? ?????? ??????? ?????? ??????.</div>
                             </div>
 
                             <div class="col-md-6 mb-3">
-                                <label asp-for="Phone" class="form-label fw-bold">رقم الهاتف</label>
+                                <label asp-for="Phone" class="form-label fw-bold">??? ??????</label>
                                 <input asp-for="Phone" class="form-control rounded-3" placeholder="091XXXXXXX" />
                                 <span asp-validation-for="Phone" class="text-danger small"></span>
                             </div>
@@ -41,14 +41,14 @@
 
                         <div class="alert alert-warning py-2 rounded-3 mt-2">
                             <i class="fas fa-info-circle"></i>
-                            <small>كلمة المرور الافتراضية للحساب الجديد هي: <strong>Parent@123</strong></small>
+                            <small>???? ?????? ?????????? ?????? ?????? ??: <strong>Parent@123</strong></small>
                         </div>
 
                         <div class="d-flex justify-content-between mt-4">
                             <button type="submit" class="btn btn-primary px-5 rounded-pill">
-                                <i class="fas fa-save me-1"></i> حفظ وإرسال الحساب
+                                <i class="fas fa-save me-1"></i> ??? ?????? ??????
                             </button>
-                            <a asp-action="Index" class="btn btn-outline-secondary px-4 rounded-pill">إلغاء</a>
+                            <a asp-action="Index" class="btn btn-outline-secondary px-4 rounded-pill">?????</a>
                         </div>
                     </form>
                 </div>

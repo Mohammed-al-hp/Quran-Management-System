@@ -1,0 +1,176 @@
+@model QuranCenters.Core.Entities.Student
+@{
+    ViewData["Title"] = "تفاصيل الطالب - " + Model.Name;
+}
+
+<style>
+    .glass-card {
+        background: rgba(255, 255, 255, 0.9);
+        border-radius: 20px;
+        border: 1px solid rgba(0,0,0,0.05);
+        box-shadow: 0 10px 30px rgba(0,0,0,0.05);
+    }
+    .badge-card {
+        transition: transform 0.3s ease;
+        text-align: center;
+        padding: 15px;
+        background: #fdfdfd;
+        border-radius: 15px;
+        border: 1px solid #eee;
+    }
+    .badge-card:hover {
+        transform: scale(1.05);
+    }
+    .badge-img-placeholder {
+        width: 60px;
+        height: 60px;
+        background: #fff8e1;
+        border-radius: 50%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        margin: 0 auto 10px;
+        color: #f57f17;
+        font-size: 2rem;
+    }
+    .point-entry {
+        border-right: 3px solid #F3B33E;
+        background-color: #fffaf0;
+        padding: 10px 15px;
+        margin-bottom: 10px;
+        border-radius: 0 10px 10px 0;
+    }
+</style>
+
+<div class="container py-4" dir="rtl">
+    <div class="row mb-4">
+        <div class="col-12">
+            <nav aria-label="breadcrumb">
+                <ol class="breadcrumb">
+                    <li class="breadcrumb-item"><a asp-action="Index">البوابة</a></li>
+                    <li class="breadcrumb-item active" aria-current="page">تفاصيل @Model.Name</li>
+                </ol>
+            </nav>
+            <h2 class="fw-bold text-dark">@Model.Name</h2>
+            <div class="d-flex align-items-center">
+                <span class="badge bg-primary rounded-pill px-3 me-2">الحلقة: @(Model.Circle?.Name ?? "غير محدد")</span>
+                <span class="text-muted"><i class="bi bi-calendar-event me-1"></i> انضم منذ: @Model.JoinDate.ToString("yyyy/MM/dd")</span>
+            </div>
+        </div>
+    </div>
+
+    <!-- الإحصائيات الرئيسية -->
+    <div class="row g-4 mb-5">
+        <div class="col-md-3">
+            <div class="glass-card p-4 text-center h-100">
+                <div class="display-5 fw-bold text-warning">@Model.PointsLedgers.Sum(p => p.Points)</div>
+                <div class="text-muted small fw-bold">إجمالي النقاط</div>
+            </div>
+        </div>
+        <div class="col-md-3">
+            <div class="glass-card p-4 text-center h-100">
+                <div class="display-5 fw-bold text-primary">@Model.Attendances.Count(a => a.Status == "حاضر")</div>
+                <div class="text-muted small fw-bold">أيام الحضور</div>
+            </div>
+        </div>
+        <div class="col-md-3">
+            <div class="glass-card p-4 text-center h-100">
+                <div class="display-5 fw-bold text-success">@Model.Memorizations.Count</div>
+                <div class="text-muted small fw-bold">سجلات الحفظ</div>
+            </div>
+        </div>
+        <div class="col-md-3">
+            <div class="glass-card p-4 text-center h-100">
+                <div class="display-5 fw-bold text-info">@Model.StudentBadges.Count</div>
+                <div class="text-muted small fw-bold">الأوسمة</div>
+            </div>
+        </div>
+    </div>
+
+    <div class="row g-4">
+        <!-- سجل الحفظ -->
+        <div class="col-lg-8">
+            <div class="glass-card p-4 mb-4">
+                <h5 class="fw-bold mb-4"><i class="bi bi-book-half text-primary me-2"></i>آخر سجلات الحفظ</h5>
+                <div class="table-responsive">
+                    <table class="table table-hover align-middle">
+                        <thead class="table-light">
+                            <tr>
+                                <th>التاريخ</th>
+                                <th>السورة</th>
+                                <th>المقطع</th>
+                                <th>التقييم</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @foreach (var mem in Model.Memorizations.OrderByDescending(m => m.Date).Take(10))
+                            {
+                                <tr>
+                                    <td>@mem.Date.ToString("MM/dd")</td>
+                                    <td class="fw-bold">@mem.SurahName</td>
+                                    <td class="small">@mem.FromAyah - @mem.ToAyah</td>
+                                    <td>
+                                        <span class="badge rounded-pill @(mem.Grade == "ممتاز" ? "bg-success" : "bg-primary")">@mem.Grade</span>
+                                    </td>
+                                </tr>
+                            }
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+
+            <!-- سجل النقاط -->
+            <div class="glass-card p-4">
+                <h5 class="fw-bold mb-4"><i class="bi bi-stars text-warning me-2"></i>سجل الأنشطة والنقاط</h5>
+                @if (!Model.PointsLedgers.Any())
+                {
+                    <p class="text-muted text-center py-4">لا يوجد سجل نقاط حالياً.</p>
+                }
+                else
+                {
+                    @foreach (var ledger in Model.PointsLedgers.OrderByDescending(p => p.DateAwarded).Take(5))
+                    {
+                        <div class="point-entry d-flex justify-content-between align-items-center">
+                            <div>
+                                <div class="fw-bold text-dark">@ledger.Reason</div>
+                                <div class="text-muted smallest">@ledger.DateAwarded.ToString("yyyy/MM/dd HH:mm")</div>
+                            </div>
+                            <div class="fw-bold text-warning">+@ledger.Points</div>
+                        </div>
+                    }
+                }
+            </div>
+        </div>
+
+        <!-- الأوسمة -->
+        <div class="col-lg-4">
+            <div class="glass-card p-4 h-100">
+                <h5 class="fw-bold mb-4"><i class="bi bi-award-fill text-warning me-2"></i>خزانة الأوسمة</h5>
+                <div class="row g-3">
+                    @if (!Model.StudentBadges.Any())
+                    {
+                        <div class="col-12 text-center py-5">
+                            <i class="bi bi-lock fs-1 text-muted opacity-25"></i>
+                            <p class="text-muted mt-2">الأوسمة تظهر هنا عند الإنجاز</p>
+                        </div>
+                    }
+                    else
+                    {
+                        @foreach (var badge in Model.StudentBadges)
+                        {
+                            <div class="col-6">
+                                <div class="badge-card">
+                                    <div class="badge-img-placeholder">
+                                        <i class="bi bi-shield-check"></i>
+                                    </div>
+                                    <div class="small fw-bold">@badge.BadgeName</div>
+                                    <div class="smallest text-muted">@badge.DateEarned.ToString("MM/dd")</div>
+                                </div>
+                            </div>
+                        }
+                    }
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

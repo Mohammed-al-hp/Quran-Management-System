@@ -1,8 +1,10 @@
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
-using QuranCentersSystem.Data;
+using QuranCenters.Infrastructure.Data;
 using QuranCentersSystem.Models;
+using QuranCenters.Core.Entities;
+using QuranCenters.Infrastructure.Identity;
 
 namespace QuranCentersSystem.Controllers
 {

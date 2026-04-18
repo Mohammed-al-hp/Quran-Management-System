@@ -1,32 +1,32 @@
-﻿@model IEnumerable<QuranCentersSystem.Models.Student>
+@model IEnumerable<QuranCenters.Core.Entities.Student>
 
 @{
-    ViewData["Title"] = "تسجيل حضور حلقة";
+    ViewData["Title"] = "????? ???? ????";
 }
 
 <div class="container-fluid py-4" dir="rtl">
     <div class="card shadow-sm border-0 bg-white p-4 rounded" style="border-radius: 15px !important;">
 
-        @* الترويسة *@
+        @* ???????? *@
         <div class="d-flex justify-content-between align-items-center mb-4 border-bottom pb-3">
             <div>
-                <h4 class="m-0 text-primary fw-bold"><i class="bi bi-calendar-check-fill me-2"></i>تسجيل الحضور الجماعي</h4>
-                <p class="text-muted mb-0 small">اختيار الحلقة وتسجيل حالة الحضور لجميع الطلاب دفعة واحدة</p>
+                <h4 class="m-0 text-primary fw-bold"><i class="bi bi-calendar-check-fill me-2"></i>????? ?????? ???????</h4>
+                <p class="text-muted mb-0 small">?????? ?????? ?????? ???? ?????? ????? ?????? ???? ?????</p>
             </div>
         </div>
 
-        @* اختيار الحلقة *@
+        @* ?????? ?????? *@
         <div class="row mb-4 bg-light p-3 rounded mx-1">
             <div class="col-md-6">
                 <form method="get" asp-action="GroupAttendance" id="selectCircleForm">
-                    <label class="form-label fw-bold small">اختر الحلقة لبدء التحضير:</label>
+                    <label class="form-label fw-bold small">???? ?????? ???? ???????:</label>
                     <select name="circleId" class="form-select shadow-sm" onchange="this.form.submit()" asp-items="ViewBag.Circles">
-                        <option value="">-- اختر الحلقة من هنا --</option>
+                        <option value="">-- ???? ?????? ?? ??? --</option>
                     </select>
                 </form>
             </div>
             <div class="col-md-6 d-flex align-items-end justify-content-md-end">
-                <span class="badge bg-info p-2 px-3 shadow-sm text-white">تاريخ اليوم: @DateTime.Now.ToString("yyyy/MM/dd")</span>
+                <span class="badge bg-info p-2 px-3 shadow-sm text-white">????? ?????: @DateTime.Now.ToString("yyyy/MM/dd")</span>
             </div>
         </div>
 
@@ -41,9 +41,9 @@
                     <table class="table table-hover align-middle shadow-sm rounded overflow-hidden">
                         <thead class="table-dark">
                             <tr>
-                                <th class="py-3 px-4">اسم الطالب</th>
-                                <th class="py-3 text-center">حالة الحضور</th>
-                                <th class="py-3 text-center">ملاحظات سريعة</th>
+                                <th class="py-3 px-4">??? ??????</th>
+                                <th class="py-3 text-center">???? ??????</th>
+                                <th class="py-3 text-center">??????? ?????</th>
                             </tr>
                         </thead>
                         <tbody>
@@ -53,18 +53,18 @@
                                     <td class="fw-bold px-4">@student.Name</td>
                                     <td class="text-center">
                                         <div class="btn-group shadow-sm" role="group">
-                                            <input type="radio" class="btn-check" name="attendanceStatus[@student.Id]" id="present_@student.Id" value="حاضر" checked>
-                                            <label class="btn btn-outline-success px-3" for="present_@student.Id">حاضر</label>
+                                            <input type="radio" class="btn-check" name="attendanceStatus[@student.Id]" id="present_@student.Id" value="????" checked>
+                                            <label class="btn btn-outline-success px-3" for="present_@student.Id">????</label>
 
-                                            <input type="radio" class="btn-check" name="attendanceStatus[@student.Id]" id="absent_@student.Id" value="غائب">
-                                            <label class="btn btn-outline-danger px-3" for="absent_@student.Id">غائب</label>
+                                            <input type="radio" class="btn-check" name="attendanceStatus[@student.Id]" id="absent_@student.Id" value="????">
+                                            <label class="btn btn-outline-danger px-3" for="absent_@student.Id">????</label>
 
-                                            <input type="radio" class="btn-check" name="attendanceStatus[@student.Id]" id="late_@student.Id" value="متأخر">
-                                            <label class="btn btn-outline-warning px-3" for="late_@student.Id">متأخر</label>
+                                            <input type="radio" class="btn-check" name="attendanceStatus[@student.Id]" id="late_@student.Id" value="?????">
+                                            <label class="btn btn-outline-warning px-3" for="late_@student.Id">?????</label>
                                         </div>
                                     </td>
                                     <td>
-                                        <input type="text" name="notes[@student.Id]" class="form-control form-control-sm border-0 bg-light" placeholder="أضف ملاحظة (اختياري)...">
+                                        <input type="text" name="notes[@student.Id]" class="form-control form-control-sm border-0 bg-light" placeholder="??? ?????? (???????)...">
                                     </td>
                                 </tr>
                             }
@@ -74,7 +74,7 @@
 
                 <div class="text-start mt-4">
                     <button type="submit" class="btn btn-primary px-5 py-2 shadow rounded-pill">
-                        <i class="bi bi-cloud-arrow-up-fill me-2"></i> حفظ كشف الحضور
+                        <i class="bi bi-cloud-arrow-up-fill me-2"></i> ??? ??? ??????
                     </button>
                 </div>
             </form>
@@ -82,7 +82,7 @@
         else if (ViewBag.SelectedCircleId != null)
         {
             <div class="alert alert-warning text-center shadow-sm">
-                <i class="bi bi-exclamation-triangle me-2"></i> لا يوجد طلاب مضافين لهذه الحلقة حالياً.
+                <i class="bi bi-exclamation-triangle me-2"></i> ?? ???? ???? ?????? ???? ?????? ??????.
             </div>
         }
     </div>

@@ -1,0 +1,12 @@
+C:\New folder (2)\Quran-Management-System\Final Year Project\QuranCentersSystem\QuranCenters.Core\bin\Debug\net8.0\QuranCenters.Core.deps.json
+C:\New folder (2)\Quran-Management-System\Final Year Project\QuranCentersSystem\QuranCenters.Core\bin\Debug\net8.0\QuranCenters.Core.dll
+C:\New folder (2)\Quran-Management-System\Final Year Project\QuranCentersSystem\QuranCenters.Core\bin\Debug\net8.0\QuranCenters.Core.pdb
+C:\New folder (2)\Quran-Management-System\Final Year Project\QuranCentersSystem\QuranCenters.Core\obj\Debug\net8.0\QuranCenters.Core.GeneratedMSBuildEditorConfig.editorconfig
+C:\New folder (2)\Quran-Management-System\Final Year Project\QuranCentersSystem\QuranCenters.Core\obj\Debug\net8.0\QuranCenters.Core.AssemblyInfoInputs.cache
+C:\New folder (2)\Quran-Management-System\Final Year Project\QuranCentersSystem\QuranCenters.Core\obj\Debug\net8.0\QuranCenters.Core.AssemblyInfo.cs
+C:\New folder (2)\Quran-Management-System\Final Year Project\QuranCentersSystem\QuranCenters.Core\obj\Debug\net8.0\QuranCenters.Core.csproj.CoreCompileInputs.cache
+C:\New folder (2)\Quran-Management-System\Final Year Project\QuranCentersSystem\QuranCenters.Core\obj\Debug\net8.0\QuranCenters.Core.sourcelink.json
+C:\New folder (2)\Quran-Management-System\Final Year Project\QuranCentersSystem\QuranCenters.Core\obj\Debug\net8.0\QuranCenters.Core.dll
+C:\New folder (2)\Quran-Management-System\Final Year Project\QuranCentersSystem\QuranCenters.Core\obj\Debug\net8.0\refint\QuranCenters.Core.dll
+C:\New folder (2)\Quran-Management-System\Final Year Project\QuranCentersSystem\QuranCenters.Core\obj\Debug\net8.0\QuranCenters.Core.pdb
+C:\New folder (2)\Quran-Management-System\Final Year Project\QuranCentersSystem\QuranCenters.Core\obj\Debug\net8.0\ref\QuranCenters.Core.dll

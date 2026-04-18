@@ -7,13 +7,16 @@ import '../theme/app_theme.dart';
 import 'add_teacher_screen.dart';
 
 class TeachersListScreen extends StatelessWidget {
-  const TeachersListScreen({Key? key}) : super(key: key);
+  const TeachersListScreen({super.key});
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text('قائمة المحفظين', style: TextStyle(fontWeight: FontWeight.bold)),
+        title: const Text(
+          'قائمة المحفظين',
+          style: TextStyle(fontWeight: FontWeight.bold),
+        ),
       ),
       body: Consumer<QuranCenterProvider>(
         builder: (context, provider, child) {
@@ -22,9 +25,7 @@ class TeachersListScreen extends StatelessWidget {
           }
 
           return Theme(
-            data: Theme.of(context).copyWith(
-              canvasColor: Colors.transparent,
-            ),
+            data: Theme.of(context).copyWith(canvasColor: Colors.transparent),
             child: ReorderableListView.builder(
               padding: const EdgeInsets.all(16),
               itemCount: provider.teachers.length,
@@ -33,7 +34,11 @@ class TeachersListScreen extends StatelessWidget {
               },
               itemBuilder: (context, index) {
                 final teacher = provider.teachers[index];
-                return _buildTeacherCard(context, teacher, ValueKey(teacher.id));
+                return _buildTeacherCard(
+                  context,
+                  teacher,
+                  ValueKey(teacher.id),
+                );
               },
             ),
           );
@@ -56,7 +61,11 @@ class TeachersListScreen extends StatelessWidget {
     );
   }
 
-  Widget _buildTeacherCard(BuildContext context, TeacherModel teacher, Key key) {
+  Widget _buildTeacherCard(
+    BuildContext context,
+    TeacherModel teacher,
+    Key key,
+  ) {
     return Container(
       key: key,
       margin: const EdgeInsets.only(bottom: 16),
@@ -68,11 +77,15 @@ class TeachersListScreen extends StatelessWidget {
           child: CircleAvatar(
             radius: 30,
             backgroundColor: AppTheme.lightEmerald,
-            backgroundImage: teacher.imagePath.isNotEmpty 
-                ? NetworkImage(teacher.imagePath) 
+            backgroundImage: teacher.imagePath.isNotEmpty
+                ? NetworkImage(teacher.imagePath)
                 : null,
             child: teacher.imagePath.isEmpty
-                ? const Icon(Icons.person, color: AppTheme.emeraldGreen, size: 30)
+                ? const Icon(
+                    Icons.person,
+                    color: AppTheme.emeraldGreen,
+                    size: 30,
+                  )
                 : null,
           ),
         ),
@@ -86,7 +99,10 @@ class TeachersListScreen extends StatelessWidget {
             children: [
               const Icon(Icons.group, size: 16, color: Colors.grey),
               const SizedBox(width: 4),
-              Text('${teacher.studentsCount} طالب', style: const TextStyle(fontSize: 12)),
+              Text(
+                '${teacher.studentsCount} طالب',
+                style: const TextStyle(fontSize: 12),
+              ),
               const SizedBox(width: 16),
               const Icon(Icons.calendar_today, size: 16, color: Colors.grey),
               const SizedBox(width: 4),

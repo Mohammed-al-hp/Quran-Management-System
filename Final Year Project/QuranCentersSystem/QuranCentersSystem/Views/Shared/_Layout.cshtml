@@ -1,4 +1,4 @@
-﻿@using Microsoft.AspNetCore.Identity
+@using Microsoft.AspNetCore.Identity
 @inject SignInManager<IdentityUser> SignInManager
 @inject UserManager<IdentityUser> UserManager
 
@@ -7,13 +7,15 @@
 <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>@ViewData["Title"] - منظومة إتقان للتحفيظ</title>
+    <title>@ViewData["Title"] - ?????? ????? ???????</title>
     <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.rtl.min.css" />
     <link rel="stylesheet" href="~/css/site.css" asp-append-version="true" />
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.0/font/bootstrap-icons.css">
+    <!-- SweetAlert2 -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/sweetalert2@11/dist/sweetalert2.min.css">
 
     <style>
-        /* تعريف متغيرات الألوان الجديدة (الأخضر والذهبي) */
+        /* ????? ??????? ??????? ??????? (?????? ???????) */
         :root {
             --primary-green: #1a531a;
             --secondary-green: #2a752a;
@@ -30,7 +32,7 @@
             direction: rtl;
         }
 
-        /* تنسيقات الهيكل (Layout) */
+        /* ??????? ?????? (Layout) */
         .sidebar {
             width: 260px;
             min-height: 100vh;
@@ -56,7 +58,7 @@
                     color: white;
                 }
 
-            /* كود تمييز الزر النشط في القائمة الجانبية (الأزرق) */
+            /* ??? ????? ???? ????? ?? ??????? ???????? (??????) */
             .sidebar .nav-link.active,
             .sidebar .collapse-item.active {
                 background-color: #f8f9fa !important;
@@ -93,53 +95,53 @@
         <nav class="sidebar">
             <div class="p-4 text-center border-bottom border-secondary">
                 <i class="bi bi-book-half" style="font-size: 3rem; color: var(--accent-gold);"></i>
-                <h5 class="mt-3 text-white">منظومة إتقان</h5>
-                <small class="text-muted">لتحفيظ القرآن الكريم</small>
+                <h5 class="mt-3 text-white">?????? ?????</h5>
+                <small class="text-muted">?????? ?????? ??????</small>
             </div>
             <div class="mt-3">
                 <a asp-controller="Home" asp-action="Index" class="nav-link">
-                    <i class="bi bi-speedometer2"></i> لوحة التحكم
+                    <i class="bi bi-speedometer2"></i> ???? ??????
                 </a>
                 <a asp-controller="Students" asp-action="Index" class="nav-link">
-                    <i class="bi bi-people"></i> إدارة الطلاب
+                    <i class="bi bi-people"></i> ????? ??????
                 </a>
                 <a asp-controller="Teachers" asp-action="Index" class="nav-link">
-                    <i class="bi bi-person-workspace"></i> إدارة المحفظين
+                    <i class="bi bi-person-workspace"></i> ????? ????????
                 </a>
 
                 <a asp-controller="Circles" asp-action="Index" class="nav-link">
-                    <i class="bi bi-mortarboard"></i> إدارة الحلقات
+                    <i class="bi bi-mortarboard"></i> ????? ???????
                 </a>
 
                 <a asp-controller="Attendances" asp-action="GroupAttendance" class="nav-link">
-                    <i class="bi bi-calendar-check"></i> الحضور والغياب
+                    <i class="bi bi-calendar-check"></i> ?????? ???????
                 </a>
 
                 <li class="nav-item">
                     <a class="nav-link collapsed" href="#" data-bs-toggle="collapse" data-bs-target="#memorizationMenu" aria-expanded="false" aria-controls="memorizationMenu">
                         <i class="bi bi-journal-check ms-2"></i>
-                        <span>متابعة الحفظ</span>
+                        <span>?????? ?????</span>
                         <i class="bi bi-chevron-down me-auto dropdown-arrow"></i>
                     </a>
                     <div id="memorizationMenu" class="collapse" aria-labelledby="headingTwo">
                         <div class="bg-white py-2 collapse-inner rounded">
                             <a class="collapse-item nav-link text-dark" asp-controller="Memorizations" asp-action="FollowUp">
-                                <i class="bi bi-patch-question ms-2"></i>نظام الأسئلة والمتابعة
+                                <i class="bi bi-patch-question ms-2"></i>???? ??????? ?????????
                             </a>
                             <a class="collapse-item nav-link text-dark" asp-controller="Memorizations" asp-action="DailyRecord">
-                                <i class="bi bi-book ms-2"></i>نظام التتبيع المباشر
+                                <i class="bi bi-book ms-2"></i>???? ??????? ???????
                             </a>
                         </div>
                     </div>
                 </li>
                 <a asp-controller="Reports" asp-action="Index" class="nav-link">
-                    <i class="bi bi-graph-up"></i> التقارير والإحصائيات
+                    <i class="bi bi-graph-up"></i> ???????? ???????????
                 </a>
 
                 <li class="nav-item">
                     <a class="nav-link text-white" asp-controller="Parents" asp-action="Index">
                         <i class="fas fa-users-cog me-2"></i>
-                        <span>إدارة أولياء الأمور</span>
+                        <span>????? ?????? ??????</span>
                     </a>
                 </li>
 
@@ -148,12 +150,12 @@
                        asp-controller="Payments" asp-action="Index">
                         <div class="d-flex align-items-center text-white-50 p-2 rounded">
                             <i class="bi bi-cash-stack me-2 fs-5"></i>
-                            <span class="ms-2">الإدارة المالية</span>
+                            <span class="ms-2">??????? ???????</span>
                         </div>
                     </a>
                 </li>
                 <a asp-controller="Users" asp-action="Index" class="nav-link">
-                    <i class="bi bi-person-lock"></i> إدارة المستخدمين
+                    <i class="bi bi-person-lock"></i> ????? ??????????
                 </a>
             </div>
         </nav>
@@ -165,17 +167,41 @@
                 <div class="d-flex align-items-center">
                     @if (SignInManager.IsSignedIn(User))
                     {
-                        <span class="me-3 text-muted">مرحباً، @UserManager.GetUserName(User)</span>
+                        <!-- Notification Bell -->
+                        <div class="dropdown me-3">
+                            <button class="btn btn-link link-dark position-relative p-0" type="button" id="notificationBell" data-bs-toggle="dropdown" aria-expanded="false">
+                                <i class="bi bi-bell-fill fs-4 text-warning"></i>
+                                <span id="notificationBadge" class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger d-none">
+                                    0
+                                </span>
+                            </button>
+                            <ul class="dropdown-menu dropdown-menu-end shadow-sm border-0 py-0" aria-labelledby="notificationBell" id="notificationList" style="width: 320px; max-height: 400px; overflow-y: auto;">
+                                <li class="p-3 border-bottom bg-light">
+                                    <div class="d-flex justify-content-between align-items-center">
+                                        <h6 class="m-0">التنبيهات</h6>
+                                        <a href="#" class="text-xs text-primary" id="markAllRead">تحديد الكل كمقروء</a>
+                                    </div>
+                                </li>
+                                <div id="notificationItems">
+                                    <li class="p-4 text-center text-muted">لا توجد تنبيهات جديدة</li>
+                                </div>
+                                <li class="p-2 text-center border-top">
+                                    <a href="#" class="btn btn-link btn-sm text-muted">عرض كل التنبيهات</a>
+                                </li>
+                            </ul>
+                        </div>
+
+                        <span class="me-3 text-muted">مرحباً @UserManager.GetUserName(User)</span>
                         <form class="form-inline" asp-area="Identity" asp-page="/Account/Logout" asp-route-returnUrl="@Url.Action("Index", "Home", new { area = "" })">
                             <button type="submit" class="btn btn-outline-danger btn-sm">
-                                <i class="bi bi-box-arrow-right"></i> تسجيل الخروج
+                                <i class="bi bi-box-arrow-right"></i> ????? ??????
                             </button>
                         </form>
                     }
                     else
                     {
                         <a class="btn btn-primary btn-sm" asp-area="Identity" asp-page="/Account/Login">
-                            <i class="bi bi-box-arrow-in-right"></i> تسجيل الدخول
+                            <i class="bi bi-box-arrow-in-right"></i> ????? ??????
                         </a>
                     }
                 </div>
@@ -188,6 +214,9 @@
     <script src="~/lib/jquery/dist/jquery.min.js"></script>
     <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
     <script src="~/js/site.js" asp-append-version="true"></script>
+    <!-- SignalR & SweetAlert2 -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/microsoft-signalr/6.0.1/signalr.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11/dist/sweetalert2.all.min.js"></script>
 
     <script>
         document.addEventListener("DOMContentLoaded", function() {
@@ -200,7 +229,6 @@
                 if (linkHref && (currentUrl === linkHref || currentUrl.startsWith(linkHref + "/"))) {
                     link.classList.add('active');
 
-                    // إذا كان الزر داخل القائمة المنسدلة، افتحها تلقائياً
                     var parentCollapse = link.closest('.collapse');
                     if (parentCollapse) {
                         parentCollapse.classList.add('show');
@@ -211,6 +239,108 @@
                     }
                 }
             });
+
+            // SignalR Connection
+            @if (SignInManager.IsSignedIn(User))
+            {
+                <text>
+                const connection = new signalR.HubConnectionBuilder()
+                    .withUrl("/notificationHub")
+                    .withAutomaticReconnect()
+                    .build();
+
+                connection.on("ReceiveNotification", function (notification) {
+                    console.log("New notification received:", notification);
+                    
+                    // Show SweetAlert2 toast
+                    Swal.fire({
+                        title: notification.title,
+                        text: notification.message,
+                        icon: 'info',
+                        toast: true,
+                        position: 'top-end',
+                        showConfirmButton: false,
+                        timer: 5000,
+                        timerProgressBar: true,
+                        didOpen: (toast) => {
+                            toast.addEventListener('mouseenter', Swal.stopTimer)
+                            toast.addEventListener('mouseleave', Swal.resumeTimer)
+                        }
+                    });
+
+                    // Update Badge
+                    const badge = document.getElementById('notificationBadge');
+                    let count = parseInt(badge.innerText) || 0;
+                    count++;
+                    badge.innerText = count;
+                    badge.classList.remove('d-none');
+
+                    // Add to dropdown
+                    loadNotifications();
+                });
+
+                connection.start().catch(err => console.error("SignalR connection error: ", err.toString()));
+
+                function loadNotifications() {
+                    fetch('/Notifications/GetRecent')
+                        .then(response => response.json())
+                        .then(data => {
+                            const container = document.getElementById('notificationItems');
+                            if (data.length === 0) {
+                                container.innerHTML = '<li class="p-4 text-center text-muted">لا توجد تنبيهات جديدة</li>';
+                                document.getElementById('notificationBadge').classList.add('d-none');
+                                return;
+                            }
+
+                            container.innerHTML = '';
+                            let unreadCount = 0;
+                            data.forEach(n => {
+                                if (!n.isRead) unreadCount++;
+                                const item = document.createElement('li');
+                                item.className = `p-3 border-bottom ${n.isRead ? '' : 'bg-light'}`;
+                                item.style.cursor = 'pointer';
+                                item.innerHTML = `
+                                    <div class="d-flex align-items-start">
+                                        <div class="bg-primary rounded-circle p-2 me-2">
+                                            <i class="bi bi-info-circle text-white"></i>
+                                        </div>
+                                        <div class="flex-grow-1">
+                                            <div class="d-flex justify-content-between">
+                                                <small class="fw-bold">${n.title}</small>
+                                                <small class="text-muted" style="font-size: 0.75rem">${new Date(n.createdAt).toLocaleString('ar-EG')}</small>
+                                            </div>
+                                            <p class="mb-0 text-sm" style="font-size: 0.85rem">${n.message}</p>
+                                        </div>
+                                    </div>
+                                `;
+                                item.onclick = () => markAsRead(n.id);
+                                container.appendChild(item);
+                            });
+
+                            const badge = document.getElementById('notificationBadge');
+                            if (unreadCount > 0) {
+                                badge.innerText = unreadCount;
+                                badge.classList.remove('d-none');
+                            } else {
+                                badge.classList.add('d-none');
+                            }
+                        });
+                }
+
+                function markAsRead(id) {
+                    fetch(`/Notifications/MarkAsRead/${id}`, { method: 'POST' })
+                        .then(() => loadNotifications());
+                }
+
+                document.getElementById('markAllRead').onclick = function (e) {
+                    e.preventDefault();
+                    fetch('/Notifications/MarkAllAsRead', { method: 'POST' })
+                        .then(() => loadNotifications());
+                };
+
+                loadNotifications();
+                </text>
+            }
         });
     </script>
 

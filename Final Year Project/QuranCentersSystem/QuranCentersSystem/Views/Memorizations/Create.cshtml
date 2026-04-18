@@ -1,8 +1,8 @@
-﻿@model QuranCentersSystem.Models.Memorization
+@model QuranCenters.Core.Entities.Memorization
 
 @{
-    ViewData["Title"] = "تسجيل الحفظ اليومي";
-    var recent = ViewBag.RecentMemorizations as List<QuranCentersSystem.Models.Memorization>;
+    ViewData["Title"] = "????? ????? ??????";
+    var recent = ViewBag.RecentMemorizations as List<QuranCenters.Core.Entities.Memorization>;
 }
 
 <div class="container-fluid" dir="rtl">
@@ -10,8 +10,8 @@
         <div class="col-md-5">
             <div class="card shadow-sm border-0 bg-white p-4 rounded-3 mb-4">
                 <div class="border-bottom pb-3 mb-4">
-                    <h4 class="text-success fw-bold m-0"><i class="bi bi-journal-check"></i> تسجيل الحفظ والمراجعة</h4>
-                    <small class="text-muted">أدخل بيانات التسميع اليومي للطالب</small>
+                    <h4 class="text-success fw-bold m-0"><i class="bi bi-journal-check"></i> ????? ????? ?????????</h4>
+                    <small class="text-muted">???? ?????? ??????? ?????? ??????</small>
                 </div>
 
                 @if (TempData["Success"] != null)
@@ -26,57 +26,57 @@
                     <div asp-validation-summary="ModelOnly" class="text-danger mb-3"></div>
 
                     <div class="mb-3">
-                        <label class="form-label fw-bold">اسم الطالب</label>
+                        <label class="form-label fw-bold">??? ??????</label>
                         <select asp-for="StudentId" class="form-select select2" asp-items="ViewBag.StudentId">
-                            <option value="">-- اختر الطالب --</option>
+                            <option value="">-- ???? ?????? --</option>
                         </select>
                         <span asp-validation-for="StudentId" class="text-danger small"></span>
                     </div>
 
                     <div class="mb-3">
-                        <label class="form-label fw-bold">التاريخ</label>
+                        <label class="form-label fw-bold">???????</label>
                         <input asp-for="Date" class="form-control" type="date" />
                         <span asp-validation-for="Date" class="text-danger small"></span>
                     </div>
 
                     <div class="mb-3">
-                        <label class="form-label fw-bold">السورة</label>
-                        <input asp-for="SurahName" class="form-control" placeholder="مثال: البقرة، جزء عم..." />
+                        <label class="form-label fw-bold">??????</label>
+                        <input asp-for="SurahName" class="form-control" placeholder="????: ??????? ??? ??..." />
                         <span asp-validation-for="SurahName" class="text-danger small"></span>
                     </div>
 
                     <div class="row">
                         <div class="col-6 mb-3">
-                            <label class="form-label fw-bold">من آية</label>
+                            <label class="form-label fw-bold">?? ???</label>
                             <input asp-for="FromAyah" class="form-control" type="number" min="1" />
                             <span asp-validation-for="FromAyah" class="text-danger small"></span>
                         </div>
                         <div class="col-6 mb-3">
-                            <label class="form-label fw-bold">إلى آية</label>
+                            <label class="form-label fw-bold">??? ???</label>
                             <input asp-for="ToAyah" class="form-control" type="number" min="1" />
                             <span asp-validation-for="ToAyah" class="text-danger small"></span>
                         </div>
                     </div>
 
                     <div class="mb-3">
-                        <label class="form-label fw-bold">التقييم</label>
+                        <label class="form-label fw-bold">???????</label>
                         <select asp-for="Grade" class="form-select">
-                            <option value="ممتاز">ممتاز</option>
-                            <option value="جيد جداً">جيد جداً</option>
-                            <option value="جيد">جيد</option>
-                            <option value="يحتاج مراجعة">يحتاج مراجعة</option>
+                            <option value="?????">?????</option>
+                            <option value="??? ????">??? ????</option>
+                            <option value="???">???</option>
+                            <option value="????? ??????">????? ??????</option>
                         </select>
                         <span asp-validation-for="Grade" class="text-danger small"></span>
                     </div>
 
                     <div class="mb-4">
-                        <label class="form-label fw-bold">ملاحظات</label>
-                        <textarea asp-for="Notes" class="form-control" rows="2" placeholder="أي ملاحظات حول جودة الحفظ أو التجويد..."></textarea>
+                        <label class="form-label fw-bold">???????</label>
+                        <textarea asp-for="Notes" class="form-control" rows="2" placeholder="?? ??????? ??? ???? ????? ?? ???????..."></textarea>
                     </div>
 
                     <div class="d-grid">
                         <button type="submit" class="btn btn-primary btn-lg py-2 fw-bold">
-                            <i class="bi bi-cloud-arrow-up"></i> حفظ السجل
+                            <i class="bi bi-cloud-arrow-up"></i> ??? ?????
                         </button>
                     </div>
                 </form>
@@ -86,7 +86,7 @@
         <div class="col-md-7">
             <div class="card shadow-sm border-0 bg-white rounded-3">
                 <div class="card-header bg-white p-4 border-bottom">
-                    <h5 class="fw-bold m-0 text-dark">آخر تسجيلات اليوم</h5>
+                    <h5 class="fw-bold m-0 text-dark">??? ??????? ?????</h5>
                 </div>
                 <div class="card-body p-0">
                     @if (recent != null && recent.Any())
@@ -95,10 +95,10 @@
                             <table class="table table-hover mb-0 align-middle">
                                 <thead class="table-light">
                                     <tr>
-                                        <th class="py-3">الطالب</th>
-                                        <th class="py-3">السورة</th>
-                                        <th class="py-3">المدى</th>
-                                        <th class="py-3">التقييم</th>
+                                        <th class="py-3">??????</th>
+                                        <th class="py-3">??????</th>
+                                        <th class="py-3">?????</th>
+                                        <th class="py-3">???????</th>
                                     </tr>
                                 </thead>
                                 <tbody>
@@ -107,13 +107,13 @@
                                         <tr>
                                             <td class="fw-bold">@item.Student?.Name</td>
                                             <td class="text-success">@item.SurahName</td>
-                                            <td>من @item.FromAyah إلى @item.ToAyah</td>
+                                            <td>?? @item.FromAyah ??? @item.ToAyah</td>
                                             <td>
-                                                @if (item.Grade == "ممتاز")
+                                                @if (item.Grade == "?????")
                                                 {
                                                     <span class="badge bg-success bg-opacity-10 text-success rounded-pill px-3">@item.Grade</span>
                                                 }
-                                                else if (item.Grade == "جيد جداً")
+                                                else if (item.Grade == "??? ????")
                                                 {
                                                     <span class="badge bg-primary bg-opacity-10 text-primary rounded-pill px-3">@item.Grade</span>
                                                 }
@@ -132,7 +132,7 @@
                     {
                         <div class="text-center p-5 text-muted">
                             <i class="bi bi-inbox" style="font-size: 3rem;"></i>
-                            <p class="mt-2">لم يتم تسجيل أي عمليات حفظ اليوم بعد.</p>
+                            <p class="mt-2">?? ??? ????? ?? ?????? ??? ????? ???.</p>
                         </div>
                     }
                 </div>

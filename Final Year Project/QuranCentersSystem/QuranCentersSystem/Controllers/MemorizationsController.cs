@@ -1,29 +1,33 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
-using QuranCentersSystem.Data;
+using QuranCenters.Infrastructure.Data;
 using QuranCentersSystem.Models;
-using Microsoft.AspNetCore.Authorization; // 👈 سطر استدعاء مكتبة الصلاحيات
+using QuranCenters.Core.Entities;
+using QuranCenters.Infrastructure.Identity;
+using Microsoft.AspNetCore.Authorization; // ?? ??? ??????? ????? ?????????
 
 namespace QuranCentersSystem.Controllers
 {
-    [Authorize(Roles = "Admin,Teacher")] // يسمح للمدير والمحفظ فقط
-    [Authorize] // 👈 قفل الشاشات وجعلها تتطلب تسجيل الدخول
+    [Authorize(Roles = "Admin,Teacher")] // ???? ?????? ??????? ???
+    [Authorize] // ?? ??? ??????? ?????? ????? ????? ??????
     public class MemorizationsController : Controller
     {
         private readonly ApplicationDbContext _context;
+        private readonly QuranCenters.Application.Interfaces.IGamificationService _gamificationService;
 
-        public MemorizationsController(ApplicationDbContext context)
+        public MemorizationsController(ApplicationDbContext context, QuranCenters.Application.Interfaces.IGamificationService gamificationService)
         {
             _context = context;
+            _gamificationService = gamificationService;
         }
 
         // ==========================================
-        // 1. شاشة الـ Index (التحويل التلقائي)
+        // 1. ???? ??? Index (??????? ????????)
         // ==========================================
         public IActionResult Index()
         {
@@ -31,11 +35,11 @@ namespace QuranCentersSystem.Controllers
         }
 
         // ==========================================
-        // 2. شاشة التسجيل اليومي الافتراضية
+        // 2. ???? ??????? ?????? ??????????
         // ==========================================
         public IActionResult Create(int? studentId)
         {
-            ViewBag.StudentId = new SelectList(_context.Students.Where(s => s.Status == "نشط"), "Id", "Name", studentId);
+            ViewBag.StudentId = new SelectList(_context.Students.Where(s => s.Status == "???"), "Id", "Name", studentId);
 
             ViewBag.RecentMemorizations = _context.Memorizations
                 .Include(m => m.Student)
@@ -48,27 +52,29 @@ namespace QuranCentersSystem.Controllers
 
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public IActionResult Create(Memorization memorization)
+        public async Task<IActionResult> Create(Memorization memorization)
         {
             if (ModelState.IsValid)
             {
                 _context.Memorizations.Add(memorization);
-                _context.SaveChanges();
+                await _context.SaveChangesAsync();
 
-                TempData["Success"] = "تم تسجيل درجة الحفظ بنجاح!";
+                await _gamificationService.ProcessDailyMemorizationPointsAsync(memorization);
+
+                TempData["Success"] = "?? ????? ???? ????? ?????!";
                 return RedirectToAction(nameof(Create), new { studentId = memorization.StudentId });
             }
 
-            ViewBag.StudentId = new SelectList(_context.Students.Where(s => s.Status == "نشط"), "Id", "Name", memorization.StudentId);
+            ViewBag.StudentId = new SelectList(_context.Students.Where(s => s.Status == "???"), "Id", "Name", memorization.StudentId);
             return View(memorization);
         }
 
         // ==========================================
-        // 3. شاشة المتابعة والأسئلة (نظام الأسئلة)
+        // 3. ???? ???????? ???????? (???? ???????)
         // ==========================================
         public async Task<IActionResult> FollowUp()
         {
-            ViewBag.Students = await _context.Students.Where(s => s.Status == "نشط").ToListAsync();
+            ViewBag.Students = await _context.Students.Where(s => s.Status == "???").ToListAsync();
             return View();
         }
 
@@ -99,22 +105,22 @@ namespace QuranCentersSystem.Controllers
                     await _context.SaveChangesAsync();
                 }
 
-                TempData["Success"] = "تم حفظ جلسة المتابعة والأسئلة بنجاح!";
+                TempData["Success"] = "?? ??? ???? ???????? ???????? ?????!";
                 return RedirectToAction(nameof(FollowUp));
             }
 
-            ViewBag.Students = await _context.Students.Where(s => s.Status == "نشط").ToListAsync();
+            ViewBag.Students = await _context.Students.Where(s => s.Status == "???").ToListAsync();
             return View(memorization);
         }
 
         // ==========================================
-        // 4. شاشة التتبيع المباشر (تسميع بدون أسئلة)
+        // 4. ???? ??????? ??????? (????? ???? ?????)
         // ==========================================
         public async Task<IActionResult> DailyRecord()
         {
-            ViewBag.Students = await _context.Students.Where(s => s.Status == "نشط").ToListAsync();
+            ViewBag.Students = await _context.Students.Where(s => s.Status == "???").ToListAsync();
 
-            // جلب آخر 5 عمليات حفظ تمت اليوم لقرائتها في يسار الشاشة
+            // ??? ??? 5 ?????? ??? ??? ????? ???????? ?? ???? ??????
             var today = DateTime.Today;
             var recentRecords = await _context.Memorizations
                 .Include(m => m.Student)
@@ -123,7 +129,7 @@ namespace QuranCentersSystem.Controllers
                 .Take(5)
                 .ToListAsync();
 
-            // إرسال العمليات الأخيرة عبر الـ ViewBag
+            // ????? ???????? ??????? ??? ??? ViewBag
             ViewBag.RecentRecords = recentRecords;
 
             return View();
@@ -138,11 +144,13 @@ namespace QuranCentersSystem.Controllers
                 _context.Add(memorization);
                 await _context.SaveChangesAsync();
 
-                TempData["Success"] = "تم تسجيل التتبيع للحفظ بنجاح!";
+                await _gamificationService.ProcessDailyMemorizationPointsAsync(memorization);
+
+                TempData["Success"] = "?? ????? ??????? ????? ?????!";
                 return RedirectToAction(nameof(DailyRecord));
             }
 
-            ViewBag.Students = await _context.Students.Where(s => s.Status == "نشط").ToListAsync();
+            ViewBag.Students = await _context.Students.Where(s => s.Status == "???").ToListAsync();
             return View(memorization);
         }
     }

@@ -2,8 +2,10 @@ using System.Linq;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
-using QuranCentersSystem.Data;
+using QuranCenters.Infrastructure.Data;
 using QuranCentersSystem.Models;
+using QuranCenters.Core.Entities;
+using QuranCenters.Infrastructure.Identity;
 
 namespace QuranCentersSystem.Controllers
 {

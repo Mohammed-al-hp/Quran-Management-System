@@ -1,0 +1,148 @@
+@model IEnumerable<QuranCenters.Core.Entities.Student>
+@{
+    ViewData["Title"] = "لوحة تحكم ولي الأمر";
+}
+
+<style>
+    .child-card {
+        transition: all 0.3s cubic-bezier(.25,.8,.25,1);
+        border-radius: 15px;
+        border: none;
+    }
+    .child-card:hover {
+        transform: translateY(-5px);
+        box-shadow: 0 14px 28px rgba(0,0,0,0.1), 0 10px 10px rgba(0,0,0,0.05) !important;
+    }
+    .points-badge {
+        background: linear-gradient(135deg, #F3B33E, #D48C17);
+        color: white;
+        padding: 5px 15px;
+        border-radius: 20px;
+        font-weight: bold;
+        font-size: 0.9rem;
+    }
+    .badge-mini {
+        width: 35px;
+        height: 35px;
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        background-color: #f8f9fa;
+        border-radius: 50%;
+        margin-left: 5px;
+        border: 1px solid #eee;
+    }
+    .stat-box {
+        background-color: #fcfcfc;
+        border-radius: 10px;
+        padding: 10px;
+        text-align: center;
+    }
+    .stat-value {
+        font-weight: 800;
+        display: block;
+        font-size: 1.2rem;
+        color: #1D5D5D;
+    }
+    .stat-label {
+        font-size: 0.75rem;
+        color: #666;
+        text-transform: uppercase;
+    }
+</style>
+
+<div class="container py-4" dir="rtl">
+    <div class="row mb-4">
+        <div class="col-12">
+            <h2 class="fw-bold text-primary"><i class="bi bi-people-fill me-2"></i> أبنائي وطلابنا</h2>
+            <p class="text-muted">مرحباً بك في بوابة ولي الأمر. تابع تقدم أبنائك الأكاديمي والتحفيزي في مكان واحد.</p>
+        </div>
+    </div>
+
+    @if (!Model.Any())
+    {
+        <div class="alert alert-info rounded-4 p-4 text-center">
+            <i class="bi bi-info-circle fs-1 d-block mb-3"></i>
+            <h5 class="fw-bold">لا يوجد طلاب مرتبطون بهذا الحساب حالياً.</h5>
+            <p class="mb-0">يرجى التواصل مع إدارة المركز للتأكد من ربط حسابك بملفات أبنائك.</p>
+        </div>
+    }
+    else
+    {
+        <div class="row">
+            @foreach (var child in Model)
+            {
+                <div class="col-lg-6 mb-4">
+                    <div class="card child-card shadow-sm h-100 overflow-hidden">
+                        <div class="card-header bg-white border-0 pt-4 px-4 d-flex justify-content-between align-items-center">
+                            <h4 class="fw-bold text-dark mb-0">@child.Name</h4>
+                            <div class="points-badge">
+                                <i class="bi bi-star-fill me-1"></i> @child.PointsLedgers.Sum(p => p.Points) نقطة
+                            </div>
+                        </div>
+                        <div class="card-body px-4">
+                            <div class="row g-3 mb-4">
+                                <div class="col-4">
+                                    <div class="stat-box">
+                                        <span class="stat-value">@child.Attendances.Count(a => a.Status == "حاضر")</span>
+                                        <span class="stat-label">الحضور</span>
+                                    </div>
+                                </div>
+                                <div class="col-4">
+                                    <div class="stat-box">
+                                        <span class="stat-value">@child.Memorizations.Count</span>
+                                        <span class="stat-label">التسميعات</span>
+                                    </div>
+                                </div>
+                                <div class="col-4">
+                                    <div class="stat-box">
+                                        <span class="stat-value">@child.Circle?.Name</span>
+                                        <span class="stat-label">الحلقة</span>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="mb-4">
+                                <h6 class="fw-bold mb-3"><i class="bi bi-award-fill text-warning me-2"></i>الأوسمة المكتسبة</h6>
+                                <div class="d-flex flex-wrap">
+                                    @if (!child.StudentBadges.Any())
+                                    {
+                                        <span class="text-muted small">لم يكتسب أي أوسمة بعد.</span>
+                                    }
+                                    else
+                                    {
+                                        @foreach (var badge in child.StudentBadges.Take(5))
+                                        {
+                                            <div class="badge-mini" title="@badge.BadgeName">
+                                                <i class="bi bi-shield-check text-warning"></i>
+                                            </div>
+                                        }
+                                        if (child.StudentBadges.Count > 5)
+                                        {
+                                            <span class="ms-2 align-self-center text-muted small">+@(child.StudentBadges.Count - 5)</span>
+                                        }
+                                    }
+                                </div>
+                            </div>
+
+                            <div class="border-top pt-3 mt-auto">
+                                <div class="d-flex justify-content-between align-items-center">
+                                    @{
+                                        var lastMem = child.Memorizations.OrderByDescending(m => m.Date).FirstOrDefault();
+                                    }
+                                    <div class="small">
+                                        <span class="text-muted">آخر حفظ:</span>
+                                        <span class="fw-bold">@(lastMem?.SurahName ?? "لا يوجد")</span>
+                                    </div>
+                                    <a asp-action="ChildDetails" asp-route-id="@child.Id" class="btn btn-primary rounded-pill btn-sm px-4">
+                                        عرض التفاصيل <i class="bi bi-arrow-left ms-1"></i>
+                                    </a>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            }
+        </div>
+    }
+</div>

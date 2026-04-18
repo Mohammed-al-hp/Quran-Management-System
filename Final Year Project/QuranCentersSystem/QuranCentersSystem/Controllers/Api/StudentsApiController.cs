@@ -2,8 +2,8 @@ using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
-using QuranCentersSystem.Data;
-using QuranCentersSystem.Services;
+using QuranCenters.Infrastructure.Data;
+using QuranCenters.Application.Interfaces;
 using System.Linq;
 using System.Threading.Tasks;
 
@@ -19,9 +19,9 @@ namespace QuranCentersSystem.Controllers.Api
     public class StudentsApiController : ControllerBase
     {
         private readonly ApplicationDbContext _context;
-        private readonly QrCodeService _qrCodeService;
+        private readonly IQrCodeService _qrCodeService;
 
-        public StudentsApiController(ApplicationDbContext context, QrCodeService qrCodeService)
+        public StudentsApiController(ApplicationDbContext context, IQrCodeService qrCodeService)
         {
             _context = context;
             _qrCodeService = qrCodeService;

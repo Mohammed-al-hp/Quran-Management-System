@@ -1,13 +1,15 @@
-﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
-using QuranCentersSystem.Data;
+using QuranCenters.Infrastructure.Data;
 using QuranCentersSystem.Models;
+using QuranCenters.Core.Entities;
+using QuranCenters.Infrastructure.Identity;
 
 namespace QuranCentersSystem.Controllers
 {
-    [Authorize(Roles = "Admin,Teacher")] // يسمح للمدير والمحفظ فقط
+    [Authorize(Roles = "Admin,Teacher")] // ???? ?????? ??????? ???
     public class AttendancesController : Controller
     {
         private readonly ApplicationDbContext _context;
@@ -17,21 +19,21 @@ namespace QuranCentersSystem.Controllers
             _context = context;
         }
 
-        // 1. عرض جدول الحضور (الأساسي)
+        // 1. ??? ???? ?????? (???????)
         public async Task<IActionResult> Index()
         {
             var attendances = _context.Attendances.Include(a => a.Student);
             return View(await attendances.ToListAsync());
         }
 
-        // 2. شاشة الإضافة الفردية (GET)
+        // 2. ???? ??????? ??????? (GET)
         public IActionResult Create()
         {
             ViewBag.StudentId = new SelectList(_context.Students, "Id", "Name");
             return View();
         }
 
-        // 3. حفظ الإضافة الفردية (POST)
+        // 3. ??? ??????? ??????? (POST)
         [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Create([Bind("Id,Date,Status,Notes,StudentId")] Attendance attendance)
@@ -47,18 +49,18 @@ namespace QuranCentersSystem.Controllers
         }
 
         // =========================================================
-        // ميزة التسجيل الجماعي الذكية التي أضفناها للحلقات
+        // ???? ??????? ??????? ?????? ???? ??????? ???????
         // =========================================================
 
-        // 4. شاشة عرض طلاب حلقة معينة لتسجيل حضورهم (GET)
+        // 4. ???? ??? ???? ???? ????? ?????? ?????? (GET)
         public async Task<IActionResult> GroupAttendance(int? circleId)
         {
-            // جلب قائمة الحلقات لعرضها في القائمة المنسدلة
+            // ??? ????? ??????? ?????? ?? ??????? ????????
             ViewBag.Circles = new SelectList(_context.Circles, "Id", "Name", circleId);
 
             var students = new List<Student>();
 
-            // إذا اختار المستخدم حلقة معينة، نجلب طلابها
+            // ??? ????? ???????? ???? ?????? ???? ??????
             if (circleId.HasValue)
             {
                 students = await _context.Students
@@ -70,7 +72,7 @@ namespace QuranCentersSystem.Controllers
             return View(students);
         }
 
-        // 5. حفظ الحضور الجماعي دفعة واحدة (POST)
+        // 5. ??? ?????? ??????? ???? ????? (POST)
         [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> SaveGroupAttendance(int circleId, DateTime date, Dictionary<int, string> attendanceStatus, Dictionary<int, string> notes)
@@ -83,19 +85,19 @@ namespace QuranCentersSystem.Controllers
                     string status = item.Value;
                     string note = notes.ContainsKey(studentId) ? notes[studentId] : "";
 
-                    // التحقق إذا كان المحفظ قد سجل حضور هذا الطالب في نفس اليوم مسبقاً لمنع التكرار
+                    // ?????? ??? ??? ?????? ?? ??? ???? ??? ?????? ?? ??? ????? ?????? ???? ???????
                     var existingAttendance = await _context.Attendances
                         .FirstOrDefaultAsync(a => a.StudentId == studentId && a.Date.Date == date.Date);
 
                     if (existingAttendance != null)
                     {
-                        // إذا كان موجوداً، نكتفي بتحديث الحالة والملاحظة
+                        // ??? ??? ???????? ????? ?????? ?????? ?????????
                         existingAttendance.Status = status;
                         existingAttendance.Notes = note;
                     }
                     else
                     {
-                        // إذا لم يكن موجوداً، ننشئ سجلاً جديداً
+                        // ??? ?? ??? ???????? ???? ????? ??????
                         var attendance = new Attendance
                         {
                             Date = date,

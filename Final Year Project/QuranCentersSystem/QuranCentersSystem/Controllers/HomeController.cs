@@ -2,9 +2,10 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
-using QuranCentersSystem.Data;
+using QuranCenters.Infrastructure.Data;
 using System.Linq;
 using System.Threading.Tasks;
+using QuranCenters.Core.Entities;
 
 namespace QuranCentersSystem.Controllers
 {
@@ -110,7 +111,7 @@ namespace QuranCentersSystem.Controllers
                 ViewBag.CirclesCount = 0;
                 ViewBag.StudentsCount = 0;
                 ViewBag.TodayAttendance = 0;
-                ViewBag.RecentMemorizations = new System.Collections.Generic.List<QuranCentersSystem.Models.Memorization>();
+                ViewBag.RecentMemorizations = new System.Collections.Generic.List<QuranCenters.Core.Entities.Memorization>();
             }
 
             return View();
@@ -156,6 +157,10 @@ namespace QuranCentersSystem.Controllers
                     .Select(m => gradeMap[m.Grade!])
                     .ToList();
                 ViewBag.AverageGrade = grades.Any() ? grades.Average().ToString("F1") : "N/A";
+
+                // Gamification Info
+                ViewBag.TotalPoints = await _context.PointsLedgers.Where(p => p.StudentId == student.Id).SumAsync(p => p.Points);
+                ViewBag.StudentBadges = await _context.StudentBadges.Where(b => b.StudentId == student.Id).ToListAsync();
             }
             else
             {
@@ -164,8 +169,10 @@ namespace QuranCentersSystem.Controllers
                 ViewBag.TotalAttendance = 0;
                 ViewBag.PresentCount = 0;
                 ViewBag.AbsentCount = 0;
-                ViewBag.RecentGrades = new System.Collections.Generic.List<QuranCentersSystem.Models.Memorization>();
+                ViewBag.RecentGrades = new System.Collections.Generic.List<Memorization>();
                 ViewBag.AverageGrade = "N/A";
+                ViewBag.TotalPoints = 0;
+                ViewBag.StudentBadges = new System.Collections.Generic.List<StudentBadge>();
             }
 
             return View();

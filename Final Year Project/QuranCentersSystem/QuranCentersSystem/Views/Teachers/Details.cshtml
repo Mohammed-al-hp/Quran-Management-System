@@ -1,7 +1,7 @@
-﻿@model QuranCentersSystem.Models.Teacher
+@model QuranCenters.Core.Entities.Teacher
 
 @{
-    ViewData["Title"] = "تفاصيل المحفظ";
+    ViewData["Title"] = "?????? ??????";
 }
 
 <div class="container py-4" dir="rtl">
@@ -9,38 +9,38 @@
         <div class="col-md-8">
             <div class="card shadow-sm border-0 rounded-3">
                 <div class="card-header bg-info text-white fw-bold d-flex justify-content-between align-items-center">
-                    <span><i class="bi bi-person-lines-fill"></i> تفاصيل المحفظ: @Model.Name</span>
-                    <a asp-action="Index" class="btn btn-sm btn-light">العودة للقائمة</a>
+                    <span><i class="bi bi-person-lines-fill"></i> ?????? ??????: @Model.Name</span>
+                    <a asp-action="Index" class="btn btn-sm btn-light">?????? ???????</a>
                 </div>
                 <div class="card-body p-4 text-end">
                     <div class="row mb-4">
                         <div class="col-md-6 mb-3">
-                            <label class="text-muted small d-block">اسم المحفظ</label>
+                            <label class="text-muted small d-block">??? ??????</label>
                             <span class="fw-bold fs-5">@Model.Name</span>
                         </div>
                         <div class="col-md-6 mb-3">
-                            <label class="text-muted small d-block">رقم الهاتف</label>
+                            <label class="text-muted small d-block">??? ??????</label>
                             <span class="fw-bold fs-5">@Model.Phone</span>
                         </div>
                         <div class="col-md-6 mb-3">
-                            <label class="text-muted small d-block">المؤهل / الإجازة</label>
+                            <label class="text-muted small d-block">?????? / ???????</label>
                             <span class="badge bg-warning text-dark fs-6">@Model.Qualification</span>
                         </div>
                         <div class="col-md-6 mb-3">
-                            <label class="text-muted small d-block">إجمالي الطلاب</label>
-                            <span class="badge bg-success fs-6">@(Model.Circles?.Sum(c => c.Students?.Count()) ?? 0) طلاب</span>
+                            <label class="text-muted small d-block">?????? ??????</label>
+                            <span class="badge bg-success fs-6">@(Model.Circles?.Sum(c => c.Students?.Count()) ?? 0) ????</span>
                         </div>
                     </div>
 
                     <hr />
 
-                    <h6 class="fw-bold text-primary mb-3"><i class="bi bi-collection"></i> الحلقات التابعة للمحفظ</h6>
+                    <h6 class="fw-bold text-primary mb-3"><i class="bi bi-collection"></i> ??????? ??????? ??????</h6>
                     <div class="table-responsive">
                         <table class="table table-bordered table-sm text-center">
                             <thead class="table-light">
                                 <tr>
-                                    <th>اسم الحلقة</th>
-                                    <th>عدد الطلاب بالحلقة</th>
+                                    <th>??? ??????</th>
+                                    <th>??? ?????? ???????</th>
                                 </tr>
                             </thead>
                             <tbody>
@@ -57,7 +57,7 @@
                                 else
                                 {
                                     <tr>
-                                        <td colspan="2" class="text-muted small">لا توجد حلقات مسندة لهذا المحفظ حالياً</td>
+                                        <td colspan="2" class="text-muted small">?? ???? ????? ????? ???? ?????? ??????</td>
                                     </tr>
                                 }
                             </tbody>
@@ -65,8 +65,8 @@
                     </div>
 
                     <div class="mt-4 d-flex gap-2">
-                        <a asp-action="Edit" asp-route-id="@Model.Id" class="btn btn-warning px-4">تعديل البيانات</a>
-                        <a asp-action="Index" class="btn btn-outline-secondary px-4">رجوع</a>
+                        <a asp-action="Edit" asp-route-id="@Model.Id" class="btn btn-warning px-4">????? ????????</a>
+                        <a asp-action="Index" class="btn btn-outline-secondary px-4">????</a>
                     </div>
                 </div>
             </div>

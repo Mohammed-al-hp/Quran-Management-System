@@ -1,12 +1,14 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
-using QuranCentersSystem.Data;
+using QuranCenters.Infrastructure.Data;
 using QuranCentersSystem.Models;
+using QuranCenters.Core.Entities;
+using QuranCenters.Infrastructure.Identity;
 using Microsoft.AspNetCore.Authorization;
 using Rotativa.AspNetCore;
 
@@ -58,28 +60,28 @@ namespace QuranCentersSystem.Controllers
             };
         }
 
-        // 2. عرض صفحة إضافة طالب جديد (معدل لإرسال قائمة أولياء الأمور)
+        // 2. ??? ???? ????? ???? ???? (???? ?????? ????? ?????? ??????)
         public IActionResult Create()
         {
             ViewData["CircleId"] = new SelectList(_context.Circles, "Id", "Name");
-            // 🌟 إضافة قائمة أولياء الأمور
+            // ?? ????? ????? ?????? ??????
             ViewBag.ParentId = new SelectList(_context.Set<Parent>(), "Id", "Name");
             return View();
         }
 
-        // 3. استقبال بيانات الطالب الجديد (معدل لاستقبال ParentId)
+        // 3. ??????? ?????? ?????? ?????? (???? ???????? ParentId)
         [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Create([Bind("Id,Name,Phone,BirthDate,ParentPhoneNumber,AgreedToTerms,CircleId,ParentId")] Student student)
         {
             if (!student.AgreedToTerms)
             {
-                ModelState.AddModelError("AgreedToTerms", "يجب الموافقة على شروط الانضمام للمركز");
+                ModelState.AddModelError("AgreedToTerms", "??? ???????? ??? ???? ???????? ??????");
             }
 
             if (ModelState.IsValid)
             {
-                student.Status = "نشط";
+                student.Status = "???";
                 student.JoinDate = DateTime.Now;
 
                 _context.Add(student);
@@ -88,7 +90,7 @@ namespace QuranCentersSystem.Controllers
             }
 
             ViewData["CircleId"] = new SelectList(_context.Circles, "Id", "Name", student.CircleId);
-            // 🌟 إعادة إرسال القائمة في حال فشل الـ Validation
+            // ?? ????? ????? ??????? ?? ??? ??? ??? Validation
             ViewBag.ParentId = new SelectList(_context.Set<Parent>(), "Id", "Name", student.ParentId);
             return View(student);
         }
@@ -101,7 +103,7 @@ namespace QuranCentersSystem.Controllers
             if (student == null) return NotFound();
 
             ViewData["CircleId"] = new SelectList(_context.Circles, "Id", "Name", student.CircleId);
-            // 🌟 إضافة قائمة أولياء الأمور عند التعديل
+            // ?? ????? ????? ?????? ?????? ??? ???????
             ViewBag.ParentId = new SelectList(_context.Set<Parent>(), "Id", "Name", student.ParentId);
             return View(student);
         }

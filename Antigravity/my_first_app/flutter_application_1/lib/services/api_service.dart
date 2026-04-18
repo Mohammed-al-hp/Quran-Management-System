@@ -6,7 +6,7 @@ import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 /// تستخدم flutter_secure_storage لحفظ الرمز بشكل آمن
 class ApiService {
   static const String baseUrl = "https://localhost:7174/api";
-  static final FlutterSecureStorage _storage = const FlutterSecureStorage();
+  static const FlutterSecureStorage _storage = FlutterSecureStorage();
 
   // ==================== إدارة الرمز ====================
 
@@ -26,7 +26,11 @@ class ApiService {
   }
 
   /// حفظ معلومات المستخدم
-  static Future<void> saveUserInfo(String role, String email, String userId) async {
+  static Future<void> saveUserInfo(
+    String role,
+    String email,
+    String userId,
+  ) async {
     await _storage.write(key: 'user_role', value: role);
     await _storage.write(key: 'user_email', value: email);
     await _storage.write(key: 'user_id', value: userId);
@@ -226,7 +230,9 @@ class ApiService {
   // ==================== الإشعارات ====================
 
   /// جلب الإشعارات
-  Future<Map<String, dynamic>> getNotifications({bool unreadOnly = false}) async {
+  Future<Map<String, dynamic>> getNotifications({
+    bool unreadOnly = false,
+  }) async {
     try {
       final headers = await _authHeaders();
       final response = await http.get(

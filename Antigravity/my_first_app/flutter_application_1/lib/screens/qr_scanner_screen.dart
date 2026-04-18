@@ -5,7 +5,7 @@ import '../services/api_service.dart';
 /// شاشة مسح رمز QR لتسجيل حضور الطلاب
 /// يستخدمها المحفظ لمسح رمز الطالب وتسجيل حضوره تلقائياً
 class QrScannerScreen extends StatefulWidget {
-  const QrScannerScreen({Key? key}) : super(key: key);
+  const QrScannerScreen({super.key});
 
   @override
   State<QrScannerScreen> createState() => _QrScannerScreenState();
@@ -40,7 +40,9 @@ class _QrScannerScreenState extends State<QrScannerScreen> {
       showDialog(
         context: context,
         builder: (ctx) => AlertDialog(
-          shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(16),
+          ),
           icon: Icon(
             isSuccess ? Icons.check_circle : Icons.error,
             color: isSuccess ? Colors.green : Colors.red,
@@ -77,7 +79,10 @@ class _QrScannerScreenState extends State<QrScannerScreen> {
 
     return Scaffold(
       appBar: AppBar(
-        title: const Text('مسح QR للحضور', style: TextStyle(fontWeight: FontWeight.bold)),
+        title: const Text(
+          'مسح QR للحضور',
+          style: TextStyle(fontWeight: FontWeight.bold),
+        ),
         backgroundColor: primaryTeal,
         foregroundColor: Colors.white,
         actions: [

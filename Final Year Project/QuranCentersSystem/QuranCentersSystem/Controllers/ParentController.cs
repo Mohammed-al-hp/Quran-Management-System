@@ -2,8 +2,10 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
-using QuranCentersSystem.Data;
+using QuranCenters.Infrastructure.Data;
 using QuranCentersSystem.Models;
+using QuranCenters.Core.Entities;
+using QuranCenters.Infrastructure.Identity;
 using System.Linq;
 using System.Threading.Tasks;
 
@@ -80,6 +82,8 @@ namespace QuranCentersSystem.Controllers
                 .Include(s => s.Attendances)
                 .Include(s => s.Memorizations)
                 .Include(s => s.Payments)
+                .Include(s => s.PointsLedgers)
+                .Include(s => s.StudentBadges)
                 .ToListAsync();
 
             return View(myChildren);
@@ -96,6 +100,8 @@ namespace QuranCentersSystem.Controllers
                 .Include(s => s.Attendances)
                 .Include(s => s.Memorizations)
                 .Include(s => s.Payments)
+                .Include(s => s.PointsLedgers)
+                .Include(s => s.StudentBadges)
                 .FirstOrDefaultAsync(s => s.Id == id);
 
             // التحقق من وجود الطالب وأن ولي الأمر هو المالك الصحيح

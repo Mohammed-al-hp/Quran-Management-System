@@ -1,0 +1,147 @@
+@model QuranCenters.Application.DTOs.LeaderboardViewModel
+@{
+    ViewData["Title"] = "لوحة الصدارة";
+    var top3 = Model.Rankings.Take(3).ToList();
+    var theRest = Model.Rankings.Skip(3).ToList();
+}
+
+<style>
+    .podium-container {
+        display: flex;
+        justify-content: center;
+        align-items: flex-end;
+        height: 350px;
+        margin-bottom: 50px;
+        position: relative;
+    }
+    .podium-step {
+        width: 150px;
+        margin: 0 10px;
+        text-align: center;
+        position: relative;
+        transition: transform 0.3s ease;
+        border-radius: 15px 15px 0 0;
+    }
+    .podium-step:hover {
+        transform: scale(1.05);
+    }
+    .rank-1 { height: 250px; background: linear-gradient(180deg, #F3B33E, #D48C17); order: 2; z-index: 3; }
+    .rank-2 { height: 180px; background: linear-gradient(180deg, #BDC3C7, #95A5A6); order: 1; z-index: 2; }
+    .rank-3 { height: 130px; background: linear-gradient(180deg, #E67E22, #D35400); order: 3; z-index: 2; }
+    
+    .podium-info {
+        position: absolute;
+        top: -100px;
+        width: 100%;
+        left: 0;
+    }
+    .podium-avatar {
+        width: 80px;
+        height: 80px;
+        border-radius: 50%;
+        background-color: white;
+        margin: 0 auto 10px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        border: 4px solid white;
+        box-shadow: 0 10px 20px rgba(0,0,0,0.1);
+        font-size: 2rem;
+    }
+    .podium-step.rank-1 .podium-avatar { border-color: #F3B33E; color: #F3B33E; }
+    .podium-step.rank-2 .podium-avatar { border-color: #BDC3C7; color: #BDC3C7; }
+    .podium-step.rank-3 .podium-avatar { border-color: #E67E22; color: #E67E22; }
+
+    .podium-name { font-weight: 800; color: #2c3e50; margin-bottom: 5px; }
+    .podium-points { font-weight: bold; font-size: 1.1rem; color: #2c3e50; }
+    
+    .rank-icon {
+        font-size: 2.5rem;
+        color: rgba(255,255,255,0.4);
+        margin-top: 20px;
+    }
+
+    .leaderboard-table {
+        background: white;
+        border-radius: 20px;
+        overflow: hidden;
+        box-shadow: 0 10px 30px rgba(0,0,0,0.05);
+    }
+    .leaderboard-table thead {
+        background: #f8f9fa;
+    }
+    .row-highlight:hover {
+        background-color: #fcfcfc !important;
+    }
+</style>
+
+<div class="container py-5" dir="rtl">
+    <div class="text-center mb-5">
+        <h1 class="fw-bold text-primary mb-3"><i class="bi bi-trophy-fill me-2 text-warning"></i> لوحة شرف فرسان القرآن</h1>
+        <p class="text-muted fs-5">تعرف على المتصدرين في رحلة الإبداع والحفظ</p>
+    </div>
+
+    @if (top3.Any())
+    {
+        <div class="podium-container">
+            @for (int i = 0; i < top3.Count; i++)
+            {
+                var student = top3[i];
+                var rankClass = "rank-" + (i + 1);
+                var rankLabel = (i + 1 == 1 ? "🥇" : i + 1 == 2 ? "🥈" : "🥉");
+                
+                <div class="podium-step @rankClass shadow-lg">
+                    <div class="podium-info">
+                        <div class="podium-avatar">
+                            <i class="bi bi-person-fill"></i>
+                        </div>
+                        <div class="podium-name text-truncate px-2">@student.StudentName</div>
+                        <div class="podium-points">@student.TotalPoints <small>نقطة</small></div>
+                    </div>
+                    <div class="rank-icon">@rankLabel</div>
+                </div>
+            }
+        </div>
+    }
+
+    <div class="row justify-content-center">
+        <div class="col-lg-10">
+            <div class="leaderboard-table">
+                <table class="table table-hover align-middle mb-0">
+                    <thead class="py-3">
+                        <tr>
+                            <th class="ps-4 py-3">الترتيب</th>
+                            <th class="py-3">الطالب</th>
+                            <th class="py-3">الحلقة</th>
+                            <th class="py-3">الأوسمة</th>
+                            <th class="text-center py-3">إجمالي النقاط</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @foreach (var student in Model.Rankings)
+                        {
+                            <tr class="row-highlight @(student.Rank <= 3 ? "fw-bold" : "")">
+                                <td class="ps-4">
+                                    @if (student.Rank == 1) { <span class="badge bg-warning text-dark px-3 rounded-pill">1</span> }
+                                    else if (student.Rank == 2) { <span class="badge bg-secondary px-3 rounded-pill">2</span> }
+                                    else if (student.Rank == 3) { <span class="badge bg-danger px-3 rounded-pill" style="background-color:#E67E22 !important;">3</span> }
+                                    else { <span class="ps-2">@student.Rank</span> }
+                                </td>
+                                <td>@student.StudentName</td>
+                                <td><span class="badge bg-light text-dark border">@student.CircleName</span></td>
+                                <td>
+                                    @for(int j=0; j < Math.Min(student.BadgeCount, 3); j++)
+                                    {
+                                        <i class="bi bi-shield-check text-warning ms-1"></i>
+                                    }
+                                    @if(student.BadgeCount > 3) { <small class="text-muted">+@(student.BadgeCount - 3)</small> }
+                                </td>
+                                <td class="text-center"><span class="fw-bold text-primary">@student.TotalPoints</span></td>
+                            </tr>
+                        }
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</div>

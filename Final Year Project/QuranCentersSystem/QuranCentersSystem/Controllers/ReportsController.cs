@@ -1,7 +1,7 @@
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Authorization;
-using QuranCentersSystem.Data;
-using QuranCentersSystem.Services;
+using QuranCenters.Infrastructure.Data;
+using QuranCenters.Application.Interfaces;
 using System;
 using System.Linq;
 using Rotativa.AspNetCore;
@@ -16,9 +16,9 @@ namespace QuranCentersSystem.Controllers
     public class ReportsController : Controller
     {
         private readonly ApplicationDbContext _context;
-        private readonly PdfReportService _pdfReportService;
+        private readonly IPdfReportService _pdfReportService;
 
-        public ReportsController(ApplicationDbContext context, PdfReportService pdfReportService)
+        public ReportsController(ApplicationDbContext context, IPdfReportService pdfReportService)
         {
             _context = context;
             _pdfReportService = pdfReportService;
