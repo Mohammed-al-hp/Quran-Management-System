@@ -1,36 +1,96 @@
 ﻿@model IEnumerable<QuranCentersSystem.Models.Circle>
 
-@{
-    ViewData["Title"] = "الحلقات والمستويات";
-}
-
 <div class="container-fluid" dir="rtl">
-    <div class="card shadow-sm bg-white p-4 rounded">
-        <div class="d-flex justify-content-between align-items-center mb-4 border-bottom pb-3">
-            <h4 class="m-0 text-success fw-bold">قائمة الحلقات</h4>
-            <a asp-controller="Circles" asp-action="Create" class="btn btn-success">
-                <i class="bi bi-plus-circle"></i> إضافة حلقة جديدة
-            </a>
-        </div>
+    <div class="card shadow-sm border-0 mb-4 rounded-3">
+        <div class="card-body p-4">
+            <div class="d-flex justify-content-between align-items-center mb-4">
+                <div>
+                    <h4 class="text-success fw-bold mb-1">إدارة الحلقات</h4>
+                    <nav aria-label="breadcrumb">
+                        <ol class="breadcrumb small mb-0">
+                            <li class="breadcrumb-item text-muted">الرئيسية</li>
+                            <li class="breadcrumb-item text-muted">الإعدادات</li>
+                            <li class="breadcrumb-item active text-success">الحلقات</li>
+                        </ol>
+                    </nav>
+                </div>
+                <a asp-action="Create" class="btn btn-success px-4 rounded-pill">
+                    <i class="bi bi-plus-circle-fill me-1"></i> إضافة حلقة جديدة
+                </a>
+            </div>
 
-        <table class="table table-striped table-hover">
-            <thead>
-                <tr>
-                    <th>اسم الحلقة</th>
+            <form method="get" class="row g-3 bg-light p-3 rounded-3 border">
+                <div class="col-md-5">
+                    <label class="form-label small fw-bold">نوع الحلقة</label>
+                    <select name="circleType" class="form-select border-0 shadow-sm" onchange="this.form.submit()">
+                        <option value="الكل">جميع الأنواع</option>
+                        <option value="1">حلقة 1</option>
+                        <option value="2">حلقة 2</option>
+                    </select>
+                </div>
+                <div class="col-md-5">
+                    <label class="form-label small fw-bold">الجنس</label>
+                    <select name="gender" class="form-select border-0 shadow-sm" onchange="this.form.submit()">
+                        <option value="الكل">الكل</option>
+                        <option value="ذكر">ذكر</option>
+                        <option value="أنثى">أنثى</option>
+                    </select>
+                </div>
+                <div class="col-md-2 d-flex align-items-end">
+                    <button type="submit" class="btn btn-outline-success w-100 shadow-sm">تحديث</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <div class="card shadow-sm border-0 rounded-3 overflow-hidden">
+        <table class="table table-hover align-middle mb-0">
+            <thead class="bg-light">
+                <tr class="text-secondary small text-uppercase">
+                    <th class="ps-4 py-3">اسم الحلقة</th>
                     <th>المحفظ المسؤول</th>
-                    <th>الإجراءات</th>
+                    <th class="text-center">عدد الطلاب</th>
+                    <th>المواعيد</th>
+                    <th class="text-center pe-4">الإجراءات</th>
                 </tr>
             </thead>
             <tbody>
                 @foreach (var item in Model)
                 {
                     <tr>
-                        <td class="fw-bold text-dark">@item.Name</td>
-                        <td class="text-success">@(item.Teacher?.Name ?? "غير محدد")</td>
+                        <td class="ps-4">
+                            <div class="d-flex align-items-center">
+                                <div class="bg-success bg-opacity-10 p-2 rounded-3 me-3 text-success">
+                                    <i class="bi bi-mortarboard-fill fs-5"></i>
+                                </div>
+                                <div>
+                                    <div class="fw-bold text-dark">@item.Name</div>
+                                    <span class="badge bg-light text-muted border">@item.CircleType | @item.Gender</span>
+                                </div>
+                            </div>
+                        </td>
                         <td>
+                            <div class="d-flex align-items-center">
+                                <i class="bi bi-person-circle text-success me-2"></i>
+                                <span class="fw-medium">@(item.Teacher?.Name ?? "غير محدد")</span>
+                            </div>
+                        </td>
+                        <td class="text-center">
+                            <div class="h6 mb-0 fw-bold text-primary">@item.Students.Count</div>
+                            <small class="text-muted small-xs">طالب مقيد</small>
+                        </td>
+                        <td>
+                            <div class="small">
+                                <i class="bi bi-calendar-event text-muted me-1"></i> @item.SelectedDays <br />
+                                <i class="bi bi-clock-history text-muted me-1"></i>
+                                @(item.TimingType == "Prayers" ? "بعد " + item.StartPrayer : item.StartTime?.ToString(@"hh\:mm"))
+                            </div>
+                        </td>
+                        <td class="text-center pe-4">
                             <div class="btn-group">
-                                <a href="#" class="btn btn-outline-warning btn-sm"><i class="bi bi-pencil"></i></a>
-                                <a href="#" class="btn btn-outline-danger btn-sm"><i class="bi bi-trash"></i></a>
+                                <a href="#" class="btn btn-sm btn-outline-warning border-0"><i class="bi bi-pencil"></i></a>
+                                <a href="#" class="btn btn-sm btn-outline-info border-0"><i class="bi bi-eye"></i></a>
+                                <button class="btn btn-sm btn-outline-danger border-0"><i class="bi bi-trash"></i></button>
                             </div>
                         </td>
                     </tr>

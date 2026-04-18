@@ -1,4 +1,7 @@
-﻿using System.Linq;
+﻿using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
@@ -16,45 +19,87 @@ namespace QuranCentersSystem.Controllers
             _context = context;
         }
 
-        // 1. عرض قائمة الحلقات
-        public IActionResult Index()
+        // 1. عرض قائمة الحلقات مع الفلترة والبحث
+        public async Task<IActionResult> Index(string gender, string circleType)
         {
-            var circles = _context.Circles
+            // جلب الحلقات مع تضمين بيانات المحفظين والطلاب لحساب العدد
+            var query = _context.Circles
                 .Include(c => c.Teacher)
-                .ToList();
-            return View(circles);
+                .Include(c => c.Students)
+                .AsQueryable();
+
+            if (!string.IsNullOrEmpty(gender) && gender != "الكل")
+            {
+                query = query.Where(c => c.Gender == gender);
+            }
+
+            if (!string.IsNullOrEmpty(circleType) && circleType != "الكل")
+            {
+                query = query.Where(c => c.CircleType == circleType);
+            }
+
+            return View(await query.ToListAsync());
         }
 
         // 2. عرض صفحة إضافة حلقة جديدة
         public IActionResult Create()
         {
-            // جلب قائمة المعلمين لعرضهم في قائمة منسدلة (Dropdown)
+            // تجهيز قائمة المحفظين للاختيار منها في الواجهة
             ViewBag.TeacherId = new SelectList(_context.Teachers, "Id", "Name");
             return View();
         }
 
-        // 3. حفظ بيانات الحلقة الجديدة
+        // 3. معالجة حفظ الحلقة الجديدة (POST)
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("Id,Name,TeacherId")] Circle circle)
+        public async Task<IActionResult> Create([Bind("Id,Name,TeacherId,CircleType,Gender,TimingType,StartPrayer,EndPrayer,StartTime,EndTime")] Circle circle, string[] SelectedDays)
         {
-            // أضف هذه الأسطر لإخبار السيرفر بأن هذه الحقول ليست ضرورية للتحقق الآن
+            // إزالة التحقق من الكائنات المرتبطة لضمان مرور ModelState.IsValid
             ModelState.Remove("Teacher");
-            ModelState.Remove("Students"); // إذا كان هناك قائمة طلاب
+            ModelState.Remove("Students");
+            ModelState.Remove("SelectedDays");
 
             if (ModelState.IsValid)
             {
-                // تعيين قيم افتراضية للحقول الجديدة حتى لا يرفضها SQL Server
-                // circle.CurrentStudents = 0; 
-                // circle.MaxCapacity = 52;
+                try
+                {
+                    // تحويل مصفوفة الأيام المختارة إلى نص مفصول بفاصلة لحفظها
+                    if (SelectedDays != null && SelectedDays.Length > 0)
+                    {
+                        circle.SelectedDays = string.Join(", ", SelectedDays);
+                    }
 
-                _context.Add(circle);
-                await _context.SaveChangesAsync();
-                return RedirectToAction(nameof(Index));
+                    _context.Add(circle);
+                    await _context.SaveChangesAsync();
+
+                    // العودة للقائمة بعد النجاح
+                    return RedirectToAction(nameof(Index));
+                }
+                catch (Exception ex)
+                {
+                    // إضافة خطأ في حال فشل الحفظ في قاعدة البيانات
+                    ModelState.AddModelError("", "حدث خطأ أثناء الاتصال بقاعدة البيانات: " + ex.Message);
+                }
             }
 
+            // إذا وصلنا هنا، فهذا يعني وجود خطأ في البيانات المدخلة
+            // نعيد ملء قائمة المحفظين لكي لا تظهر فارغة في الواجهة
             ViewBag.TeacherId = new SelectList(_context.Teachers, "Id", "Name", circle.TeacherId);
             return View(circle);
+        }
+
+        // 4. حذف الحلقة (إضافي للتكامل)
+        [HttpPost, ActionName("Delete")]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> DeleteConfirmed(int id)
+        {
+            var circle = await _context.Circles.FindAsync(id);
+            if (circle != null)
+            {
+                _context.Circles.Remove(circle);
+                await _context.SaveChangesAsync();
+            }
+            return RedirectToAction(nameof(Index));
         }
     }
 }

@@ -14,35 +14,103 @@
         </div>
 
         <div class="row justify-content-center">
-            <div class="col-md-8 col-lg-6">
+            <div class="col-md-10 col-lg-8">
                 <form asp-action="Create" class="bg-light p-4 rounded shadow-sm">
                     <div asp-validation-summary="ModelOnly" class="text-danger mb-3"></div>
 
-                    <div class="mb-3">
-                        <label asp-for="Name" class="form-label fw-bold text-secondary">اسم الحلقة</label>
-                        <div class="input-group">
-                            <span class="input-group-text"><i class="bi bi-mortarboard"></i></span>
-                            <input asp-for="Name" class="form-control" placeholder="أدخل اسم الحلقة..." />
+                    <div class="row">
+                        <div class="col-md-6 mb-3">
+                            <label asp-for="Name" class="form-label fw-bold text-secondary">اسم الحلقة</label>
+                            <div class="input-group">
+                                <span class="input-group-text"><i class="bi bi-mortarboard"></i></span>
+                                <input asp-for="Name" class="form-control" placeholder="أدخل اسم الحلقة..." />
+                            </div>
+                            <span asp-validation-for="Name" class="text-danger small"></span>
                         </div>
-                        <span asp-validation-for="Name" class="text-danger small"></span>
+
+                        <div class="col-md-6 mb-3">
+                            <label asp-for="TeacherId" class="form-label fw-bold text-secondary">المحفظ المسؤول</label>
+                            <div class="input-group">
+                                <span class="input-group-text"><i class="bi bi-person-badge"></i></span>
+                                <select asp-for="TeacherId" class="form-select" asp-items="ViewBag.TeacherId">
+                                    <option value="">-- اختر المحفظ --</option>
+                                </select>
+                            </div>
+                            <span asp-validation-for="TeacherId" class="text-danger small"></span>
+                        </div>
                     </div>
 
                     <div class="mb-3">
-                        <label asp-for="TeacherId" class="form-label fw-bold text-secondary">المحفظ المسؤول</label>
-                        <div class="input-group">
-                            <span class="input-group-text"><i class="bi bi-person-badge"></i></span>
-                            <select asp-for="TeacherId" class="form-select" asp-items="ViewBag.TeacherId">
-                                <option value="">-- اختر المحفظ --</option>
-                            </select>
+                        <label class="form-label fw-bold text-secondary">أيام الحلقة</label>
+                        <div class="d-flex flex-wrap gap-3 p-3 bg-white rounded border">
+                            @{
+                                string[] days = { "السبت", "الأحد", "الإثنين", "الثلاثاء", "الأربعاء", "الخميس", "الجمعة" };
+                                foreach (var day in days)
+                                {
+                                    <div class="form-check">
+                                        <input class="form-check-input" type="checkbox" name="SelectedDays" value="@day" id="day_@day">
+                                        <label class="form-check-label" for="day_@day">@day</label>
+                                    </div>
+                                }
+                            }
                         </div>
-                        <span asp-validation-for="TeacherId" class="text-danger small"></span>
+                    </div>
+
+                    <div class="card border-0 shadow-sm mb-3">
+                        <div class="card-body">
+                            <label class="form-label fw-bold text-success mb-3">آلية تحديد وقت الحلقة</label>
+                            <div class="d-flex gap-4 mb-4">
+                                <div class="form-check">
+                                    <input class="form-check-input" type="radio" name="TimingType" id="typePrayers" value="Prayers" checked onchange="toggleTiming()">
+                                    <label class="form-check-label fw-bold" for="typePrayers">توقيت بالصلوات</label>
+                                </div>
+                                <div class="form-check">
+                                    <input class="form-check-input" type="radio" name="TimingType" id="typeHours" value="Hours" onchange="toggleTiming()">
+                                    <label class="form-check-label fw-bold" for="typeHours">توقيت بالساعات</label>
+                                </div>
+                            </div>
+
+                            <div id="prayersSection" class="row g-3">
+                                <div class="col-md-6">
+                                    <label class="small text-muted">بداية الحلقة (بعد صلاة)</label>
+                                    <select name="StartPrayer" class="form-select">
+                                        <option>الفجر</option>
+                                        <option>الظهر</option>
+                                        <option>العصر</option>
+                                        <option>المغرب</option>
+                                        <option>العشاء</option>
+                                    </select>
+                                </div>
+                                <div class="col-md-6">
+                                    <label class="small text-muted">نهاية الحلقة (إلى صلاة/وقت)</label>
+                                    <select name="EndPrayer" class="form-select">
+                                        <option>الشروق</option>
+                                        <option>الظهر</option>
+                                        <option>العصر</option>
+                                        <option>المغرب</option>
+                                        <option>العشاء</option>
+                                    </select>
+                                </div>
+                            </div>
+
+                            <div id="hoursSection" class="row g-3" style="display: none;">
+                                <div class="col-md-6">
+                                    <label class="small text-muted">وقت البداية</label>
+                                    <input type="time" name="StartTime" class="form-control">
+                                </div>
+                                <div class="col-md-6">
+                                    <label class="small text-muted">وقت النهاية</label>
+                                    <input type="time" name="EndTime" class="form-control">
+                                </div>
+                            </div>
+                        </div>
                     </div>
 
                     <hr class="my-4">
 
                     <div class="d-grid">
                         <button type="submit" class="btn btn-success btn-lg">
-                            <i class="bi bi-check-circle"></i> حفظ البيانات
+                            <i class="bi bi-check-circle"></i> حفظ الحلقة
                         </button>
                     </div>
                 </form>
@@ -50,3 +118,13 @@
         </div>
     </div>
 </div>
+
+@section Scripts {
+    <script>
+        function toggleTiming() {
+            const isPrayers = document.getElementById('typePrayers').checked;
+            document.getElementById('prayersSection').style.display = isPrayers ? 'flex' : 'none';
+            document.getElementById('hoursSection').style.display = isPrayers ? 'none' : 'flex';
+        }
+    </script>
+}
