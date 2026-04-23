@@ -1,48 +1,71 @@
 using Microsoft.EntityFrameworkCore;
 using QuranCenters.Core.Interfaces;
 using QuranCenters.Infrastructure.Data;
+using System;
 using System.Collections.Generic;
+using System.Linq;
+using System.Linq.Expressions;
 using System.Threading.Tasks;
 
 namespace QuranCenters.Infrastructure.Repositories
 {
+    /// <summary>
+    /// تنفيذ المستودع العام - يوفر عمليات CRUD لجميع الكيانات عبر EF Core
+    /// </summary>
     public class Repository<T> : IRepository<T> where T : class
     {
         protected readonly ApplicationDbContext _context;
+        protected readonly DbSet<T> _dbSet;
 
         public Repository(ApplicationDbContext context)
         {
             _context = context;
+            _dbSet = context.Set<T>();
         }
 
-        public async Task<T> GetByIdAsync(int id)
+        public async Task<T?> GetByIdAsync(int id)
         {
-            return await _context.Set<T>().FindAsync(id);
+            return await _dbSet.FindAsync(id);
         }
 
         public async Task<IEnumerable<T>> GetAllAsync()
         {
-            return await _context.Set<T>().ToListAsync();
+            return await _dbSet.ToListAsync();
+        }
+
+        public async Task<IEnumerable<T>> FindAsync(Expression<Func<T, bool>> predicate)
+        {
+            return await _dbSet.Where(predicate).ToListAsync();
         }
 
         public async Task AddAsync(T entity)
         {
-            await _context.Set<T>().AddAsync(entity);
+            await _dbSet.AddAsync(entity);
+        }
+
+        public async Task AddRangeAsync(IEnumerable<T> entities)
+        {
+            await _dbSet.AddRangeAsync(entities);
         }
 
         public void Update(T entity)
         {
-            _context.Set<T>().Update(entity);
+            _dbSet.Update(entity);
         }
 
         public void Delete(T entity)
         {
-            _context.Set<T>().Remove(entity);
+            _dbSet.Remove(entity);
         }
 
-        public async Task SaveChangesAsync()
+        public void DeleteRange(IEnumerable<T> entities)
         {
-            await _context.SaveChangesAsync();
+            _dbSet.RemoveRange(entities);
+        }
+
+        public IQueryable<T> Query()
+        {
+            return _dbSet.AsQueryable();
         }
     }
 }

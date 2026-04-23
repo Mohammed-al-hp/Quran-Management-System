@@ -2,15 +2,13 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
-<<<<<<< HEAD
 using QuranCenters.Infrastructure.Data;
-=======
-using QuranCentersSystem.Data;
-using QuranCentersSystem.Models;
->>>>>>> 7097dff658495d1d8b18b5d9bb1a3b0e942784ad
+using QuranCenters.Infrastructure.Identity;
+using QuranCenters.Application.Interfaces;
+using QuranCenters.Core.Entities;
 using System.Linq;
 using System.Threading.Tasks;
-using QuranCenters.Core.Entities;
+using System.Collections.Generic;
 
 namespace QuranCentersSystem.Controllers
 {
@@ -21,19 +19,27 @@ namespace QuranCentersSystem.Controllers
     [Authorize]
     public class HomeController : Controller
     {
-        private readonly ApplicationDbContext _context;
-<<<<<<< HEAD
-        private readonly UserManager<IdentityUser> _userManager;
-
-        public HomeController(ApplicationDbContext context, UserManager<IdentityUser> userManager)
-=======
         private readonly UserManager<ApplicationUser> _userManager;
+        private readonly IStudentService _studentService;
+        private readonly ITeacherService _teacherService;
+        private readonly ICircleService _circleService;
+        private readonly IMemorizationService _memorizationService;
+        private readonly IAttendanceService _attendanceService;
 
-        public HomeController(ApplicationDbContext context, UserManager<ApplicationUser> userManager)
->>>>>>> 7097dff658495d1d8b18b5d9bb1a3b0e942784ad
+        public HomeController(
+            UserManager<ApplicationUser> userManager,
+            IStudentService studentService,
+            ITeacherService teacherService,
+            ICircleService circleService,
+            IMemorizationService memorizationService,
+            IAttendanceService attendanceService)
         {
-            _context = context;
             _userManager = userManager;
+            _studentService = studentService;
+            _teacherService = teacherService;
+            _circleService = circleService;
+            _memorizationService = memorizationService;
+            _attendanceService = attendanceService;
         }
 
         /// <summary>
@@ -43,7 +49,6 @@ namespace QuranCentersSystem.Controllers
         {
             var user = await _userManager.GetUserAsync(User);
             if (user == null) return Challenge();
-<<<<<<< HEAD
 
             var roles = await _userManager.GetRolesAsync(user);
             var role = roles.FirstOrDefault();
@@ -61,74 +66,20 @@ namespace QuranCentersSystem.Controllers
                     break;
             }
 
-            // لوحة تحكم المدير (الافتراضية) - لا تغيير في الـ View
-            ViewBag.StudentsCount = await _context.Students.CountAsync();
-            ViewBag.TeachersCount = await _context.Teachers.CountAsync();
-            ViewBag.CirclesCount = await _context.Circles.CountAsync();
-
-            // حساب حضور اليوم
-            ViewBag.TodayAttendance = await _context.Memorizations
-                .Where(m => m.Date.Date == System.DateTime.Today)
-                .Select(m => m.StudentId)
-                .Distinct()
-                .CountAsync();
+            // لوحة تحكم المدير (الافتراضية)
+            ViewBag.StudentsCount = await _studentService.GetStudentsCountAsync();
+            ViewBag.TeachersCount = await _teacherService.GetTeachersCountAsync();
+            ViewBag.CirclesCount = await _circleService.GetCirclesCountAsync();
+            ViewBag.TodayAttendance = await _memorizationService.GetTodayActiveStudentsCountAsync();
 
             // بيانات الرسم البياني للتقييمات
-=======
-
-            // --- 1. إحصائيات المدير (Admin) ---
-            if (User.IsInRole("Admin"))
-            {
-                ViewBag.StudentsCount = await _context.Students.CountAsync();
-                ViewBag.TeachersCount = await _context.Teachers.CountAsync();
-                ViewBag.CirclesCount = await _context.Circles.CountAsync();
-                ViewBag.TodayAttendance = await GetTodayAttendanceCount(null);
-            }
-            // --- 2. إحصائيات المحفظ (Teacher) ---
-            else if (User.IsInRole("Teacher"))
-            {
-                // نربط المحفظ بحلقاته عن طريق البريد الإلكتروني
-                var teacher = await _context.Teachers
-                    .Include(t => t.Circles)
-                    .FirstOrDefaultAsync(t => t.Phone == user.PhoneNumber || t.Name == user.UserName); // تخصيص الربط حسب موديلك
-
-                if (teacher != null)
-                {
-                    var circleIds = teacher.Circles.Select(c => c.Id).ToList();
-                    ViewBag.StudentsCount = await _context.Students.CountAsync(s => circleIds.Contains(s.CircleId));
-                    ViewBag.CirclesCount = teacher.Circles.Count;
-                    ViewBag.TodayAttendance = await GetTodayAttendanceCount(circleIds);
-                }
-            }
-            // --- 3. إحصائيات ولي الأمر (Parent) ---
-            else if (User.IsInRole("Parent"))
-            {
-                ViewBag.MyStudentsCount = await _context.Students.CountAsync(s => s.ParentEmail == user.Email);
-            }
-
-            // بيانات الرسم البياني (عمة للمركز أو مخصصة)
-            await PrepareGradesChartData();
+            var grades = await _memorizationService.GetGradeDistributionAsync();
+            ViewBag.ExcellentCount = grades.ExcellentCount;
+            ViewBag.VeryGoodCount = grades.VeryGoodCount;
+            ViewBag.GoodCount = grades.GoodCount;
+            ViewBag.FairCount = grades.FairCount;
 
             return View();
-        }
-
-        private async Task<int> GetTodayAttendanceCount(List<int> circleIds)
-        {
-            var query = _context.Memorizations.Where(m => m.Date.Date == System.DateTime.Today);
-            if (circleIds != null)
-            {
-                query = query.Where(m => circleIds.Contains(m.Student.CircleId));
-            }
-            return await query.Select(m => m.StudentId).Distinct().CountAsync();
-        }
-
-        private async Task PrepareGradesChartData()
-        {
->>>>>>> 7097dff658495d1d8b18b5d9bb1a3b0e942784ad
-            ViewBag.ExcellentCount = await _context.Memorizations.CountAsync(m => m.Grade == "ممتاز");
-            ViewBag.VeryGoodCount = await _context.Memorizations.CountAsync(m => m.Grade == "جيد جداً");
-            ViewBag.GoodCount = await _context.Memorizations.CountAsync(m => m.Grade == "جيد");
-            ViewBag.FairCount = await _context.Memorizations.CountAsync(m => m.Grade == "مقبول");
         }
 
         /// <summary>
@@ -140,11 +91,7 @@ namespace QuranCentersSystem.Controllers
             var user = await _userManager.GetUserAsync(User);
             if (user == null) return Challenge();
 
-            // البحث عن ملف المحفظ المرتبط بالبريد الإلكتروني
-            var teacher = await _context.Teachers
-                .Include(t => t.Circles)
-                    .ThenInclude(c => c.Students)
-                .FirstOrDefaultAsync(t => t.Phone == user.Email || t.Name.Contains(user.UserName ?? ""));
+            var teacher = await _teacherService.GetTeacherByContactAsync(user.Email ?? user.UserName ?? "");
 
             if (teacher != null)
             {
@@ -152,27 +99,23 @@ namespace QuranCentersSystem.Controllers
                 ViewBag.CirclesCount = teacher.Circles.Count;
                 ViewBag.StudentsCount = teacher.Circles.SelectMany(c => c.Students).Count();
 
-                // حضور اليوم لطلابه
                 var studentIds = teacher.Circles.SelectMany(c => c.Students).Select(s => s.Id).ToList();
-                ViewBag.TodayAttendance = await _context.Attendances
-                    .Where(a => studentIds.Contains(a.StudentId) && a.Date.Date == System.DateTime.Today)
-                    .CountAsync();
+                var circleIds = teacher.Circles.Select(c => c.Id).ToList();
+
+                ViewBag.TodayAttendance = await _attendanceService.GetTodayAttendanceCountAsync(circleIds);
 
                 // آخر سجلات الحفظ
-                ViewBag.RecentMemorizations = await _context.Memorizations
-                    .Include(m => m.Student)
+                ViewBag.RecentMemorizations = (await _memorizationService.GetRecentRecordsAsync(10))
                     .Where(m => studentIds.Contains(m.StudentId))
-                    .OrderByDescending(m => m.Date)
-                    .Take(10)
-                    .ToListAsync();
+                    .ToList();
             }
             else
             {
-                ViewBag.TeacherName = user.Email;
+                ViewBag.TeacherName = user.FullName ?? user.Email;
                 ViewBag.CirclesCount = 0;
                 ViewBag.StudentsCount = 0;
                 ViewBag.TodayAttendance = 0;
-                ViewBag.RecentMemorizations = new System.Collections.Generic.List<QuranCenters.Core.Entities.Memorization>();
+                ViewBag.RecentMemorizations = new List<Memorization>();
             }
 
             return View();
@@ -187,12 +130,7 @@ namespace QuranCentersSystem.Controllers
             var user = await _userManager.GetUserAsync(User);
             if (user == null) return Challenge();
 
-            // البحث عن ملف الطالب المرتبط بالبريد
-            var student = await _context.Students
-                .Include(s => s.Circle)
-                .Include(s => s.Attendances)
-                .Include(s => s.Memorizations)
-                .FirstOrDefaultAsync(s => s.ParentEmail == user.Email || s.Phone == user.Email);
+            var student = await _studentService.GetStudentByEmailAsync(user.Email ?? "");
 
             if (student != null)
             {
@@ -202,38 +140,36 @@ namespace QuranCentersSystem.Controllers
                 ViewBag.PresentCount = student.Attendances.Count(a => a.Status == "حاضر");
                 ViewBag.AbsentCount = student.Attendances.Count(a => a.Status == "غائب");
 
-                // آخر الدرجات
                 ViewBag.RecentGrades = student.Memorizations
                     .OrderByDescending(m => m.Date)
                     .Take(10)
                     .ToList();
 
-                // متوسط التقييم
-                var gradeMap = new System.Collections.Generic.Dictionary<string, int>
+                var gradeMap = new Dictionary<string, int>
                 {
                     { "ممتاز", 4 }, { "جيد جداً", 3 }, { "جيد", 2 }, { "مقبول", 1 }
                 };
-                var grades = student.Memorizations
+                var gradeValues = student.Memorizations
                     .Where(m => gradeMap.ContainsKey(m.Grade ?? ""))
                     .Select(m => gradeMap[m.Grade!])
                     .ToList();
-                ViewBag.AverageGrade = grades.Any() ? grades.Average().ToString("F1") : "N/A";
+                ViewBag.AverageGrade = gradeValues.Any() ? gradeValues.Average().ToString("F1") : "N/A";
 
                 // Gamification Info
-                ViewBag.TotalPoints = await _context.PointsLedgers.Where(p => p.StudentId == student.Id).SumAsync(p => p.Points);
-                ViewBag.StudentBadges = await _context.StudentBadges.Where(b => b.StudentId == student.Id).ToListAsync();
+                ViewBag.TotalPoints = student.PointsLedgers?.Sum(p => p.Points) ?? 0;
+                ViewBag.StudentBadges = student.StudentBadges?.ToList() ?? new List<StudentBadge>();
             }
             else
             {
-                ViewBag.StudentName = user.Email;
+                ViewBag.StudentName = user.FullName ?? user.Email;
                 ViewBag.CircleName = "غير محدد";
                 ViewBag.TotalAttendance = 0;
                 ViewBag.PresentCount = 0;
                 ViewBag.AbsentCount = 0;
-                ViewBag.RecentGrades = new System.Collections.Generic.List<Memorization>();
+                ViewBag.RecentGrades = new List<Memorization>();
                 ViewBag.AverageGrade = "N/A";
                 ViewBag.TotalPoints = 0;
-                ViewBag.StudentBadges = new System.Collections.Generic.List<StudentBadge>();
+                ViewBag.StudentBadges = new List<StudentBadge>();
             }
 
             return View();

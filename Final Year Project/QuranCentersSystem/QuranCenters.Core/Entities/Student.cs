@@ -13,7 +13,6 @@ namespace QuranCenters.Core.Entities
         [Display(Name = "اسم الطالب")]
         public string Name { get; set; }
 
-        // أضف هذا الحقل لحل مشكلة FullName في التقرير
         [Display(Name = "الاسم الكامل")]
         public string FullName => Name;
 
@@ -37,16 +36,15 @@ namespace QuranCenters.Core.Entities
         [Display(Name = "رمز QR")]
         public string? QrCodeToken { get; set; }
 
+        // Navigation Properties
         public int CircleId { get; set; }
         public virtual Circle Circle { get; set; }
-        public int? ParentId { get; set; } // جعلناه اختياري لضمان عدم تعطل البيانات القديمة
+
+        public int? ParentId { get; set; }
         [ForeignKey("ParentId")]
         public virtual Parent Parent { get; set; }
-        // أضف هذا السطر لحل أخطاء "Payments" في الـ Controller والـ Index
-        public virtual ICollection<Payment> Payments { get; set; }
 
-        // 🌟 الحل الرئيسي: إضافة هذه الأسطر لربط الجداول
-        public string? ParentEmail { get; set; } // أضف هذا السطر لربط الطالب بحساب ولي الأمر
+        public virtual ICollection<Payment> Payments { get; set; } = new List<Payment>();
         public virtual ICollection<Attendance> Attendances { get; set; } = new List<Attendance>();
         public virtual ICollection<Memorization> Memorizations { get; set; } = new List<Memorization>();
         public virtual ICollection<PointsLedger> PointsLedgers { get; set; } = new List<PointsLedger>();

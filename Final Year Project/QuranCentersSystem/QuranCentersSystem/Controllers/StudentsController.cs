@@ -1,15 +1,13 @@
 using System;
-using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
-using QuranCenters.Infrastructure.Data;
-using QuranCentersSystem.Models;
+using QuranCenters.Application.Interfaces;
 using QuranCenters.Core.Entities;
-using QuranCenters.Infrastructure.Identity;
-using Microsoft.AspNetCore.Authorization;
+using QuranCenters.Core.Interfaces;
 using Rotativa.AspNetCore;
 
 namespace QuranCentersSystem.Controllers
@@ -18,26 +16,23 @@ namespace QuranCentersSystem.Controllers
     [Authorize(Roles = "Admin")]
     public class StudentsController : Controller
     {
-        private readonly ApplicationDbContext _context;
+        private readonly IStudentService _studentService;
+        private readonly ICircleService _circleService;
+        private readonly IUnitOfWork _unitOfWork;
 
-        public StudentsController(ApplicationDbContext context)
+        public StudentsController(IStudentService studentService, ICircleService circleService, IUnitOfWork unitOfWork)
         {
-            _context = context;
+            _studentService = studentService;
+            _circleService = circleService;
+            _unitOfWork = unitOfWork;
         }
 
         public async Task<IActionResult> Index(int? circleId)
         {
-            ViewBag.Circles = await _context.Circles.ToListAsync();
+            ViewBag.Circles = await _circleService.GetAllCirclesAsync();
             ViewBag.SelectedCircle = circleId;
 
-            var studentsQuery = _context.Students.Include(s => s.Circle).AsQueryable();
-
-            if (circleId.HasValue)
-            {
-                studentsQuery = studentsQuery.Where(s => s.CircleId == circleId.Value);
-            }
-
-            var students = await studentsQuery.ToListAsync();
+            var students = await _studentService.GetAllStudentsAsync(circleId);
             return View(students);
         }
 
@@ -45,39 +40,15 @@ namespace QuranCentersSystem.Controllers
         {
             if (id == null) return NotFound();
 
-            var student = await _context.Students
-                .Include(s => s.Circle)
-                .Include(s => s.Attendances)
-                .Include(s => s.Memorizations)
-                .Include(s => s.PointsLedgers)
-                .Include(s => s.StudentBadges)
-                .FirstOrDefaultAsync(m => m.Id == id);
-
+            var student = await _studentService.GetStudentWithDetailsAsync(id.Value);
             if (student == null) return NotFound();
 
-            // Analytics Logic: Pages This Week vs Last Week
-            var today = DateTime.Today;
-            var startOfThisWeek = today.AddDays(-(int)today.DayOfWeek); // Sunday
-            var startOfLastWeek = startOfThisWeek.AddDays(-7);
+            // Analytics
+            var weeklyProgress = await _studentService.GetWeeklyProgressAsync(id.Value);
+            ViewBag.ThisWeekPages = weeklyProgress.ThisWeekPages;
+            ViewBag.LastWeekPages = weeklyProgress.LastWeekPages;
 
-            var thisWeekProgress = student.Memorizations
-                .Where(m => m.Date >= startOfThisWeek && m.Date < startOfThisWeek.AddDays(7))
-                .Sum(m => m.PagesCount);
-
-            var lastWeekProgress = student.Memorizations
-                .Where(m => m.Date >= startOfLastWeek && m.Date < startOfThisWeek)
-                .Sum(m => m.PagesCount);
-
-            ViewBag.ThisWeekPages = thisWeekProgress;
-            ViewBag.LastWeekPages = lastWeekProgress;
-            
-            // Monthly Trend (optional but good for premium feel)
-            var monthlyData = student.Memorizations
-                .Where(m => m.Date >= today.AddDays(-30))
-                .GroupBy(m => m.Date.Date)
-                .Select(g => new { Date = g.Key.ToString("MM/dd"), Count = g.Sum(m => m.PagesCount) })
-                .ToList();
-            
+            var monthlyData = await _studentService.GetMonthlyTrendAsync(id.Value);
             ViewBag.MonthlyLabels = monthlyData.Select(d => d.Date).ToList();
             ViewBag.MonthlyValues = monthlyData.Select(d => d.Count).ToList();
 
@@ -86,12 +57,7 @@ namespace QuranCentersSystem.Controllers
 
         public async Task<IActionResult> PrintStudentReport(int id)
         {
-            var student = await _context.Students
-                .Include(s => s.Circle)
-                .Include(s => s.Attendances)
-                .Include(s => s.Memorizations)
-                .FirstOrDefaultAsync(m => m.Id == id);
-
+            var student = await _studentService.GetStudentWithDetailsAsync(id);
             if (student == null) return NotFound();
 
             return new ViewAsPdf("StudentReportPDF", student)
@@ -103,38 +69,34 @@ namespace QuranCentersSystem.Controllers
             };
         }
 
-        // 2. ??? ???? ????? ???? ???? (???? ?????? ????? ?????? ??????)
-        public IActionResult Create()
+        public async Task<IActionResult> Create()
         {
-            ViewData["CircleId"] = new SelectList(_context.Circles, "Id", "Name");
-            // ?? ????? ????? ?????? ??????
-            ViewBag.ParentId = new SelectList(_context.Set<Parent>(), "Id", "Name");
+            var circles = await _circleService.GetAllCirclesAsync();
+            ViewData["CircleId"] = new SelectList(circles, "Id", "Name");
+            var parents = await _unitOfWork.Repository<Parent>().GetAllAsync();
+            ViewBag.ParentId = new SelectList(parents, "Id", "Name");
             return View();
         }
 
-        // 3. ??????? ?????? ?????? ?????? (???? ???????? ParentId)
         [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Create([Bind("Id,Name,Phone,BirthDate,ParentPhoneNumber,AgreedToTerms,CircleId,ParentId")] Student student)
         {
             if (!student.AgreedToTerms)
             {
-                ModelState.AddModelError("AgreedToTerms", "??? ???????? ??? ???? ???????? ??????");
+                ModelState.AddModelError("AgreedToTerms", "يجب الموافقة على شروط وأحكام النظام");
             }
 
             if (ModelState.IsValid)
             {
-                student.Status = "???";
-                student.JoinDate = DateTime.Now;
-
-                _context.Add(student);
-                await _context.SaveChangesAsync();
+                await _studentService.CreateStudentAsync(student);
                 return RedirectToAction(nameof(Index));
             }
 
-            ViewData["CircleId"] = new SelectList(_context.Circles, "Id", "Name", student.CircleId);
-            // ?? ????? ????? ??????? ?? ??? ??? ??? Validation
-            ViewBag.ParentId = new SelectList(_context.Set<Parent>(), "Id", "Name", student.ParentId);
+            var circles = await _circleService.GetAllCirclesAsync();
+            ViewData["CircleId"] = new SelectList(circles, "Id", "Name", student.CircleId);
+            var parents = await _unitOfWork.Repository<Parent>().GetAllAsync();
+            ViewBag.ParentId = new SelectList(parents, "Id", "Name", student.ParentId);
             return View(student);
         }
 
@@ -142,12 +104,13 @@ namespace QuranCentersSystem.Controllers
         {
             if (id == null) return NotFound();
 
-            var student = await _context.Students.FindAsync(id);
+            var student = await _studentService.GetStudentByIdAsync(id.Value);
             if (student == null) return NotFound();
 
-            ViewData["CircleId"] = new SelectList(_context.Circles, "Id", "Name", student.CircleId);
-            // ?? ????? ????? ?????? ?????? ??? ???????
-            ViewBag.ParentId = new SelectList(_context.Set<Parent>(), "Id", "Name", student.ParentId);
+            var circles = await _circleService.GetAllCirclesAsync();
+            ViewData["CircleId"] = new SelectList(circles, "Id", "Name", student.CircleId);
+            var parents = await _unitOfWork.Repository<Parent>().GetAllAsync();
+            ViewBag.ParentId = new SelectList(parents, "Id", "Name", student.ParentId);
             return View(student);
         }
 
@@ -161,18 +124,20 @@ namespace QuranCentersSystem.Controllers
             {
                 try
                 {
-                    _context.Update(student);
-                    await _context.SaveChangesAsync();
+                    await _studentService.UpdateStudentAsync(student);
                 }
                 catch (DbUpdateConcurrencyException)
                 {
-                    if (!_context.Students.Any(e => e.Id == student.Id)) return NotFound();
+                    if (!await _studentService.StudentExistsAsync(student.Id)) return NotFound();
                     else throw;
                 }
                 return RedirectToAction(nameof(Index));
             }
-            ViewData["CircleId"] = new SelectList(_context.Circles, "Id", "Name", student.CircleId);
-            ViewBag.ParentId = new SelectList(_context.Set<Parent>(), "Id", "Name", student.ParentId);
+
+            var circles = await _circleService.GetAllCirclesAsync();
+            ViewData["CircleId"] = new SelectList(circles, "Id", "Name", student.CircleId);
+            var parents = await _unitOfWork.Repository<Parent>().GetAllAsync();
+            ViewBag.ParentId = new SelectList(parents, "Id", "Name", student.ParentId);
             return View(student);
         }
 
@@ -181,10 +146,7 @@ namespace QuranCentersSystem.Controllers
         {
             if (id == null) return NotFound();
 
-            var student = await _context.Students
-                .Include(s => s.Circle)
-                .FirstOrDefaultAsync(m => m.Id == id);
-
+            var student = await _studentService.GetStudentWithDetailsAsync(id.Value);
             if (student == null) return NotFound();
 
             return View(student);
@@ -195,12 +157,7 @@ namespace QuranCentersSystem.Controllers
         [Authorize(Roles = "Admin")]
         public async Task<IActionResult> DeleteConfirmed(int id)
         {
-            var student = await _context.Students.FindAsync(id);
-            if (student != null)
-            {
-                _context.Students.Remove(student);
-                await _context.SaveChangesAsync();
-            }
+            await _studentService.DeleteStudentAsync(id);
             return RedirectToAction(nameof(Index));
         }
     }
