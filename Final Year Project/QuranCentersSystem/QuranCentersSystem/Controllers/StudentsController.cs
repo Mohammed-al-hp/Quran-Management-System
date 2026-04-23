@@ -41,6 +41,49 @@ namespace QuranCentersSystem.Controllers
             return View(students);
         }
 
+        public async Task<IActionResult> Details(int? id)
+        {
+            if (id == null) return NotFound();
+
+            var student = await _context.Students
+                .Include(s => s.Circle)
+                .Include(s => s.Attendances)
+                .Include(s => s.Memorizations)
+                .Include(s => s.PointsLedgers)
+                .Include(s => s.StudentBadges)
+                .FirstOrDefaultAsync(m => m.Id == id);
+
+            if (student == null) return NotFound();
+
+            // Analytics Logic: Pages This Week vs Last Week
+            var today = DateTime.Today;
+            var startOfThisWeek = today.AddDays(-(int)today.DayOfWeek); // Sunday
+            var startOfLastWeek = startOfThisWeek.AddDays(-7);
+
+            var thisWeekProgress = student.Memorizations
+                .Where(m => m.Date >= startOfThisWeek && m.Date < startOfThisWeek.AddDays(7))
+                .Sum(m => m.PagesCount);
+
+            var lastWeekProgress = student.Memorizations
+                .Where(m => m.Date >= startOfLastWeek && m.Date < startOfThisWeek)
+                .Sum(m => m.PagesCount);
+
+            ViewBag.ThisWeekPages = thisWeekProgress;
+            ViewBag.LastWeekPages = lastWeekProgress;
+            
+            // Monthly Trend (optional but good for premium feel)
+            var monthlyData = student.Memorizations
+                .Where(m => m.Date >= today.AddDays(-30))
+                .GroupBy(m => m.Date.Date)
+                .Select(g => new { Date = g.Key.ToString("MM/dd"), Count = g.Sum(m => m.PagesCount) })
+                .ToList();
+            
+            ViewBag.MonthlyLabels = monthlyData.Select(d => d.Date).ToList();
+            ViewBag.MonthlyValues = monthlyData.Select(d => d.Count).ToList();
+
+            return View(student);
+        }
+
         public async Task<IActionResult> PrintStudentReport(int id)
         {
             var student = await _context.Students

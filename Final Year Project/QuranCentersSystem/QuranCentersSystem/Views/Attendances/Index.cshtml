@@ -1,23 +1,23 @@
 @model IEnumerable<QuranCenters.Core.Entities.Attendance>
 
 @{
-    ViewData["Title"] = "??? ?????? ???????";
+    ViewData["Title"] = "سجلات الحضور اليومي";
 }
 
-<div class="container-fluid" dir="rtl">
+<div class="container-fluid py-4" dir="rtl">
     <div class="card shadow-sm border-0 mb-4 bg-white rounded-3">
         <div class="card-body p-4">
             <div class="d-flex justify-content-between align-items-center border-bottom pb-3">
                 <div>
-                    <h4 class="text-success fw-bold m-0">??? ?????? ??????? ??????</h4>
-                    <small class="text-muted">?? ?????? ???? ???? ??????? ?????</small>
+                    <h4 class="text-success fw-bold m-0">سجل حضور وغياب الطلاب</h4>
+                    <small class="text-muted">تابع قائمة الحضور والغياب اليومية بدقة لضمان الانضباط</small>
                 </div>
                 <div class="d-flex gap-2">
-                    <a asp-action="GroupAttendance" class="btn btn-primary px-4">
-                        <i class="bi bi-people-fill"></i> ????? ???? ????
+                    <a asp-action="GroupAttendance" class="btn btn-primary px-4 shadow-sm">
+                        <i class="bi bi-people-fill"></i> تسجيل حضور جماعي
                     </a>
-                    <a asp-action="Create" class="btn btn-success px-4">
-                        <i class="bi bi-plus-circle"></i> ????? ????
+                    <a asp-action="Create" class="btn btn-success px-4 shadow-sm">
+                        <i class="bi bi-plus-circle"></i> تسجيل مفرد
                     </a>
                 </div>
             </div>
@@ -26,38 +26,38 @@
                 <table class="table table-hover align-middle">
                     <thead class="table-light">
                         <tr>
-                            <th class="py-3">???????</th>
-                            <th class="py-3">??? ??????</th>
-                            <th class="py-3">??????</th>
-                            <th class="py-3">???????</th>
-                            <th class="py-3 text-center">????????</th>
+                            <th class="py-3">التاريخ</th>
+                            <th class="py-3">اسم الطالب</th>
+                            <th class="py-3">الحالة</th>
+                            <th class="py-3">الملاحظات</th>
+                            <th class="py-3 text-center">الإجراءات</th>
                         </tr>
                     </thead>
                     <tbody>
                         @foreach (var item in Model)
                         {
                             <tr>
-                                <td>@item.Date.ToShortDateString()</td>
-                                <td class="fw-bold">@(item.Student?.Name ?? "??? ????")</td>
+                                <td class="text-muted">@item.Date.ToShortDateString()</td>
+                                <td class="fw-bold">@(item.Student?.Name ?? "غير محدد")</td>
                                 <td>
-                                    @if (item.Status == "????")
+                                    @if (item.Status == "حاضر")
                                     {
-                                        <span class="badge bg-success bg-opacity-10 text-success rounded-pill px-3">????</span>
+                                        <span class="badge bg-success bg-opacity-10 text-success rounded-pill px-3 py-2">حاضر</span>
                                     }
-                                    else if (item.Status == "????")
+                                    else if (item.Status == "غائب")
                                     {
-                                        <span class="badge bg-danger bg-opacity-10 text-danger rounded-pill px-3">????</span>
+                                        <span class="badge bg-danger bg-opacity-10 text-danger rounded-pill px-3 py-2">غائب</span>
                                     }
                                     else
                                     {
-                                        <span class="badge bg-warning bg-opacity-10 text-warning rounded-pill px-3">??????</span>
+                                        <span class="badge bg-warning bg-opacity-10 text-warning rounded-pill px-3 py-2">متأخر</span>
                                     }
                                 </td>
-                                <td class="text-muted">@item.Notes</td>
+                                <td class="text-muted small">@item.Notes</td>
                                 <td class="text-center">
                                     <div class="btn-group" role="group">
-                                        <a asp-action="Edit" asp-route-id="@item.Id" class="btn btn-outline-warning btn-sm">?????</a>
-                                        <a asp-action="Delete" asp-route-id="@item.Id" class="btn btn-outline-danger btn-sm">???</a>
+                                        <a asp-action="Edit" asp-route-id="@item.Id" class="btn btn-outline-warning btn-sm px-3 rounded-pill me-1">تعديل</a>
+                                        <a asp-action="Delete" asp-route-id="@item.Id" class="btn btn-outline-danger btn-sm px-3 rounded-pill">حذف</a>
                                     </div>
                                 </td>
                             </tr>

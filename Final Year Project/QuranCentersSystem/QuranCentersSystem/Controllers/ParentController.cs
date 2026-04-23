@@ -25,7 +25,7 @@ namespace QuranCentersSystem.Controllers
         }
 
         // 🌟 أكشن إضافة ولي أمر جديد مع إنشاء حساب آلي (للمدير فقط)
-        [Authorize]
+        [Authorize(Roles = "Admin")]
         public IActionResult Create()
         {
             return View();
@@ -63,7 +63,7 @@ namespace QuranCentersSystem.Controllers
         }
 
         // لوحة تحكم ولي الأمر
-        [Authorize(Roles = "Parent")]
+        [Authorize(Roles = "Admin,Parent")]
         public async Task<IActionResult> Index()
         {
             var currentUser = await _userManager.GetUserAsync(User);
@@ -89,7 +89,7 @@ namespace QuranCentersSystem.Controllers
             return View(myChildren);
         }
 
-        [Authorize(Roles = "Parent")]
+        [Authorize(Roles = "Admin,Parent")]
         public async Task<IActionResult> ChildDetails(int id)
         {
             var currentUser = await _userManager.GetUserAsync(User);
@@ -104,13 +104,16 @@ namespace QuranCentersSystem.Controllers
                 .Include(s => s.StudentBadges)
                 .FirstOrDefaultAsync(s => s.Id == id);
 
-            // التحقق من وجود الطالب وأن ولي الأمر هو المالك الصحيح
+            // التحقق من وجود الطالب وأن ولي الأمر هو المالك الصحيح (أو أنه مدير)
             if (student == null)
             {
                 return NotFound();
             }
 
-            if (student.Parent == null || student.Parent.Email != currentUser.Email)
+            var roles = await _userManager.GetRolesAsync(currentUser);
+            bool isAdmin = roles.Contains("Admin");
+
+            if (!isAdmin && (student.Parent == null || student.Parent.Email != currentUser.Email))
             {
                 return Forbid();
             }

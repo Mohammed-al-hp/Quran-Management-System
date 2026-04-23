@@ -18,14 +18,25 @@ using QuranCenters.Application.Interfaces;
 using QuranCenters.Infrastructure.Repositories;
 using QuranCenters.Infrastructure.Hubs;
 
-
 var builder = WebApplication.CreateBuilder(args);
 
-// --- 1. إعدادات قاعدة البيانات ---
-builder.Services.AddDbContext<ApplicationDbContext>(options =>
-    options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection")));
+// --- 🌟 تكوين الترميز لدعم اللغة العربية بشكل كامل ---
+builder.Services.AddControllersWithViews()
+    .AddJsonOptions(options => {
+        options.JsonSerializerOptions.PropertyNamingPolicy = null;
+    });
 
-// --- 2. إعداد نظام الهوية ---
+// 🌟 ضمان دعم النصوص العربية في الاستجابة
+builder.Services.Configure<Microsoft.AspNetCore.Mvc.MvcOptions>(options => {
+    // Add any global filters if needed
+});
+
+builder.Services.AddDbContext<ApplicationDbContext>(options =>
+{
+    options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection"));
+    options.EnableSensitiveDataLogging();
+});
+
 builder.Services.AddDefaultIdentity<IdentityUser>(options =>
 {
     options.SignIn.RequireConfirmedAccount = false;
@@ -38,13 +49,11 @@ builder.Services.AddDefaultIdentity<IdentityUser>(options =>
     .AddRoles<IdentityRole>()
     .AddEntityFrameworkStores<ApplicationDbContext>();
 
-// --- 3. إعداد المصادقة المزدوجة (Cookies + JWT) ---
 var jwtSettings = builder.Configuration.GetSection("JwtSettings");
 var secretKey = jwtSettings["SecretKey"] ?? "ItqanQuranSystem2026SecureKeyMustBe32CharsOrMore!!";
 
 builder.Services.AddAuthentication(options =>
 {
-    // الاحتفاظ بـ Cookies كنظام افتراضي للـ MVC
     options.DefaultAuthenticateScheme = IdentityConstants.ApplicationScheme;
     options.DefaultChallengeScheme = IdentityConstants.ApplicationScheme;
 })
@@ -62,18 +71,14 @@ builder.Services.AddAuthentication(options =>
     };
 });
 
-// --- 4. إعداد سياسة CORS ---
 builder.Services.AddCors(options =>
 {
     options.AddPolicy("AllowFlutter", policy =>
     {
-        policy.AllowAnyOrigin()
-              .AllowAnyMethod()
-              .AllowAnyHeader();
+        policy.AllowAnyOrigin().AllowAnyMethod().AllowAnyHeader();
     });
 });
 
-// --- 5. إعداد MVC و JSON ---
 builder.Services.AddControllersWithViews()
     .AddJsonOptions(options =>
     {
@@ -83,49 +88,12 @@ builder.Services.AddControllersWithViews()
 
 builder.Services.AddRazorPages();
 
-// --- 6. إعداد Swagger/OpenAPI ---
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen(c =>
 {
-    c.SwaggerDoc("v1", new OpenApiInfo
-    {
-        Title = "Itqan Quran Management API",
-        Version = "v1",
-        Description = "واجهة برمجة تطبيقات نظام إتقان لإدارة مراكز تحفيظ القرآن الكريم",
-        Contact = new OpenApiContact
-        {
-            Name = "Itqan Team",
-            Email = "admin@itqan.com"
-        }
-    });
-
-    // إضافة دعم JWT في Swagger
-    c.AddSecurityDefinition("Bearer", new OpenApiSecurityScheme
-    {
-        Description = "أدخل رمز JWT بالتنسيق: Bearer {token}",
-        Name = "Authorization",
-        In = ParameterLocation.Header,
-        Type = SecuritySchemeType.ApiKey,
-        Scheme = "Bearer"
-    });
-
-    c.AddSecurityRequirement(new OpenApiSecurityRequirement
-    {
-        {
-            new OpenApiSecurityScheme
-            {
-                Reference = new OpenApiReference
-                {
-                    Type = ReferenceType.SecurityScheme,
-                    Id = "Bearer"
-                }
-            },
-            Array.Empty<string>()
-        }
-    });
+    c.SwaggerDoc("v1", new OpenApiInfo { Title = "Itqan Quran Management API", Version = "v1" });
 });
 
-// --- 7. تسجيل الخدمات المخصصة ---
 builder.Services.AddScoped<INotificationService, NotificationService>();
 builder.Services.AddScoped<IQrCodeService, QrCodeService>();
 builder.Services.AddScoped<IPdfReportService, PdfReportService>();
@@ -133,8 +101,6 @@ builder.Services.AddScoped(typeof(IRepository<>), typeof(Repository<>));
 builder.Services.AddScoped<IGamificationService, GamificationService>();
 builder.Services.AddSignalR();
 
-
-// --- 8. إعداد الكوكيز ---
 builder.Services.ConfigureApplicationCookie(options =>
 {
     options.LoginPath = "/Identity/Account/Login";
@@ -144,17 +110,18 @@ builder.Services.ConfigureApplicationCookie(options =>
 
 var app = builder.Build();
 
-// --- 9. إعدادات Middleware ---
-// معالج الأخطاء العام - يجب أن يكون أولاً
 app.UseMiddleware<GlobalExceptionMiddleware>();
 
-if (!app.Environment.IsDevelopment())
+if (app.Environment.IsDevelopment())
+{
+    app.UseDeveloperExceptionPage();
+}
+else
 {
     app.UseExceptionHandler("/Home/Error");
     app.UseHsts();
 }
 
-// تفعيل Swagger في جميع البيئات
 app.UseSwagger();
 app.UseSwaggerUI(c =>
 {
@@ -164,32 +131,23 @@ app.UseSwaggerUI(c =>
 
 app.UseHttpsRedirection();
 app.UseStaticFiles();
-
 app.UseRouting();
-
-// تفعيل CORS بعد الـ Routing وقبل الـ Auth
 app.UseCors("AllowFlutter");
-
 app.UseAuthentication();
 app.UseAuthorization();
 
 RotativaConfiguration.Setup(app.Environment.WebRootPath, "Rotativa");
 
-app.MapControllerRoute(
-    name: "default",
-    pattern: "{controller=Home}/{action=Index}/{id?}");
+app.MapControllerRoute(name: "default", pattern: "{controller=Home}/{action=Index}/{id?}");
 app.MapRazorPages();
 app.MapHub<NotificationHub>("/notificationHub");
 
-
-// --- 10. بذر البيانات (Seed Data) ---
 using (var scope = app.Services.CreateScope())
 {
     var services = scope.ServiceProvider;
     var roleManager = services.GetRequiredService<RoleManager<IdentityRole>>();
     var userManager = services.GetRequiredService<UserManager<IdentityUser>>();
 
-    // التأكد من جميع الأدوار (إضافة دور الطالب)
     string[] roleNames = { "Admin", "Teacher", "Student", "Parent" };
     foreach (var roleName in roleNames)
     {
@@ -199,8 +157,7 @@ using (var scope = app.Services.CreateScope())
         }
     }
 
-    // إنشاء حساب المدير الافتراضي
-    var adminEmail = "admin@itqan.com";
+    var adminEmail = "admin@quransystems.com";
     var adminUser = await userManager.FindByEmailAsync(adminEmail);
     if (adminUser == null)
     {

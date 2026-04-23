@@ -81,7 +81,14 @@ namespace QuranCentersSystem.Middleware
             }
             else
             {
-                // لطلبات MVC - إعادة التوجيه لصفحة الخطأ
+                // لطلبات MVC
+                if (_env.IsDevelopment())
+                {
+                    // في بيئة التطوير، اترك الاستثناء ينتشر ليظهر في صفحة مطور ASP.NET
+                    return; 
+                }
+
+                // في الإنتاج، أعد التوجيه لصفحة الخطأ
                 context.Response.Redirect("/Home/Error");
             }
         }

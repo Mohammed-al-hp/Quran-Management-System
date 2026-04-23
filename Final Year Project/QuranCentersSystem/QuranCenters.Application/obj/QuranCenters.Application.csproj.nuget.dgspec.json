@@ -1,17 +1,17 @@
 {
   "format": 1,
   "restore": {
-    "c:\\New folder (2)\\Quran-Management-System\\Final Year Project\\QuranCentersSystem\\QuranCenters.Application\\QuranCenters.Application.csproj": {}
+    "C:\\New folder (2)\\Quran-Management-System\\Final Year Project\\QuranCentersSystem\\QuranCenters.Application\\QuranCenters.Application.csproj": {}
   },
   "projects": {
-    "c:\\New folder (2)\\Quran-Management-System\\Final Year Project\\QuranCentersSystem\\QuranCenters.Application\\QuranCenters.Application.csproj": {
+    "C:\\New folder (2)\\Quran-Management-System\\Final Year Project\\QuranCentersSystem\\QuranCenters.Application\\QuranCenters.Application.csproj": {
       "version": "1.0.0",
       "restore": {
-        "projectUniqueName": "c:\\New folder (2)\\Quran-Management-System\\Final Year Project\\QuranCentersSystem\\QuranCenters.Application\\QuranCenters.Application.csproj",
+        "projectUniqueName": "C:\\New folder (2)\\Quran-Management-System\\Final Year Project\\QuranCentersSystem\\QuranCenters.Application\\QuranCenters.Application.csproj",
         "projectName": "QuranCenters.Application",
-        "projectPath": "c:\\New folder (2)\\Quran-Management-System\\Final Year Project\\QuranCentersSystem\\QuranCenters.Application\\QuranCenters.Application.csproj",
+        "projectPath": "C:\\New folder (2)\\Quran-Management-System\\Final Year Project\\QuranCentersSystem\\QuranCenters.Application\\QuranCenters.Application.csproj",
         "packagesPath": "C:\\Users\\pcwor\\.nuget\\packages\\",
-        "outputPath": "c:\\New folder (2)\\Quran-Management-System\\Final Year Project\\QuranCentersSystem\\QuranCenters.Application\\obj\\",
+        "outputPath": "C:\\New folder (2)\\Quran-Management-System\\Final Year Project\\QuranCentersSystem\\QuranCenters.Application\\obj\\",
         "projectStyle": "PackageReference",
         "fallbackFolders": [
           "C:\\Program Files (x86)\\Microsoft Visual Studio\\Shared\\NuGetPackages"

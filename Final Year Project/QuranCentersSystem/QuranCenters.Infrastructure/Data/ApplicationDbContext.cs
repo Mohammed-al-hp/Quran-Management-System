@@ -33,8 +33,15 @@ namespace QuranCenters.Infrastructure.Data
         {
             base.OnModelCreating(modelBuilder);
 
+            // إعداد الترميز العربي لقاعدة البيانات بالكامل
+            modelBuilder.UseCollation("Arabic_CI_AS");
+
             // تكوين جدول Parent للحفاظ على التوافق مع اسم الجدول الحالي
             modelBuilder.Entity<Parent>().ToTable("Parent");
+
+            modelBuilder.Entity<Memorization>()
+                .Property(m => m.PagesCount)
+                .HasPrecision(5, 2);
         }
     }
 }

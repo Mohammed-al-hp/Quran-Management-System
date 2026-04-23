@@ -2,83 +2,150 @@
 @{
     ViewData["Title"] = "لوحة الصدارة";
     var top3 = Model.Rankings.Take(3).ToList();
-    var theRest = Model.Rankings.Skip(3).ToList();
 }
 
 <style>
+    :root {
+        --medal-gold: #FFD700;
+        --medal-silver: #C0C0C0;
+        --medal-bronze: #CD7F32;
+        --gold-soft: rgba(255, 215, 0, 0.15);
+        --silver-soft: rgba(192, 192, 192, 0.15);
+        --bronze-soft: rgba(205, 127, 50, 0.15);
+    }
+
+    /* Podium Styles - Premium Glassmorphism */
     .podium-container {
         display: flex;
         justify-content: center;
         align-items: flex-end;
-        height: 350px;
-        margin-bottom: 50px;
+        height: 380px;
+        margin-bottom: 60px;
         position: relative;
+        padding-top: 50px;
     }
     .podium-step {
-        width: 150px;
-        margin: 0 10px;
+        width: 160px;
+        margin: 0 12px;
         text-align: center;
         position: relative;
-        transition: transform 0.3s ease;
-        border-radius: 15px 15px 0 0;
+        transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+        border-radius: 20px 20px 10px 10px;
+        box-shadow: 0 15px 35px rgba(0,0,0,0.1);
     }
     .podium-step:hover {
-        transform: scale(1.05);
+        transform: translateY(-10px);
     }
-    .rank-1 { height: 250px; background: linear-gradient(180deg, #F3B33E, #D48C17); order: 2; z-index: 3; }
-    .rank-2 { height: 180px; background: linear-gradient(180deg, #BDC3C7, #95A5A6); order: 1; z-index: 2; }
-    .rank-3 { height: 130px; background: linear-gradient(180deg, #E67E22, #D35400); order: 3; z-index: 2; }
+    
+    .rank-1 { height: 260px; background: linear-gradient(135deg, #FFD700, #F39C12); order: 2; z-index: 3; border: 2px solid #FFF; }
+    .rank-2 { height: 190px; background: linear-gradient(135deg, #BDC3C7, #7F8C8D); order: 1; z-index: 2; }
+    .rank-3 { height: 140px; background: linear-gradient(135deg, #CD7F32, #A0522D); order: 3; z-index: 2; }
     
     .podium-info {
         position: absolute;
-        top: -100px;
+        top: -110px;
         width: 100%;
         left: 0;
     }
     .podium-avatar {
-        width: 80px;
-        height: 80px;
+        width: 90px;
+        height: 90px;
         border-radius: 50%;
         background-color: white;
-        margin: 0 auto 10px;
+        margin: 0 auto 12px;
         display: flex;
         align-items: center;
         justify-content: center;
-        border: 4px solid white;
-        box-shadow: 0 10px 20px rgba(0,0,0,0.1);
-        font-size: 2rem;
+        border: 5px solid white;
+        box-shadow: 0 12px 25px rgba(0,0,0,0.15);
+        font-size: 2.2rem;
+        position: relative;
     }
-    .podium-step.rank-1 .podium-avatar { border-color: #F3B33E; color: #F3B33E; }
-    .podium-step.rank-2 .podium-avatar { border-color: #BDC3C7; color: #BDC3C7; }
-    .podium-step.rank-3 .podium-avatar { border-color: #E67E22; color: #E67E22; }
+    .top-badge {
+        position: absolute;
+        bottom: -5px;
+        right: -5px;
+        width: 30px;
+        height: 30px;
+        border-radius: 50%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 0.8rem;
+        color: white;
+        font-weight: bold;
+        border: 2px solid white;
+    }
+    .rank-1 .top-badge { background: #F39C12; }
+    .rank-2 .top-badge { background: #7F8C8D; }
+    .rank-3 .top-badge { background: #A0522D; }
 
-    .podium-name { font-weight: 800; color: #2c3e50; margin-bottom: 5px; }
-    .podium-points { font-weight: bold; font-size: 1.1rem; color: #2c3e50; }
+    .podium-step.rank-1 .podium-avatar { border-color: var(--medal-gold); color: var(--medal-gold); }
+    .podium-step.rank-2 .podium-avatar { border-color: var(--medal-silver); color: #7F8C8D; }
+    .podium-step.rank-3 .podium-avatar { border-color: var(--medal-bronze); color: #CD7F32; }
+
+    .podium-name { font-weight: 800; color: #1a2a3a; margin-bottom: 5px; font-size: 1.1rem; }
+    .podium-points { font-weight: 900; font-size: 1.2rem; color: #2c3e50; text-shadow: 0 1px 2px rgba(255,255,255,0.5); }
     
-    .rank-icon {
-        font-size: 2.5rem;
-        color: rgba(255,255,255,0.4);
-        margin-top: 20px;
+    /* Table Highlights */
+    .table-leaderboard {
+        border-collapse: separate;
+        border-spacing: 0 8px;
+    }
+    .table-leaderboard tbody tr {
+        background: white;
+        box-shadow: 0 2px 10px rgba(0,0,0,0.02);
+        border-radius: 12px;
+        transition: all 0.2s ease;
+    }
+    .table-leaderboard tbody tr:hover {
+        transform: scale(1.005);
+        box-shadow: 0 5px 15px rgba(0,0,0,0.05);
+    }
+    .table-leaderboard td {
+        padding: 1.2rem 1rem;
+        border: none;
+    }
+    .table-leaderboard td:first-child { border-top-right-radius: 12px; border-bottom-right-radius: 12px; }
+    .table-leaderboard td:last-child { border-top-left-radius: 12px; border-bottom-left-radius: 12px; }
+
+    /* Rank Highlighting */
+    .row-gold { background: var(--gold-soft) !important; border-right: 5px solid var(--medal-gold) !important; font-weight: bold; }
+    .row-silver { background: var(--silver-soft) !important; border-right: 5px solid var(--medal-silver) !important; font-weight: bold; }
+    .row-bronze { background: var(--bronze-soft) !important; border-right: 5px solid var(--medal-bronze) !important; font-weight: bold; }
+
+    .medal-icon {
+        font-size: 1.5rem;
+        margin-right: 5px;
     }
 
-    .leaderboard-table {
-        background: white;
+    /* Distinct Point & Badge Styles */
+    .point-tag {
+        background: #fff8e1;
+        color: #f39c12;
+        padding: 6px 12px;
         border-radius: 20px;
-        overflow: hidden;
-        box-shadow: 0 10px 30px rgba(0,0,0,0.05);
+        font-weight: 800;
+        border: 1px solid #ffe082;
+        display: inline-flex;
+        align-items: center;
     }
-    .leaderboard-table thead {
-        background: #f8f9fa;
-    }
-    .row-highlight:hover {
-        background-color: #fcfcfc !important;
+    .badge-tag {
+        background: #e3f2fd;
+        color: #1976d2;
+        padding: 6px 12px;
+        border-radius: 20px;
+        font-weight: 700;
+        border: 1px solid #bbdefb;
+        display: inline-flex;
+        align-items: center;
     }
 </style>
 
 <div class="container py-5" dir="rtl">
     <div class="text-center mb-5">
-        <h1 class="fw-bold text-primary mb-3"><i class="bi bi-trophy-fill me-2 text-warning"></i> لوحة شرف فرسان القرآن</h1>
-        <p class="text-muted fs-5">تعرف على المتصدرين في رحلة الإبداع والحفظ</p>
+        <h1 class="fw-bold text-success display-4 mb-3"><i class="bi bi-award-fill me-2 text-warning"></i> لوحة شرف فرسان القرآن</h1>
+        <p class="text-muted fs-5">تكريماً للطلاب الأكثر تميزاً وانضباطاً في رحاب كتاب الله</p>
     </div>
 
     @if (top3.Any())
@@ -87,56 +154,79 @@
             @for (int i = 0; i < top3.Count; i++)
             {
                 var student = top3[i];
-                var rankClass = "rank-" + (i + 1);
-                var rankLabel = (i + 1 == 1 ? "🥇" : i + 1 == 2 ? "🥈" : "🥉");
+                // Display in order 2, 1, 3 for visual podium
+                var displayRank = i + 1;
+                var rankClass = "rank-" + displayRank;
+                var medalLabel = (displayRank == 1 ? "🥇" : displayRank == 2 ? "🥈" : "🥉");
                 
-                <div class="podium-step @rankClass shadow-lg">
+                <div class="podium-step @rankClass">
                     <div class="podium-info">
                         <div class="podium-avatar">
                             <i class="bi bi-person-fill"></i>
+                            <div class="top-badge">@displayRank</div>
                         </div>
                         <div class="podium-name text-truncate px-2">@student.StudentName</div>
-                        <div class="podium-points">@student.TotalPoints <small>نقطة</small></div>
+                        <div class="podium-points">
+                            <i class="bi bi-star-fill text-warning me-1"></i>
+                            @student.TotalPoints
+                        </div>
                     </div>
-                    <div class="rank-icon">@rankLabel</div>
+                    <div class="display-4 text-white opacity-50 mt-4">@medalLabel</div>
                 </div>
             }
         </div>
     }
 
     <div class="row justify-content-center">
-        <div class="col-lg-10">
-            <div class="leaderboard-table">
-                <table class="table table-hover align-middle mb-0">
-                    <thead class="py-3">
-                        <tr>
-                            <th class="ps-4 py-3">الترتيب</th>
-                            <th class="py-3">الطالب</th>
-                            <th class="py-3">الحلقة</th>
-                            <th class="py-3">الأوسمة</th>
-                            <th class="text-center py-3">إجمالي النقاط</th>
+        <div class="col-lg-11">
+            <div class="table-responsive p-2">
+                <table class="table table-leaderboard align-middle">
+                    <thead>
+                        <tr class="text-secondary text-uppercase fw-bold">
+                            <th class="ps-4">الترتيب</th>
+                            <th>الطالب</th>
+                            <th>الحلقة</th>
+                            <th>الأوسمة المستحقة</th>
+                            <th class="text-center">إجمالي النقاط</th>
                         </tr>
                     </thead>
                     <tbody>
                         @foreach (var student in Model.Rankings)
                         {
-                            <tr class="row-highlight @(student.Rank <= 3 ? "fw-bold" : "")">
+                            var rowClass = student.Rank == 1 ? "row-gold" : 
+                                           student.Rank == 2 ? "row-silver" : 
+                                           student.Rank == 3 ? "row-bronze" : "";
+                            
+                            <tr class="@rowClass">
                                 <td class="ps-4">
-                                    @if (student.Rank == 1) { <span class="badge bg-warning text-dark px-3 rounded-pill">1</span> }
-                                    else if (student.Rank == 2) { <span class="badge bg-secondary px-3 rounded-pill">2</span> }
-                                    else if (student.Rank == 3) { <span class="badge bg-danger px-3 rounded-pill" style="background-color:#E67E22 !important;">3</span> }
-                                    else { <span class="ps-2">@student.Rank</span> }
+                                    @if (student.Rank == 1) { <span class="medal-icon">🥇</span><span class="ms-2">الأول</span> }
+                                    else if (student.Rank == 2) { <span class="medal-icon">🥈</span><span class="ms-2">الثاني</span> }
+                                    else if (student.Rank == 3) { <span class="medal-icon">🥉</span><span class="ms-2">الثالث</span> }
+                                    else { <span class="badge bg-light text-dark border-0 px-3 py-2 ms-2">@student.Rank</span> }
                                 </td>
-                                <td>@student.StudentName</td>
-                                <td><span class="badge bg-light text-dark border">@student.CircleName</span></td>
                                 <td>
-                                    @for(int j=0; j < Math.Min(student.BadgeCount, 3); j++)
-                                    {
-                                        <i class="bi bi-shield-check text-warning ms-1"></i>
-                                    }
-                                    @if(student.BadgeCount > 3) { <small class="text-muted">+@(student.BadgeCount - 3)</small> }
+                                    <div class="d-flex align-items-center">
+                                        <div class="avatar-sm bg-success bg-opacity-10 text-success rounded-circle p-2 me-2 d-none d-md-flex align-items-center justify-content-center" style="width:40px; height:40px;">
+                                            <i class="bi bi-person"></i>
+                                        </div>
+                                        <div class="fw-bold">@student.StudentName</div>
+                                    </div>
                                 </td>
-                                <td class="text-center"><span class="fw-bold text-primary">@student.TotalPoints</span></td>
+                                <td>
+                                    <span class="text-muted"><i class="bi bi-mortarboard me-1"></i> @student.CircleName</span>
+                                </td>
+                                <td>
+                                    <div class="badge-tag">
+                                        <i class="bi bi-shield-check me-2"></i>
+                                        @student.BadgeCount أوسمة
+                                    </div>
+                                </td>
+                                <td class="text-center">
+                                    <div class="point-tag">
+                                        <i class="bi bi-star-fill me-2"></i>
+                                        @student.TotalPoints نقطة
+                                    </div>
+                                </td>
                             </tr>
                         }
                     </tbody>

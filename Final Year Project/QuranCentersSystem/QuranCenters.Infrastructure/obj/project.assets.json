@@ -4620,8 +4620,8 @@
         "net8.0": {
           "targetAlias": "net8.0",
           "projectReferences": {
-            "c:\\New folder (2)\\Quran-Management-System\\Final Year Project\\QuranCentersSystem\\QuranCenters.Application\\QuranCenters.Application.csproj": {
-              "projectPath": "c:\\New folder (2)\\Quran-Management-System\\Final Year Project\\QuranCentersSystem\\QuranCenters.Application\\QuranCenters.Application.csproj"
+            "C:\\New folder (2)\\Quran-Management-System\\Final Year Project\\QuranCentersSystem\\QuranCenters.Application\\QuranCenters.Application.csproj": {
+              "projectPath": "C:\\New folder (2)\\Quran-Management-System\\Final Year Project\\QuranCentersSystem\\QuranCenters.Application\\QuranCenters.Application.csproj"
             },
             "C:\\New folder (2)\\Quran-Management-System\\Final Year Project\\QuranCentersSystem\\QuranCenters.Core\\QuranCenters.Core.csproj": {
               "projectPath": "C:\\New folder (2)\\Quran-Management-System\\Final Year Project\\QuranCentersSystem\\QuranCenters.Core\\QuranCenters.Core.csproj"

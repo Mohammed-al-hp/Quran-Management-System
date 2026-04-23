@@ -1,48 +1,51 @@
 @model QuranCenters.Core.Entities.Circle
 
 @{
-    ViewData["Title"] = "????? ???? ?????";
+    ViewData["Title"] = "إضافة حلقة جديدة";
 }
 
-<div class="container-fluid" dir="rtl">
-    <div class="card shadow-sm bg-white p-4 rounded border-0">
+<div class="container-fluid py-4" dir="rtl">
+    <div class="card shadow-sm bg-white p-4 rounded-3 border-0">
         <div class="d-flex justify-content-between align-items-center mb-4 border-bottom pb-3">
-            <h4 class="m-0 text-success fw-bold">????? ???? ?????</h4>
-            <a asp-action="Index" class="btn btn-outline-secondary">
-                <i class="bi bi-arrow-right"></i> ???? ???????
+            <div>
+                <h4 class="m-0 text-success fw-bold">إضافة حلقة جديدة</h4>
+                <p class="text-muted small mb-0">إنشاء حلقة دراسية جديدة وتعيين محفظ مسؤول عنها</p>
+            </div>
+            <a asp-action="Index" class="btn btn-outline-secondary px-4 shadow-sm">
+                <i class="bi bi-arrow-right"></i> عودة للقائمة
             </a>
         </div>
 
         <div class="row justify-content-center">
             <div class="col-md-8 col-lg-6">
-                <form asp-action="Create" class="bg-light p-4 rounded shadow-sm">
+                <form asp-action="Create" class="bg-light p-4 rounded-4 shadow-sm border-0">
                     <div asp-validation-summary="ModelOnly" class="text-danger mb-3"></div>
 
                     <div class="mb-3">
-                        <label asp-for="Name" class="form-label fw-bold text-secondary">??? ??????</label>
+                        <label asp-for="Name" class="form-label fw-bold text-secondary">اسم الحلقة</label>
                         <div class="input-group">
-                            <span class="input-group-text"><i class="bi bi-mortarboard"></i></span>
-                            <input asp-for="Name" class="form-control" placeholder="???? ??? ??????..." />
+                            <span class="input-group-text bg-white border-0 shadow-sm"><i class="bi bi-mortarboard"></i></span>
+                            <input asp-for="Name" class="form-control border-0 shadow-sm py-2" placeholder="أدخل اسم الحلقة..." />
                         </div>
                         <span asp-validation-for="Name" class="text-danger small"></span>
                     </div>
 
                     <div class="mb-3">
-                        <label asp-for="TeacherId" class="form-label fw-bold text-secondary">?????? ???????</label>
+                        <label asp-for="TeacherId" class="form-label fw-bold text-secondary">المحفظ المسؤول</label>
                         <div class="input-group">
-                            <span class="input-group-text"><i class="bi bi-person-badge"></i></span>
-                            <select asp-for="TeacherId" class="form-select" asp-items="ViewBag.TeacherId">
-                                <option value="">-- ???? ?????? --</option>
+                            <span class="input-group-text bg-white border-0 shadow-sm"><i class="bi bi-person-badge"></i></span>
+                            <select asp-for="TeacherId" class="form-select border-0 shadow-sm py-2" asp-items="ViewBag.TeacherId">
+                                <option value="">-- اختر المحفظ --</option>
                             </select>
                         </div>
                         <span asp-validation-for="TeacherId" class="text-danger small"></span>
                     </div>
 
-                    <hr class="my-4">
+                    <hr class="my-4 opacity-25">
 
-                    <div class="d-grid">
-                        <button type="submit" class="btn btn-success btn-lg">
-                            <i class="bi bi-check-circle"></i> ??? ????????
+                    <div class="d-grid mt-4">
+                        <button type="submit" class="btn btn-success btn-lg py-3 shadow">
+                            <i class="bi bi-check-circle me-1"></i> حفظ البيانات
                         </button>
                     </div>
                 </form>

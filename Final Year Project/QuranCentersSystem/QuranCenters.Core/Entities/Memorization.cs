@@ -49,6 +49,9 @@ namespace QuranCenters.Core.Entities
         [Display(Name = "ملاحظات المعلم")]
         public string Notes { get; set; }
 
+        [Display(Name = "عدد الصفحات")]
+        public decimal PagesCount { get; set; }
+
         public List<MemorizationQuestion> Questions { get; set; } = new List<MemorizationQuestion>();
     }
 

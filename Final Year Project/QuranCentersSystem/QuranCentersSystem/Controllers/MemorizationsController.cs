@@ -61,7 +61,7 @@ namespace QuranCentersSystem.Controllers
 
                 await _gamificationService.ProcessDailyMemorizationPointsAsync(memorization);
 
-                TempData["Success"] = "?? ????? ???? ????? ?????!";
+                TempData["Success"] = "تم إضافة سجل الحفظ بنجاح!";
                 return RedirectToAction(nameof(Create), new { studentId = memorization.StudentId });
             }
 
@@ -146,7 +146,7 @@ namespace QuranCentersSystem.Controllers
 
                 await _gamificationService.ProcessDailyMemorizationPointsAsync(memorization);
 
-                TempData["Success"] = "?? ????? ??????? ????? ?????!";
+                TempData["Success"] = "تم تسجيل السجل بنجاح!";
                 return RedirectToAction(nameof(DailyRecord));
             }
 

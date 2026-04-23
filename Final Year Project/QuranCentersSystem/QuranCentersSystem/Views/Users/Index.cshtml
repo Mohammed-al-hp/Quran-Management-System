@@ -1,50 +1,94 @@
-@model IEnumerable<QuranCenters.Core.Entities.Student>
+@model IEnumerable<QuranCenters.Infrastructure.Identity.ApplicationUser>
+@{
+    ViewData["Title"] = "إدارة المستخدمين";
+}
 
 <div class="container-fluid py-4" dir="rtl">
-    <div class="card shadow-sm p-4">
+    <div class="card shadow-sm p-4 border-0">
         <div class="d-flex justify-content-between align-items-center mb-4">
-            <h4 class="text-success fw-bold">????? ??????</h4>
-            <a asp-action="Create" class="btn btn-success">????? ????</a>
+            <h4 class="text-primary fw-bold"><i class="bi bi-person-lock me-2"></i> إدارة مستخدمي النظام</h4>
+            <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#createUserModal">
+                <i class="bi bi-person-plus me-1"></i> إضافة مستخدم جديد
+            </button>
         </div>
 
-        <table class="table table-hover align-middle">
-            <thead class="table-light">
-                <tr>
-                    <th>?????</th>
-                    <th>??????</th>
-                    <th>??????</th>
-                    <th>?????????</th>
-                </tr>
-            </thead>
-            <tbody>
-                @foreach (var item in Model)
-                {
+        <div class="table-responsive">
+            <table class="table table-hover align-middle">
+                <thead class="table-light">
                     <tr>
-                        <td>@item.Name</td>
-                        <td>@(item.Circle?.Name ?? "??? ????")</td>
-                        <td><span class="badge @(item.Status == "???" ? "bg-success" : "bg-secondary")">@item.Status</span></td>
-                        <td>
-                            <div class="d-flex gap-2">
-                                @* ?? ??????? ?????? ?????? *@
-                                <a asp-action="Edit" asp-route-id="@item.Id" class="btn btn-sm btn-outline-warning rounded-circle">
-                                    <i class="bi bi-pencil"></i>
-                                </a>
-
-                                @* ?? ????? ????? ????? ???? ?? ????? ?????? ?????? ?? *@
-                                @if (User.Identity.Name == "admin@example.com" || User.IsInRole("Admin") || User.IsInRole("???? ??????"))
-                                {
-                                    <form asp-action="Delete" asp-route-id="@item.Id" method="post" onsubmit="return confirm('?? ??? ????? ?? ??? ??? ???????')">
-                                        @Html.AntiForgeryToken()
-                                        <button type="submit" class="btn btn-sm btn-outline-danger rounded-circle">
-                                            <i class="bi bi-trash"></i>
-                                        </button>
-                                    </form>
-                                }
-                            </div>
-                        </td>
+                        <th class="py-3">اسم المستخدم</th>
+                        <th class="py-3">البريد الإلكتروني</th>
+                        <th class="py-3">الدور / الصلاحية</th>
+                        <th class="py-3">الحالة</th>
+                        <th class="py-3">الإجراءات</th>
                     </tr>
-                }
-            </tbody>
-        </table>
+                </thead>
+                <tbody>
+                    @foreach (var item in Model)
+                    {
+                        <tr>
+                            <td class="fw-bold">@item.Username</td>
+                            <td>@item.Email</td>
+                            <td>
+                                <span class="badge @(item.Role == "Admin" ? "bg-danger" : "bg-info text-dark")">
+                                    @(item.Role == "Admin" ? "مدير النظام" : item.Role == "Teacher" ? "محفظ" : item.Role)
+                                </span>
+                            </td>
+                            <td>
+                                <span class="badge @(item.IsActive ? "bg-success" : "bg-secondary")">
+                                    @(item.IsActive ? "نشط" : "معطل")
+                                </span>
+                            </td>
+                            <td>
+                                <div class="d-flex gap-2">
+                                    <button class="btn btn-sm btn-outline-primary rounded-pill px-3">تعديل</button>
+                                </div>
+                            </td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+
+<!-- Modal ????? ???? (Simplified for now) -->
+<div class="modal fade" id="createUserModal" tabindex="-1" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <form asp-action="Create" method="post">
+                @Html.AntiForgeryToken()
+                <div class="modal-header">
+                    <h5 class="modal-title">إضافة مستخدم جديد</h5>
+                    <button type="button" class="btn-close ms-0 me-auto" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <div class="mb-3">
+                        <label class="form-label">الاسم الكامل</label>
+                        <input name="Username" class="form-control" required />
+                    </div>
+                    <div class="mb-3">
+                        <label class="form-label">البريد الإلكتروني</label>
+                        <input name="Email" type="email" class="form-control" required />
+                    </div>
+                    <div class="mb-3">
+                        <label class="form-label">كلمة المرور</label>
+                        <input name="Password" type="password" class="form-control" required />
+                    </div>
+                    <div class="mb-3">
+                        <label class="form-label">الصلاحية</label>
+                        <select name="Role" class="form-select">
+                            <option value="Admin">مدير النظام</option>
+                            <option value="Teacher">محفظ</option>
+                            <option value="Parent">ولي أمر</option>
+                        </select>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">إلغاء</button>
+                    <button type="submit" class="btn btn-primary">حفظ المستخدم</button>
+                </div>
+            </form>
+        </div>
     </div>
 </div>
