@@ -49,5 +49,7 @@ namespace QuranCenters.Core.Entities
         public virtual ICollection<Memorization> Memorizations { get; set; } = new List<Memorization>();
         public virtual ICollection<PointsLedger> PointsLedgers { get; set; } = new List<PointsLedger>();
         public virtual ICollection<StudentBadge> StudentBadges { get; set; } = new List<StudentBadge>();
+        public virtual ICollection<AssignmentSubmission> AssignmentSubmissions { get; set; } = new List<AssignmentSubmission>();
+        public virtual ICollection<KhatmProgress> KhatmProgresses { get; set; } = new List<KhatmProgress>();
     }
 }

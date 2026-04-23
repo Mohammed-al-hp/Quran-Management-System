@@ -83,5 +83,49 @@ namespace QuranCenters.Application.Services
 
             return await query.CountAsync();
         }
+
+        public async Task SaveGroupAttendanceAsync(int circleId, DateTime date, Dictionary<int, string> statuses, Dictionary<int, string> notes)
+        {
+            if (statuses == null || statuses.Count == 0) return;
+
+            foreach (var item in statuses)
+            {
+                int studentId = item.Key;
+                string status = item.Value;
+                string note = notes != null && notes.ContainsKey(studentId) ? notes[studentId] : "";
+
+                // التحقق من وجود سجل حضور سابق لنفس الطالب في نفس اليوم
+                var existingAttendance = await _unitOfWork.Repository<Attendance>().Query()
+                    .FirstOrDefaultAsync(a => a.StudentId == studentId && a.Date.Date == date.Date);
+
+                if (existingAttendance != null)
+                {
+                    existingAttendance.Status = status;
+                    existingAttendance.Notes = note;
+                    _unitOfWork.Repository<Attendance>().Update(existingAttendance);
+                }
+                else
+                {
+                    var attendance = new Attendance
+                    {
+                        Date = date,
+                        Status = status,
+                        StudentId = studentId,
+                        Notes = note
+                    };
+                    await _unitOfWork.Repository<Attendance>().AddAsync(attendance);
+                }
+            }
+
+            await _unitOfWork.SaveChangesAsync();
+
+            // Process gamification points for present students
+            foreach (var item in statuses.Where(s => s.Value == "حاضر"))
+            {
+                var attendance = new Attendance { StudentId = item.Key, Status = item.Value };
+                await _gamificationService.ProcessAttendancePointsAsync(attendance);
+            }
+        }
     }
 }
+

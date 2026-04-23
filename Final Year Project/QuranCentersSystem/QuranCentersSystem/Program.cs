@@ -122,6 +122,8 @@ builder.Services.AddScoped<IGamificationService, GamificationService>();
 builder.Services.AddScoped<INotificationService, NotificationService>();
 builder.Services.AddScoped<IQrCodeService, QrCodeService>();
 builder.Services.AddScoped<IPdfReportService, PdfReportService>();
+builder.Services.AddScoped<IPaymentService, PaymentService>();
+builder.Services.AddScoped<IParentService, ParentService>();
 
 // --- 9. SignalR ---
 builder.Services.AddSignalR();

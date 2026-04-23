@@ -1,11 +1,8 @@
-using System.Linq;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
-using Microsoft.EntityFrameworkCore;
-using QuranCenters.Infrastructure.Data;
-using QuranCentersSystem.Models;
+using QuranCenters.Application.Interfaces;
 using QuranCenters.Core.Entities;
-using QuranCenters.Infrastructure.Identity;
+using System.Threading.Tasks;
 
 namespace QuranCentersSystem.Controllers
 {
@@ -15,27 +12,27 @@ namespace QuranCentersSystem.Controllers
     [Microsoft.AspNetCore.Authorization.Authorize(Roles = "Admin")]
     public class CirclesController : Controller
     {
-        private readonly ApplicationDbContext _context;
+        private readonly ICircleService _circleService;
+        private readonly ITeacherService _teacherService;
 
-        public CirclesController(ApplicationDbContext context)
+        public CirclesController(ICircleService circleService, ITeacherService teacherService)
         {
-            _context = context;
+            _circleService = circleService;
+            _teacherService = teacherService;
         }
 
         // 1. عرض قائمة الحلقات
-        public IActionResult Index()
+        public async Task<IActionResult> Index()
         {
-            var circles = _context.Circles
-                .Include(c => c.Teacher)
-                .ToList();
+            var circles = await _circleService.GetAllCirclesAsync();
             return View(circles);
         }
 
         // 2. عرض صفحة إضافة حلقة جديدة
-        public IActionResult Create()
+        public async Task<IActionResult> Create()
         {
-            // جلب قائمة المعلمين لعرضهم في قائمة منسدلة (Dropdown)
-            ViewBag.TeacherId = new SelectList(_context.Teachers, "Id", "Name");
+            var teachers = await _teacherService.GetAllTeachersAsync();
+            ViewBag.TeacherId = new SelectList(teachers, "Id", "Name");
             return View();
         }
 
@@ -46,20 +43,16 @@ namespace QuranCentersSystem.Controllers
         {
             // أضف هذه الأسطر لإخبار السيرفر بأن هذه الحقول ليست ضرورية للتحقق الآن
             ModelState.Remove("Teacher");
-            ModelState.Remove("Students"); // إذا كان هناك قائمة طلاب
+            ModelState.Remove("Students");
 
             if (ModelState.IsValid)
             {
-                // تعيين قيم افتراضية للحقول الجديدة حتى لا يرفضها SQL Server
-                // circle.CurrentStudents = 0; 
-                // circle.MaxCapacity = 52;
-
-                _context.Add(circle);
-                await _context.SaveChangesAsync();
+                await _circleService.CreateCircleAsync(circle);
                 return RedirectToAction(nameof(Index));
             }
 
-            ViewBag.TeacherId = new SelectList(_context.Teachers, "Id", "Name", circle.TeacherId);
+            var teachers = await _teacherService.GetAllTeachersAsync();
+            ViewBag.TeacherId = new SelectList(teachers, "Id", "Name", circle.TeacherId);
             return View(circle);
         }
     }

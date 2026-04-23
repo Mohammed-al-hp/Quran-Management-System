@@ -14,5 +14,6 @@ namespace QuranCenters.Application.Interfaces
         Task RecordAttendanceAsync(Attendance attendance);
         Task RecordBulkAttendanceAsync(IEnumerable<Attendance> attendances);
         Task<int> GetTodayAttendanceCountAsync(List<int>? circleIds = null);
+        Task SaveGroupAttendanceAsync(int circleId, DateTime date, Dictionary<int, string> statuses, Dictionary<int, string> notes);
     }
 }

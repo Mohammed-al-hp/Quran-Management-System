@@ -19,7 +19,7 @@ namespace QuranCenters.Application.Services
 
         public async Task<IEnumerable<Teacher>> GetAllTeachersAsync(string? searchTerm = null, string? sortBy = null)
         {
-            var query = _unitOfWork.Repository<Teacher>().Query()
+            IQueryable<Teacher> query = _unitOfWork.Repository<Teacher>().Query()
                 .Include(t => t.Circles)
                     .ThenInclude(c => c.Students);
 

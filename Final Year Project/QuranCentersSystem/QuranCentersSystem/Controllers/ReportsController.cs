@@ -1,9 +1,8 @@
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Authorization;
-using QuranCenters.Infrastructure.Data;
 using QuranCenters.Application.Interfaces;
 using System;
-using System.Linq;
+using System.Threading.Tasks;
 using Rotativa.AspNetCore;
 
 namespace QuranCentersSystem.Controllers
@@ -15,33 +14,24 @@ namespace QuranCentersSystem.Controllers
     [Authorize]
     public class ReportsController : Controller
     {
-        private readonly ApplicationDbContext _context;
         private readonly IPdfReportService _pdfReportService;
 
-        public ReportsController(ApplicationDbContext context, IPdfReportService pdfReportService)
+        public ReportsController(IPdfReportService pdfReportService)
         {
-            _context = context;
             _pdfReportService = pdfReportService;
         }
 
         /// <summary>
         /// عرض تقرير طالب على الشاشة
         /// </summary>
-        public IActionResult StudentReport(int id)
+        public async Task<IActionResult> StudentReport(int id)
         {
-            var student = _context.Students.FirstOrDefault(s => s.Id == id);
+            var reportData = await _pdfReportService.GetStudentReportDataAsync(id);
+            if (reportData == null) return NotFound();
 
-            var attendances = _context.Attendances
-                .Where(a => a.StudentId == id)
-                .ToList();
-
-            var memorization = _context.Memorizations
-                .Where(m => m.StudentId == id)
-                .ToList();
-
-            ViewBag.Student = student;
-            ViewBag.Attendances = attendances;
-            ViewBag.Memorization = memorization;
+            ViewBag.Student = reportData.Student;
+            ViewBag.Attendances = reportData.Attendances;
+            ViewBag.Memorization = reportData.Memorizations;
 
             return View();
         }
@@ -49,21 +39,14 @@ namespace QuranCentersSystem.Controllers
         /// <summary>
         /// طباعة تقرير طالب كملف PDF
         /// </summary>
-        public IActionResult PrintStudentReport(int id)
+        public async Task<IActionResult> PrintStudentReport(int id)
         {
-            var student = _context.Students.FirstOrDefault(s => s.Id == id);
+            var reportData = await _pdfReportService.GetStudentReportDataAsync(id);
+            if (reportData == null) return NotFound();
 
-            var attendances = _context.Attendances
-                .Where(a => a.StudentId == id)
-                .ToList();
-
-            var memorization = _context.Memorizations
-                .Where(m => m.StudentId == id)
-                .ToList();
-
-            ViewBag.Student = student;
-            ViewBag.Attendances = attendances;
-            ViewBag.Memorization = memorization;
+            ViewBag.Student = reportData.Student;
+            ViewBag.Attendances = reportData.Attendances;
+            ViewBag.Memorization = reportData.Memorizations;
 
             return new ViewAsPdf("StudentReport")
             {
@@ -76,7 +59,7 @@ namespace QuranCentersSystem.Controllers
         /// توليد تقرير شهري احترافي لطالب معين
         /// GET: /Reports/MonthlyReport?studentId=1&month=4&year=2026
         /// </summary>
-        public async System.Threading.Tasks.Task<IActionResult> MonthlyReport(int studentId, int? month, int? year)
+        public async Task<IActionResult> MonthlyReport(int studentId, int? month, int? year)
         {
             var reportMonth = month ?? DateTime.Now.Month;
             var reportYear = year ?? DateTime.Now.Year;
@@ -93,7 +76,7 @@ namespace QuranCentersSystem.Controllers
         /// طباعة التقرير الشهري كملف PDF
         /// GET: /Reports/PrintMonthlyReport?studentId=1&month=4&year=2026
         /// </summary>
-        public async System.Threading.Tasks.Task<IActionResult> PrintMonthlyReport(int studentId, int? month, int? year)
+        public async Task<IActionResult> PrintMonthlyReport(int studentId, int? month, int? year)
         {
             var reportMonth = month ?? DateTime.Now.Month;
             var reportYear = year ?? DateTime.Now.Year;

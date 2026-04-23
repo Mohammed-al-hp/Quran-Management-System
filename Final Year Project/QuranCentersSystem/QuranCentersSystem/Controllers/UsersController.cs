@@ -1,54 +1,53 @@
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Identity;
-using Microsoft.EntityFrameworkCore;
-using QuranCenters.Infrastructure.Data;
-using QuranCentersSystem.Models;
-using QuranCenters.Core.Entities;
+using Microsoft.AspNetCore.Authorization;
 using QuranCenters.Infrastructure.Identity;
+using Microsoft.EntityFrameworkCore;
+using System.Threading.Tasks;
 
 namespace QuranCentersSystem.Controllers
 {
     /// <summary>
     /// متحكم المستخدمين - إدارة حسابات النظام (للمدير فقط)
+    /// يستخدم UserManager بدلاً من DbContext مباشرة لإدارة المستخدمين
     /// </summary>
-    [Microsoft.AspNetCore.Authorization.Authorize(Roles = "Admin")]
+    [Authorize(Roles = "Admin")]
     public class UsersController : Controller
     {
-        private readonly ApplicationDbContext _context;
         private readonly UserManager<ApplicationUser> _userManager;
 
-        public UsersController(ApplicationDbContext context, UserManager<ApplicationUser> userManager)
+        public UsersController(UserManager<ApplicationUser> userManager)
         {
-            _context = context;
             _userManager = userManager;
         }
 
         public async Task<IActionResult> Index()
         {
-            var users = await _context.ApplicationUsers.ToListAsync();
+            var users = await _userManager.Users.ToListAsync();
             return View(users);
         }
 
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create(ApplicationUser user, string Password)
+        public async Task<IActionResult> Create(string Email, string FullName, string Role, string Password)
         {
-            if (ModelState.IsValid && !string.IsNullOrEmpty(Password))
+            if (!string.IsNullOrEmpty(Email) && !string.IsNullOrEmpty(Password) && !string.IsNullOrEmpty(Role))
             {
-                // أ- إنشاء المستخدم في نظام Identity لتشفير كلمة المرور
-                var ApplicationUser = new ApplicationUser { UserName = user.Email, Email = user.Email, EmailConfirmed = true };
-                var result = await _userManager.CreateAsync(ApplicationUser, Password);
+                var user = new ApplicationUser
+                {
+                    UserName = Email,
+                    Email = Email,
+                    EmailConfirmed = true,
+                    FullName = FullName,
+                    Role = Role,
+                    IsActive = true
+                };
+
+                var result = await _userManager.CreateAsync(user, Password);
 
                 if (result.Succeeded)
                 {
-                    // ب- إسناد الدور المختار (مدير النظام أو محفظ)
-                    await _userManager.AddToRoleAsync(ApplicationUser, user.Role);
-
-                    // ج- حفظ في جدول العرض المخصص
-                    user.IsActive = true;
-                    _context.ApplicationUsers.Add(user);
-                    await _context.SaveChangesAsync();
-
+                    await _userManager.AddToRoleAsync(user, Role);
                     return RedirectToAction(nameof(Index));
                 }
 
@@ -57,7 +56,9 @@ namespace QuranCentersSystem.Controllers
                     ModelState.AddModelError("", error.Description);
                 }
             }
-            return View("Index", await _context.ApplicationUsers.ToListAsync());
+
+            var users = await _userManager.Users.ToListAsync();
+            return View("Index", users);
         }
     }
 }

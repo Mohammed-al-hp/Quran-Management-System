@@ -1,32 +1,36 @@
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
-using Microsoft.EntityFrameworkCore;
-using QuranCenters.Infrastructure.Data;
-using QuranCentersSystem.Models;
-using QuranCenters.Core.Entities;
-using QuranCenters.Infrastructure.Identity;
 using Microsoft.AspNetCore.Authorization;
+using QuranCenters.Application.Interfaces;
+using QuranCenters.Core.Entities;
+using System.Threading.Tasks;
 
 namespace QuranCentersSystem.Controllers
 {
-    [Authorize(Roles = "Admin")] // ?????? ???
+    [Authorize(Roles = "Admin")]
     public class PaymentsController : Controller
     {
-        private readonly ApplicationDbContext _context;
+        private readonly IPaymentService _paymentService;
+        private readonly IStudentService _studentService;
 
-        public PaymentsController(ApplicationDbContext context) => _context = context;
-
-        // ??? ????? ?????????
-        public async Task<IActionResult> Index()
+        public PaymentsController(IPaymentService paymentService, IStudentService studentService)
         {
-            var payments = _context.Payments.Include(p => p.Student);
-            return View(await payments.ToListAsync());
+            _paymentService = paymentService;
+            _studentService = studentService;
         }
 
-        // ???? ????? ???? ?????
-        public IActionResult Create()
+        // عرض قائمة المدفوعات
+        public async Task<IActionResult> Index()
         {
-            ViewBag.StudentId = new SelectList(_context.Students, "Id", "Name");
+            var payments = await _paymentService.GetAllPaymentsAsync();
+            return View(payments);
+        }
+
+        // صفحة إضافة دفعة جديدة
+        public async Task<IActionResult> Create()
+        {
+            var students = await _studentService.GetAllStudentsAsync();
+            ViewBag.StudentId = new SelectList(students, "Id", "Name");
             return View();
         }
 
@@ -36,12 +40,11 @@ namespace QuranCentersSystem.Controllers
         {
             if (ModelState.IsValid)
             {
-                payment.CreatedBy = User.Identity.Name; // ????? ?? ??? ????????
-                _context.Add(payment);
-                await _context.SaveChangesAsync();
+                await _paymentService.CreatePaymentAsync(payment, User.Identity?.Name ?? "System");
                 return RedirectToAction(nameof(Index));
             }
-            ViewBag.StudentId = new SelectList(_context.Students, "Id", "Name", payment.StudentId);
+            var students = await _studentService.GetAllStudentsAsync();
+            ViewBag.StudentId = new SelectList(students, "Id", "Name", payment.StudentId);
             return View(payment);
         }
     }

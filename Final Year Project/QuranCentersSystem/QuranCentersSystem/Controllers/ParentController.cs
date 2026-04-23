@@ -1,9 +1,7 @@
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
-using Microsoft.EntityFrameworkCore;
-using QuranCenters.Infrastructure.Data;
-using QuranCentersSystem.Models;
+using QuranCenters.Application.Interfaces;
 using QuranCenters.Core.Entities;
 using QuranCenters.Infrastructure.Identity;
 using System.Linq;
@@ -15,12 +13,12 @@ namespace QuranCentersSystem.Controllers
     [Authorize]
     public class ParentsController : Controller
     {
-        private readonly ApplicationDbContext _context;
+        private readonly IParentService _parentService;
         private readonly UserManager<ApplicationUser> _userManager;
 
-        public ParentsController(ApplicationDbContext context, UserManager<ApplicationUser> userManager)
+        public ParentsController(IParentService parentService, UserManager<ApplicationUser> userManager)
         {
-            _context = context;
+            _parentService = parentService;
             _userManager = userManager;
         }
 
@@ -48,8 +46,7 @@ namespace QuranCentersSystem.Controllers
                     await _userManager.AddToRoleAsync(user, "Parent");
 
                     // 3. حفظ بياناته في جدول الـ Parents
-                    _context.Add(parent);
-                    await _context.SaveChangesAsync();
+                    await _parentService.CreateParentAsync(parent);
                     return RedirectToAction(nameof(Index));
                 }
 
@@ -69,23 +66,14 @@ namespace QuranCentersSystem.Controllers
             var currentUser = await _userManager.GetUserAsync(User);
             if (currentUser == null) return Challenge();
 
-            var parentProfile = await _context.Set<Parent>()
-                .FirstOrDefaultAsync(p => p.Email == currentUser.Email);
+            var parentProfile = await _parentService.GetParentByEmailAsync(currentUser.Email);
 
             if (parentProfile == null)
             {
                 return View("NoProfileFound");
             }
 
-            var myChildren = await _context.Students
-                .Where(s => s.ParentId == parentProfile.Id)
-                .Include(s => s.Attendances)
-                .Include(s => s.Memorizations)
-                .Include(s => s.Payments)
-                .Include(s => s.PointsLedgers)
-                .Include(s => s.StudentBadges)
-                .ToListAsync();
-
+            var myChildren = await _parentService.GetChildrenAsync(parentProfile.Id);
             return View(myChildren);
         }
 
@@ -95,27 +83,33 @@ namespace QuranCentersSystem.Controllers
             var currentUser = await _userManager.GetUserAsync(User);
             if (currentUser == null) return Challenge();
 
-            var student = await _context.Students
-                .Include(s => s.Parent)
-                .Include(s => s.Attendances)
-                .Include(s => s.Memorizations)
-                .Include(s => s.Payments)
-                .Include(s => s.PointsLedgers)
-                .Include(s => s.StudentBadges)
-                .FirstOrDefaultAsync(s => s.Id == id);
-
-            // التحقق من وجود الطالب وأن ولي الأمر هو المالك الصحيح (أو أنه مدير)
-            if (student == null)
-            {
-                return NotFound();
-            }
-
             var roles = await _userManager.GetRolesAsync(currentUser);
             bool isAdmin = roles.Contains("Admin");
 
-            if (!isAdmin && (student.Parent == null || student.Parent.Email != currentUser.Email))
+            // جلب ملف ولي الأمر
+            var parentProfile = await _parentService.GetParentByEmailAsync(currentUser.Email);
+
+            if (!isAdmin && parentProfile == null)
             {
                 return Forbid();
+            }
+
+            Student student;
+            if (isAdmin)
+            {
+                // المدير يمكنه رؤية أي طالب
+                var studentService = HttpContext.RequestServices.GetService<IStudentService>();
+                student = await studentService.GetStudentWithDetailsAsync(id);
+            }
+            else
+            {
+                // ولي الأمر يرى أبناءه فقط
+                student = await _parentService.GetChildWithDetailsAsync(parentProfile.Id, id);
+            }
+
+            if (student == null)
+            {
+                return NotFound();
             }
 
             return View(student);

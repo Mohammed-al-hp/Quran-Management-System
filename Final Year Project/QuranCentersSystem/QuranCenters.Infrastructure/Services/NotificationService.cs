@@ -226,5 +226,58 @@ namespace QuranCenters.Infrastructure.Services
 
             await _context.SaveChangesAsync();
         }
+
+        // --- إدارة الإشعارات (جديد) ---
+
+        public async Task<List<Notification>> GetRecentByUserAsync(string userId, int count = 10)
+        {
+            return await _context.Notifications
+                .Where(n => n.UserId == userId)
+                .OrderByDescending(n => n.CreatedAt)
+                .Take(count)
+                .ToListAsync();
+        }
+
+        public async Task<List<Notification>> GetAllByUserAsync(string userId)
+        {
+            return await _context.Notifications
+                .Where(n => n.UserId == userId)
+                .OrderByDescending(n => n.CreatedAt)
+                .ToListAsync();
+        }
+
+        public async Task<int> GetUnreadCountAsync(string userId)
+        {
+            return await _context.Notifications
+                .Where(n => n.UserId == userId && !n.IsRead)
+                .CountAsync();
+        }
+
+        public async Task MarkAsReadAsync(int notificationId, string userId)
+        {
+            var notification = await _context.Notifications
+                .FirstOrDefaultAsync(n => n.Id == notificationId && n.UserId == userId);
+
+            if (notification != null)
+            {
+                notification.IsRead = true;
+                await _context.SaveChangesAsync();
+            }
+        }
+
+        public async Task MarkAllAsReadAsync(string userId)
+        {
+            var notifications = await _context.Notifications
+                .Where(n => n.UserId == userId && !n.IsRead)
+                .ToListAsync();
+
+            foreach (var n in notifications)
+            {
+                n.IsRead = true;
+            }
+
+            await _context.SaveChangesAsync();
+        }
     }
 }
+

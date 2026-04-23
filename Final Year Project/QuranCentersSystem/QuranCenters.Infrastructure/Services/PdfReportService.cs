@@ -95,5 +95,32 @@ namespace QuranCenters.Infrastructure.Services
                 return "أداء مقبول - يحتاج للمتابعة والتشجيع";
             return "يحتاج لاهتمام خاص ومتابعة مكثفة";
         }
+
+        public async Task<StudentReportData> GetStudentReportDataAsync(int studentId)
+        {
+            var student = await _context.Students
+                .Include(s => s.Circle)
+                .FirstOrDefaultAsync(s => s.Id == studentId);
+
+            if (student == null) return null;
+
+            var attendances = await _context.Attendances
+                .Where(a => a.StudentId == studentId)
+                .OrderBy(a => a.Date)
+                .ToListAsync();
+
+            var memorizations = await _context.Memorizations
+                .Where(m => m.StudentId == studentId)
+                .OrderBy(m => m.Date)
+                .ToListAsync();
+
+            return new StudentReportData
+            {
+                Student = student,
+                Attendances = attendances,
+                Memorizations = memorizations
+            };
+        }
     }
 }
+

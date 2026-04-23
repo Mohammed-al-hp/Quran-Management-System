@@ -20,7 +20,7 @@ namespace QuranCenters.Application.Services
 
         public async Task<IEnumerable<Student>> GetAllStudentsAsync(int? circleId = null)
         {
-            var query = _unitOfWork.Repository<Student>().Query()
+            IQueryable<Student> query = _unitOfWork.Repository<Student>().Query()
                 .Include(s => s.Circle);
 
             if (circleId.HasValue)

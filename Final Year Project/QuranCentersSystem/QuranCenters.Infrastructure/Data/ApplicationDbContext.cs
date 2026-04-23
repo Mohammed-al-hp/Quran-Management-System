@@ -16,6 +16,7 @@ namespace QuranCenters.Infrastructure.Data
         {
         }
 
+        // --- الجداول الأساسية ---
         public DbSet<Student> Students { get; set; }
         public DbSet<Teacher> Teachers { get; set; }
         public DbSet<Circle> Circles { get; set; }
@@ -25,8 +26,17 @@ namespace QuranCenters.Infrastructure.Data
         public DbSet<Payment> Payments { get; set; }
         public DbSet<Parent> Parents { get; set; }
         public DbSet<Notification> Notifications { get; set; }
+
+        // --- جداول التلعيب ---
         public DbSet<PointsLedger> PointsLedgers { get; set; }
         public DbSet<StudentBadge> StudentBadges { get; set; }
+
+        // --- الجداول الجديدة (Checkpoint 1) ---
+        public DbSet<Message> Messages { get; set; }
+        public DbSet<Assignment> Assignments { get; set; }
+        public DbSet<AssignmentSubmission> AssignmentSubmissions { get; set; }
+        public DbSet<KhatmProgress> KhatmProgresses { get; set; }
+        public DbSet<SystemSetting> SystemSettings { get; set; }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
@@ -62,6 +72,59 @@ namespace QuranCenters.Infrastructure.Data
                 .WithMany(t => t.Circles)
                 .HasForeignKey(c => c.TeacherId)
                 .OnDelete(DeleteBehavior.SetNull);
+
+            // --- علاقات الجداول الجديدة ---
+
+            // Assignment → Circle
+            modelBuilder.Entity<Assignment>()
+                .HasOne(a => a.Circle)
+                .WithMany()
+                .HasForeignKey(a => a.CircleId)
+                .OnDelete(DeleteBehavior.Restrict);
+
+            // Assignment → Teacher (optional)
+            modelBuilder.Entity<Assignment>()
+                .HasOne(a => a.Teacher)
+                .WithMany()
+                .HasForeignKey(a => a.TeacherId)
+                .OnDelete(DeleteBehavior.SetNull);
+
+            // AssignmentSubmission → Assignment
+            modelBuilder.Entity<AssignmentSubmission>()
+                .HasOne(s => s.Assignment)
+                .WithMany(a => a.Submissions)
+                .HasForeignKey(s => s.AssignmentId)
+                .OnDelete(DeleteBehavior.Cascade);
+
+            // AssignmentSubmission → Student
+            modelBuilder.Entity<AssignmentSubmission>()
+                .HasOne(s => s.Student)
+                .WithMany(st => st.AssignmentSubmissions)
+                .HasForeignKey(s => s.StudentId)
+                .OnDelete(DeleteBehavior.Restrict);
+
+            // KhatmProgress → Student
+            modelBuilder.Entity<KhatmProgress>()
+                .HasOne(k => k.Student)
+                .WithMany(s => s.KhatmProgresses)
+                .HasForeignKey(k => k.StudentId)
+                .OnDelete(DeleteBehavior.Cascade);
+
+            modelBuilder.Entity<KhatmProgress>()
+                .Property(k => k.TotalPagesMemorized)
+                .HasPrecision(7, 2);
+
+            // Message → Student (optional relation)
+            modelBuilder.Entity<Message>()
+                .HasOne(m => m.RelatedStudent)
+                .WithMany()
+                .HasForeignKey(m => m.RelatedStudentId)
+                .OnDelete(DeleteBehavior.SetNull);
+
+            // SystemSetting - unique key constraint
+            modelBuilder.Entity<SystemSetting>()
+                .HasIndex(s => s.Key)
+                .IsUnique();
         }
     }
 }
