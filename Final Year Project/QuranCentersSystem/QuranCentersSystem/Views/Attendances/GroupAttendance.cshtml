@@ -1,49 +1,58 @@
 ﻿@model IEnumerable<QuranCentersSystem.Models.Student>
-
 @{
     ViewData["Title"] = "تسجيل حضور حلقة";
+    var hijriCulture = new System.Globalization.CultureInfo("ar-SA");
+    hijriCulture.DateTimeFormat.Calendar = new System.Globalization.UmAlQuraCalendar();
 }
 
 <div class="container-fluid py-4" dir="rtl">
-    <div class="card shadow-sm border-0 bg-white p-4 rounded" style="border-radius: 15px !important;">
-
-        @* الترويسة *@
+    <div class="card shadow-sm border-0 bg-white p-4 rounded-3">
+        
         <div class="d-flex justify-content-between align-items-center mb-4 border-bottom pb-3">
             <div>
                 <h4 class="m-0 text-primary fw-bold"><i class="bi bi-calendar-check-fill me-2"></i>تسجيل الحضور الجماعي</h4>
-                <p class="text-muted mb-0 small">اختيار الحلقة وتسجيل حالة الحضور لجميع الطلاب دفعة واحدة</p>
+                <p class="text-muted mb-0 small">تاريخ اليوم الهجري: @DateTime.Now.ToString("dd MMMM yyyy", hijriCulture)</p>
             </div>
+            @if (Model != null && Model.Any())
+            {
+                <button type="button" class="btn btn-outline-success shadow-sm" onclick="markAllPresent()">
+                    <i class="bi bi-check-all"></i> تحضير الجميع كحاضر
+                </button>
+            }
         </div>
 
-        @* اختيار الحلقة *@
-        <div class="row mb-4 bg-light p-3 rounded mx-1">
-            <div class="col-md-6">
-                <form method="get" asp-action="GroupAttendance" id="selectCircleForm">
-                    <label class="form-label fw-bold small">اختر الحلقة لبدء التحضير:</label>
+        @* قسم الفلترة - تم تعديل ترتيب الأوسمة لإنهاء الخطأ *@
+        <form method="get" asp-action="GroupAttendance" id="filterForm">
+            <div class="row mb-4 bg-light p-3 rounded mx-1">
+                <div class="col-md-5">
+                    <label class="form-label fw-bold small">الحلقة:</label>
                     <select name="circleId" class="form-select shadow-sm" onchange="this.form.submit()" asp-items="ViewBag.Circles">
-                        <option value="">-- اختر الحلقة من هنا --</option>
+                        <option value="">-- اختر الحلقة --</option>
                     </select>
-                </form>
+                </div>
+
+                <div class="col-md-4">
+                    <label class="form-label fw-bold small">التاريخ:</label>
+                    <input type="date" name="date" class="form-control shadow-sm" value="@ViewBag.SelectedDate" onchange="this.form.submit()" />
+                </div>
             </div>
-            <div class="col-md-6 d-flex align-items-end justify-content-md-end">
-                <span class="badge bg-info p-2 px-3 shadow-sm text-white">تاريخ اليوم: @DateTime.Now.ToString("yyyy/MM/dd")</span>
-            </div>
-        </div>
+        </form>
 
         @if (Model != null && Model.Any())
         {
             <form asp-action="SaveGroupAttendance" method="post">
                 @Html.AntiForgeryToken()
                 <input type="hidden" name="circleId" value="@ViewBag.SelectedCircleId" />
-                <input type="hidden" name="date" value="@DateTime.Now.ToString("yyyy-MM-dd")" />
+                <input type="hidden" name="date" value="@ViewBag.SelectedDate" />
 
                 <div class="table-responsive">
-                    <table class="table table-hover align-middle shadow-sm rounded overflow-hidden">
+                    <table class="table table-hover align-middle shadow-sm">
                         <thead class="table-dark">
                             <tr>
                                 <th class="py-3 px-4">اسم الطالب</th>
                                 <th class="py-3 text-center">حالة الحضور</th>
-                                <th class="py-3 text-center">ملاحظات سريعة</th>
+                                <th class="py-3 text-center">التأخر (دقائق)</th>
+                                <th class="py-3 text-center">ملاحظات</th>
                             </tr>
                         </thead>
                         <tbody>
@@ -53,18 +62,21 @@
                                     <td class="fw-bold px-4">@student.Name</td>
                                     <td class="text-center">
                                         <div class="btn-group shadow-sm" role="group">
-                                            <input type="radio" class="btn-check" name="attendanceStatus[@student.Id]" id="present_@student.Id" value="حاضر" checked>
+                                            <input type="radio" class="btn-check attendance-radio" name="attendanceStatus[@student.Id]" id="present_@student.Id" value="حاضر" checked>
                                             <label class="btn btn-outline-success px-3" for="present_@student.Id">حاضر</label>
 
-                                            <input type="radio" class="btn-check" name="attendanceStatus[@student.Id]" id="absent_@student.Id" value="غائب">
+                                            <input type="radio" class="btn-check attendance-radio" name="attendanceStatus[@student.Id]" id="absent_@student.Id" value="غائب">
                                             <label class="btn btn-outline-danger px-3" for="absent_@student.Id">غائب</label>
 
-                                            <input type="radio" class="btn-check" name="attendanceStatus[@student.Id]" id="late_@student.Id" value="متأخر">
+                                            <input type="radio" class="btn-check attendance-radio" name="attendanceStatus[@student.Id]" id="late_@student.Id" value="متأخر">
                                             <label class="btn btn-outline-warning px-3" for="late_@student.Id">متأخر</label>
                                         </div>
                                     </td>
+                                    <td style="width: 120px;">
+                                        <input type="number" name="delayMinutes[@student.Id]" class="form-control form-control-sm text-center" placeholder="0" min="0">
+                                    </td>
                                     <td>
-                                        <input type="text" name="notes[@student.Id]" class="form-control form-control-sm border-0 bg-light" placeholder="أضف ملاحظة (اختياري)...">
+                                        <input type="text" name="notes[@student.Id]" class="form-control form-control-sm border-0 bg-light" placeholder="ملاحظة...">
                                     </td>
                                 </tr>
                             }
@@ -81,31 +93,21 @@
         }
         else if (ViewBag.SelectedCircleId != null)
         {
-            <div class="alert alert-warning text-center shadow-sm">
-                <i class="bi bi-exclamation-triangle me-2"></i> لا يوجد طلاب مضافين لهذه الحلقة حالياً.
-            </div>
+            <div class="alert alert-info text-center">لا يوجد طلاب مسجلين في هذه الحلقة حالياً.</div>
         }
     </div>
 </div>
 
+<script>
+    function markAllPresent() {
+        document.querySelectorAll('.attendance-radio[value="حاضر"]').forEach(radio => {
+            radio.checked = true;
+        });
+    }
+</script>
+
 <style>
-    .btn-check:checked + .btn-outline-success {
-        background-color: #198754;
-        color: white;
-    }
-
-    .btn-check:checked + .btn-outline-danger {
-        background-color: #dc3545;
-        color: white;
-    }
-
-    .btn-check:checked + .btn-outline-warning {
-        background-color: #ffc107;
-        color: black;
-    }
-
-    .table-hover tbody tr:hover {
-        background-color: #f8f9fa;
-        transition: 0.3s;
-    }
+    .btn-check:checked + .btn-outline-success { background-color: #198754 !important; color: white !important; }
+    .btn-check:checked + .btn-outline-danger { background-color: #dc3545 !important; color: white !important; }
+    .btn-check:checked + .btn-outline-warning { background-color: #ffc107 !important; color: black !important; }
 </style>

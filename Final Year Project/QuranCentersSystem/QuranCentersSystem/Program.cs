@@ -28,21 +28,19 @@ builder.Services.AddDefaultIdentity<ApplicationUser>(options =>
     .AddEntityFrameworkStores<ApplicationDbContext>();
 
 // --- 3. إعدادات JWT Authentication لـ Flutter ---
-// نجلب القيم من ملف appsettings.json الذي أعددناه
 var jwtSettings = builder.Configuration.GetSection("Jwt");
-var key = Encoding.UTF8.GetBytes(jwtSettings["Key"] ?? "YourSuperSecretKey12345_MustBeLong");
+var keyString = jwtSettings["Key"] ?? "YourSuperSecretKey12345_MustBeLong";
+var key = Encoding.UTF8.GetBytes(keyString);
 
-// --- تعديل نظام Authentication ليدعم الويب والموبايل معاً ---
 builder.Services.AddAuthentication(options =>
 {
-    // نجعل الكوكيز هي الافتراضية للمتصفح (MVC)
+    // الافتراضي للمتصفح (MVC) هو الكوكيز
     options.DefaultScheme = IdentityConstants.ApplicationScheme;
     options.DefaultAuthenticateScheme = IdentityConstants.ApplicationScheme;
     options.DefaultChallengeScheme = IdentityConstants.ApplicationScheme;
 })
 .AddJwtBearer(JwtBearerDefaults.AuthenticationScheme, options =>
 {
-    // إعدادات الـ JWT الخاصة بـ Flutter (تبقى كما هي)
     options.TokenValidationParameters = new TokenValidationParameters
     {
         ValidateIssuer = true,
@@ -51,7 +49,7 @@ builder.Services.AddAuthentication(options =>
         ValidateIssuerSigningKey = true,
         ValidIssuer = builder.Configuration["Jwt:Issuer"],
         ValidAudience = builder.Configuration["Jwt:Audience"],
-        IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(builder.Configuration["Jwt:Key"]))
+        IssuerSigningKey = new SymmetricSecurityKey(key)
     };
 });
 
@@ -101,13 +99,14 @@ app.MapControllerRoute(
     pattern: "{controller=Home}/{action=Index}/{id?}");
 app.MapRazorPages();
 
-// --- 6. بذر البيانات (Seed Data) ---
+// --- 6. بذر البيانات (Seed Data) المطور والنهائي ---
 using (var scope = app.Services.CreateScope())
 {
     var services = scope.ServiceProvider;
     var userManager = services.GetRequiredService<UserManager<ApplicationUser>>();
     var roleManager = services.GetRequiredService<RoleManager<IdentityRole>>();
 
+    // التأكد من وجود الأدوار (Admin, Teacher, Parent)
     string[] roleNames = { "Admin", "Teacher", "Parent" };
     foreach (var roleName in roleNames)
     {
@@ -118,6 +117,8 @@ using (var scope = app.Services.CreateScope())
     }
 
     var adminEmail = "admin@quransystems.com";
+
+    // البحث عن المستخدم بدقة لمنع خطأ الـ Duplicate Key Row
     var existingUser = await userManager.FindByEmailAsync(adminEmail);
 
     if (existingUser == null)
@@ -131,10 +132,19 @@ using (var scope = app.Services.CreateScope())
             IsActive = true
         };
 
-        var result = await userManager.CreateAsync(admin, "Admin@123");
-        if (result.Succeeded)
+        // استخدام Try-Catch كطبقة حماية إضافية أثناء الحفظ في قاعدة البيانات
+        try
         {
-            await userManager.AddToRoleAsync(admin, "Admin");
+            var result = await userManager.CreateAsync(admin, "Admin@123");
+            if (result.Succeeded)
+            {
+                await userManager.AddToRoleAsync(admin, "Admin");
+            }
+        }
+        catch (Exception ex)
+        {
+            // تسجيل الخطأ في الـ Console بدلاً من توقف التطبيق
+            Console.WriteLine($"[Seed Data Error]: {ex.Message}");
         }
     }
 }

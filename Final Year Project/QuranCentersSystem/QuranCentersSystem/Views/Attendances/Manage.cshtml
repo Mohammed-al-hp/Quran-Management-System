@@ -1,0 +1,81 @@
+﻿@model IEnumerable<QuranCentersSystem.Models.Teacher>
+@{
+    ViewData["Title"] = "حضور المعلمين";
+    var hijri = new System.Globalization.CultureInfo("ar-SA");
+    hijri.DateTimeFormat.Calendar = new System.Globalization.UmAlQuraCalendar();
+}
+
+<div class="container-fluid py-4" dir="rtl">
+    <div class="card shadow-sm border-0 bg-white p-4 rounded-3">
+        <div class="d-flex justify-content-between align-items-center mb-4 border-bottom pb-3">
+            <div>
+                <h4 class="text-primary fw-bold m-0"><i class="bi bi-person-badge-fill me-2"></i>تحضير المعلمين اليومي</h4>
+                <p class="text-muted small mb-0">التاريخ: @DateTime.Now.ToString("dd MMMM yyyy", hijri)</p>
+            </div>
+            <button type="button" class="btn btn-outline-success" onclick="markAllActive()">
+                <i class="bi bi-check-all"></i> تحضير جميع المعلمين
+            </button>
+        </div>
+
+        <form asp-action="SaveAttendance" method="post">
+            <div class="row mb-4">
+                <div class="col-md-3">
+                    <label class="small fw-bold">تاريخ التحضير:</label>
+                    <input type="date" name="date" class="form-control" value="@ViewBag.Date" />
+                </div>
+            </div>
+
+            <div class="table-responsive">
+                <table class="table table-hover align-middle">
+                    <thead class="table-dark">
+                        <tr>
+                            <th>اسم المعلم</th>
+                            <th class="text-center">الحالة</th>
+                            <th class="text-center">ساعات العمل</th>
+                            <th>ملاحظات</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @foreach (var teacher in Model)
+                        {
+                            <tr>
+                                <td class="fw-bold">@teacher.Name</td>
+                                <td class="text-center">
+                                    <div class="btn-group btn-group-sm" role="group">
+                                        <input type="radio" class="btn-check" name="status[@teacher.Id]" id="h_@teacher.Id" value="حاضر" checked>
+                                        <label class="btn btn-outline-success" for="h_@teacher.Id">حاضر</label>
+
+                                        <input type="radio" class="btn-check" name="status[@teacher.Id]" id="g_@teacher.Id" value="غائب">
+                                        <label class="btn btn-outline-danger" for="g_@teacher.Id">غائب</label>
+
+                                        <input type="radio" class="btn-check" name="status[@teacher.Id]" id="t_@teacher.Id" value="تأخر">
+                                        <label class="btn btn-outline-warning" for="t_@teacher.Id">تأخر</label>
+                                    </div>
+                                </td>
+                                <td style="width: 150px">
+                                    <div class="input-group input-group-sm">
+                                        <input type="number" name="hours[@teacher.Id]" class="form-control text-center" value="4" step="0.5">
+                                        <span class="input-group-text small">ساعة</span>
+                                    </div>
+                                </td>
+                                <td>
+                                    <input type="text" name="notes[@teacher.Id]" class="form-control form-control-sm border-0 bg-light" placeholder="...">
+                                </td>
+                            </tr>
+                        }
+                    </tbody>
+                </table>
+            </div>
+
+            <div class="mt-4">
+                <button type="submit" class="btn btn-primary px-5 shadow-sm">حفظ كشف حضور المعلمين</button>
+            </div>
+        </form>
+    </div>
+</div>
+
+<script>
+    function markAllActive() {
+        document.querySelectorAll('input[value="حاضر"]').forEach(r => r.checked = true);
+    }
+</script>

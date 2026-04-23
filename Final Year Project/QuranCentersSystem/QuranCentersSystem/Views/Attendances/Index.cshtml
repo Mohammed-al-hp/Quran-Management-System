@@ -10,13 +10,13 @@
             <div class="d-flex justify-content-between align-items-center border-bottom pb-3">
                 <div>
                     <h4 class="text-success fw-bold m-0">سجل الحضور والغياب اليومي</h4>
-                    <small class="text-muted">قم بتسجيل حضور طلاب الحلقات لليوم</small>
+                    <small class="text-muted">عرض وإدارة حضور طلاب الحلقات</small>
                 </div>
                 <div class="d-flex gap-2">
-                    <a asp-action="GroupAttendance" class="btn btn-primary px-4">
+                    <a asp-action="GroupAttendance" class="btn btn-primary px-4 shadow-sm">
                         <i class="bi bi-people-fill"></i> تسجيل حضور حلقة
                     </a>
-                    <a asp-action="Create" class="btn btn-success px-4">
+                    <a asp-action="Create" class="btn btn-success px-4 shadow-sm">
                         <i class="bi bi-plus-circle"></i> تسجيل فردي
                     </a>
                 </div>
@@ -29,6 +29,7 @@
                             <th class="py-3">التاريخ</th>
                             <th class="py-3">اسم الطالب</th>
                             <th class="py-3">الحالة</th>
+                            <th class="py-3">التأخير</th>
                             <th class="py-3">ملاحظات</th>
                             <th class="py-3 text-center">العمليات</th>
                         </tr>
@@ -37,7 +38,7 @@
                         @foreach (var item in Model)
                         {
                             <tr>
-                                <td>@item.Date.ToShortDateString()</td>
+                                <td class="text-secondary">@item.Date.ToShortDateString()</td>
                                 <td class="fw-bold">@(item.Student?.Name ?? "غير محدد")</td>
                                 <td>
                                     @if (item.Status == "حاضر")
@@ -48,17 +49,48 @@
                                     {
                                         <span class="badge bg-danger bg-opacity-10 text-danger rounded-pill px-3">غائب</span>
                                     }
+                                    else if (item.Status == "متأخر")
+                                    {
+                                        <span class="badge bg-warning bg-opacity-10 text-dark rounded-pill px-3">متأخر</span>
+                                    }
                                     else
                                     {
-                                        <span class="badge bg-warning bg-opacity-10 text-warning rounded-pill px-3">مستأذن</span>
+                                        <span class="badge bg-info bg-opacity-10 text-info rounded-pill px-3">@item.Status</span>
                                     }
                                 </td>
-                                <td class="text-muted">@item.Notes</td>
+                                <td>
+                                    @if (item.Status == "متأخر" && item.DelayMinutes > 0)
+                                    {
+                                        <span class="text-muted small">
+                                            <i class="bi bi-clock-history text-warning"></i> @item.DelayMinutes دقيقة
+                                        </span>
+                                    }
+                                    else
+                                    {
+                                        <span class="text-muted small">-</span>
+                                    }
+                                </td>
+                                <td class="text-muted small" style="max-width: 200px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;">
+                                    @item.Notes
+                                </td>
                                 <td class="text-center">
                                     <div class="btn-group" role="group">
-                                        <a asp-action="Edit" asp-route-id="@item.Id" class="btn btn-outline-warning btn-sm">تعديل</a>
-                                        <a asp-action="Delete" asp-route-id="@item.Id" class="btn btn-outline-danger btn-sm">حذف</a>
+                                        <a asp-action="Edit" asp-route-id="@item.Id" class="btn btn-outline-warning btn-sm shadow-sm" title="تعديل">
+                                            <i class="bi bi-pencil"></i>
+                                        </a>
+                                        <a asp-action="Delete" asp-route-id="@item.Id" class="btn btn-outline-danger btn-sm shadow-sm" title="حذف">
+                                            <i class="bi bi-trash"></i>
+                                        </a>
                                     </div>
+                                </td>
+                            </tr>
+                        }
+                        @if (!Model.Any())
+                        {
+                            <tr>
+                                <td colspan="6" class="text-center py-5 text-muted">
+                                    <i class="bi bi-inbox fs-1 d-block mb-2"></i>
+                                    لا توجد سجلات حضور حالياً
                                 </td>
                             </tr>
                         }
@@ -68,3 +100,16 @@
         </div>
     </div>
 </div>
+
+<style>
+    /* تحسينات بصرية إضافية للجدول */
+    .table-hover tbody tr:hover {
+        background-color: rgba(25, 135, 84, 0.02);
+        transition: 0.2s;
+    }
+
+    .badge {
+        font-weight: 600;
+        font-size: 0.85rem;
+    }
+</style>
