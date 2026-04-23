@@ -46,6 +46,7 @@ namespace QuranCenters.Core.Entities
         public virtual ICollection<Payment> Payments { get; set; }
 
         // 🌟 الحل الرئيسي: إضافة هذه الأسطر لربط الجداول
+        public string? ParentEmail { get; set; } // أضف هذا السطر لربط الطالب بحساب ولي الأمر
         public virtual ICollection<Attendance> Attendances { get; set; } = new List<Attendance>();
         public virtual ICollection<Memorization> Memorizations { get; set; } = new List<Memorization>();
         public virtual ICollection<PointsLedger> PointsLedgers { get; set; } = new List<PointsLedger>();

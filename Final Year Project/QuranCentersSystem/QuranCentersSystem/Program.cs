@@ -13,10 +13,16 @@ using QuranCenters.Infrastructure.Services;
 using System.Text;
 using System.Text.Json.Serialization;
 using Rotativa.AspNetCore;
+<<<<<<< HEAD
 using QuranCenters.Core.Interfaces;
 using QuranCenters.Application.Interfaces;
 using QuranCenters.Infrastructure.Repositories;
 using QuranCenters.Infrastructure.Hubs;
+=======
+using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.IdentityModel.Tokens;
+using System.Text;
+>>>>>>> 7097dff658495d1d8b18b5d9bb1a3b0e942784ad
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -37,7 +43,12 @@ builder.Services.AddDbContext<ApplicationDbContext>(options =>
     options.EnableSensitiveDataLogging();
 });
 
+<<<<<<< HEAD
 builder.Services.AddDefaultIdentity<IdentityUser>(options =>
+=======
+// --- 2. إعداد نظام الهوية لاستخدام ApplicationUser ---
+builder.Services.AddDefaultIdentity<ApplicationUser>(options =>
+>>>>>>> 7097dff658495d1d8b18b5d9bb1a3b0e942784ad
 {
     options.SignIn.RequireConfirmedAccount = false;
     options.Password.RequireDigit = false;
@@ -49,28 +60,55 @@ builder.Services.AddDefaultIdentity<IdentityUser>(options =>
     .AddRoles<IdentityRole>()
     .AddEntityFrameworkStores<ApplicationDbContext>();
 
+<<<<<<< HEAD
 var jwtSettings = builder.Configuration.GetSection("JwtSettings");
 var secretKey = jwtSettings["SecretKey"] ?? "ItqanQuranSystem2026SecureKeyMustBe32CharsOrMore!!";
 
 builder.Services.AddAuthentication(options =>
 {
+=======
+// --- 3. إعدادات JWT Authentication لـ Flutter ---
+// نجلب القيم من ملف appsettings.json الذي أعددناه
+var jwtSettings = builder.Configuration.GetSection("Jwt");
+var key = Encoding.UTF8.GetBytes(jwtSettings["Key"] ?? "YourSuperSecretKey12345_MustBeLong");
+
+// --- تعديل نظام Authentication ليدعم الويب والموبايل معاً ---
+builder.Services.AddAuthentication(options =>
+{
+    // نجعل الكوكيز هي الافتراضية للمتصفح (MVC)
+    options.DefaultScheme = IdentityConstants.ApplicationScheme;
+>>>>>>> 7097dff658495d1d8b18b5d9bb1a3b0e942784ad
     options.DefaultAuthenticateScheme = IdentityConstants.ApplicationScheme;
     options.DefaultChallengeScheme = IdentityConstants.ApplicationScheme;
 })
 .AddJwtBearer(JwtBearerDefaults.AuthenticationScheme, options =>
 {
+<<<<<<< HEAD
+=======
+    // إعدادات الـ JWT الخاصة بـ Flutter (تبقى كما هي)
+>>>>>>> 7097dff658495d1d8b18b5d9bb1a3b0e942784ad
     options.TokenValidationParameters = new TokenValidationParameters
     {
         ValidateIssuer = true,
         ValidateAudience = true,
         ValidateLifetime = true,
         ValidateIssuerSigningKey = true,
+<<<<<<< HEAD
         ValidIssuer = jwtSettings["Issuer"] ?? "ItqanQuranSystem",
         ValidAudience = jwtSettings["Audience"] ?? "ItqanFlutterApp",
         IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(secretKey))
     };
 });
 
+=======
+        ValidIssuer = builder.Configuration["Jwt:Issuer"],
+        ValidAudience = builder.Configuration["Jwt:Audience"],
+        IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(builder.Configuration["Jwt:Key"]))
+    };
+});
+
+// --- 4. إعداد سياسة CORS لـ Flutter ---
+>>>>>>> 7097dff658495d1d8b18b5d9bb1a3b0e942784ad
 builder.Services.AddCors(options =>
 {
     options.AddPolicy("AllowFlutter", policy =>
@@ -88,6 +126,7 @@ builder.Services.AddControllersWithViews()
 
 builder.Services.AddRazorPages();
 
+<<<<<<< HEAD
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen(c =>
 {
@@ -117,11 +156,18 @@ if (app.Environment.IsDevelopment())
     app.UseDeveloperExceptionPage();
 }
 else
+=======
+var app = builder.Build();
+
+// --- 5. إعدادات Middleware ---
+if (!app.Environment.IsDevelopment())
+>>>>>>> 7097dff658495d1d8b18b5d9bb1a3b0e942784ad
 {
     app.UseExceptionHandler("/Home/Error");
     app.UseHsts();
 }
 
+<<<<<<< HEAD
 app.UseSwagger();
 app.UseSwaggerUI(c =>
 {
@@ -132,6 +178,13 @@ app.UseSwaggerUI(c =>
 app.UseHttpsRedirection();
 app.UseStaticFiles();
 app.UseRouting();
+=======
+app.UseHttpsRedirection();
+app.UseStaticFiles();
+app.UseRouting();
+
+// تفعيل CORS قبل الـ Authentication
+>>>>>>> 7097dff658495d1d8b18b5d9bb1a3b0e942784ad
 app.UseCors("AllowFlutter");
 app.UseAuthentication();
 app.UseAuthorization();
@@ -142,13 +195,21 @@ app.MapControllerRoute(name: "default", pattern: "{controller=Home}/{action=Inde
 app.MapRazorPages();
 app.MapHub<NotificationHub>("/notificationHub");
 
+<<<<<<< HEAD
+=======
+// --- 6. بذر البيانات (Seed Data) ---
+>>>>>>> 7097dff658495d1d8b18b5d9bb1a3b0e942784ad
 using (var scope = app.Services.CreateScope())
 {
     var services = scope.ServiceProvider;
+    var userManager = services.GetRequiredService<UserManager<ApplicationUser>>();
     var roleManager = services.GetRequiredService<RoleManager<IdentityRole>>();
-    var userManager = services.GetRequiredService<UserManager<IdentityUser>>();
 
+<<<<<<< HEAD
     string[] roleNames = { "Admin", "Teacher", "Student", "Parent" };
+=======
+    string[] roleNames = { "Admin", "Teacher", "Parent" };
+>>>>>>> 7097dff658495d1d8b18b5d9bb1a3b0e942784ad
     foreach (var roleName in roleNames)
     {
         if (!await roleManager.RoleExistsAsync(roleName))
@@ -158,14 +219,28 @@ using (var scope = app.Services.CreateScope())
     }
 
     var adminEmail = "admin@quransystems.com";
+<<<<<<< HEAD
     var adminUser = await userManager.FindByEmailAsync(adminEmail);
     if (adminUser == null)
+=======
+    var existingUser = await userManager.FindByEmailAsync(adminEmail);
+
+    if (existingUser == null)
+>>>>>>> 7097dff658495d1d8b18b5d9bb1a3b0e942784ad
     {
-        var user = new IdentityUser { UserName = adminEmail, Email = adminEmail, EmailConfirmed = true };
-        var result = await userManager.CreateAsync(user, "Admin@123");
+        var admin = new ApplicationUser
+        {
+            UserName = adminEmail,
+            Email = adminEmail,
+            EmailConfirmed = true,
+            Role = "Admin",
+            IsActive = true
+        };
+
+        var result = await userManager.CreateAsync(admin, "Admin@123");
         if (result.Succeeded)
         {
-            await userManager.AddToRoleAsync(user, "Admin");
+            await userManager.AddToRoleAsync(admin, "Admin");
         }
     }
 }

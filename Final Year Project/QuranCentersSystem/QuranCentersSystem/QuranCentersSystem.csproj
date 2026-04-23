@@ -7,7 +7,11 @@
   </PropertyGroup>
 
   <ItemGroup>
+<<<<<<< HEAD
     <PackageReference Include="Microsoft.AspNetCore.Authentication.JwtBearer" Version="8.0.23" />
+=======
+    <PackageReference Include="Microsoft.AspNetCore.Authentication.JwtBearer" Version="8.0.0" />
+>>>>>>> 7097dff658495d1d8b18b5d9bb1a3b0e942784ad
     <PackageReference Include="Microsoft.AspNetCore.Identity.EntityFrameworkCore" Version="8.0.23" />
     <PackageReference Include="Microsoft.AspNetCore.Identity.UI" Version="8.0.23" />
     <PackageReference Include="Microsoft.AspNetCore.SignalR.Client" Version="10.0.6" />
@@ -22,7 +26,11 @@
     <PackageReference Include="Microsoft.VisualStudio.Web.CodeGeneration.Design" Version="8.0.23" />
     <PackageReference Include="QRCoder" Version="1.8.0" />
     <PackageReference Include="Rotativa.AspNetCore" Version="1.4.0" />
+<<<<<<< HEAD
     <PackageReference Include="Swashbuckle.AspNetCore" Version="6.5.0" />
+=======
+    <PackageReference Include="System.IdentityModel.Tokens.Jwt" Version="8.17.0" />
+>>>>>>> 7097dff658495d1d8b18b5d9bb1a3b0e942784ad
   </ItemGroup>
 
   <ItemGroup>

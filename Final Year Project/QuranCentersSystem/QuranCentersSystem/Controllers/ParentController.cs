@@ -16,9 +16,9 @@ namespace QuranCentersSystem.Controllers
     public class ParentsController : Controller
     {
         private readonly ApplicationDbContext _context;
-        private readonly UserManager<IdentityUser> _userManager;
+        private readonly UserManager<ApplicationUser> _userManager;
 
-        public ParentsController(ApplicationDbContext context, UserManager<IdentityUser> userManager)
+        public ParentsController(ApplicationDbContext context, UserManager<ApplicationUser> userManager)
         {
             _context = context;
             _userManager = userManager;
@@ -39,7 +39,7 @@ namespace QuranCentersSystem.Controllers
             if (ModelState.IsValid)
             {
                 // 1. إنشاء حساب الدخول في جدول Identity باستخدام الإيميل
-                var user = new IdentityUser { UserName = parent.Email, Email = parent.Email, EmailConfirmed = true };
+                var user = new ApplicationUser { UserName = parent.Email, Email = parent.Email, EmailConfirmed = true };
                 var result = await _userManager.CreateAsync(user, "Parent@123"); // كلمة مرور افتراضية
 
                 if (result.Succeeded)

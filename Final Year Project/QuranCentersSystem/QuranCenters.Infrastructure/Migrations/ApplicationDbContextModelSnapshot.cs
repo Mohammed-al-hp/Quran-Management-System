@@ -87,6 +87,11 @@ namespace QuranCenters.Infrastructure.Migrations
                         .IsConcurrencyToken()
                         .HasColumnType("nvarchar(max)");
 
+                    b.Property<string>("Discriminator")
+                        .IsRequired()
+                        .HasMaxLength(21)
+                        .HasColumnType("nvarchar(21)");
+
                     b.Property<string>("Email")
                         .HasMaxLength(256)
                         .HasColumnType("nvarchar(256)");
@@ -138,6 +143,10 @@ namespace QuranCenters.Infrastructure.Migrations
                         .HasFilter("[NormalizedUserName] IS NOT NULL");
 
                     b.ToTable("AspNetUsers", (string)null);
+
+                    b.HasDiscriminator().HasValue("IdentityUser");
+
+                    b.UseTphMappingStrategy();
                 });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityUserClaim<string>", b =>
@@ -225,7 +234,11 @@ namespace QuranCenters.Infrastructure.Migrations
                     b.ToTable("AspNetUserTokens", (string)null);
                 });
 
+<<<<<<< HEAD:Final Year Project/QuranCentersSystem/QuranCenters.Infrastructure/Migrations/ApplicationDbContextModelSnapshot.cs
             modelBuilder.Entity("QuranCenters.Core.Entities.Attendance", b =>
+=======
+            modelBuilder.Entity("QuranCentersSystem.Models.Attendance", b =>
+>>>>>>> 7097dff658495d1d8b18b5d9bb1a3b0e942784ad:Final Year Project/QuranCentersSystem/QuranCentersSystem/Migrations/ApplicationDbContextModelSnapshot.cs
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
@@ -608,6 +621,7 @@ namespace QuranCenters.Infrastructure.Migrations
                     b.ToTable("Teachers");
                 });
 
+<<<<<<< HEAD:Final Year Project/QuranCentersSystem/QuranCenters.Infrastructure/Migrations/ApplicationDbContextModelSnapshot.cs
             modelBuilder.Entity("QuranCenters.Infrastructure.Identity.ApplicationUser", b =>
                 {
                     b.Property<int>("Id")
@@ -619,6 +633,11 @@ namespace QuranCenters.Infrastructure.Migrations
                     b.Property<string>("Email")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
+=======
+            modelBuilder.Entity("QuranCentersSystem.Models.ApplicationUser", b =>
+                {
+                    b.HasBaseType("Microsoft.AspNetCore.Identity.IdentityUser");
+>>>>>>> 7097dff658495d1d8b18b5d9bb1a3b0e942784ad:Final Year Project/QuranCentersSystem/QuranCentersSystem/Migrations/ApplicationDbContextModelSnapshot.cs
 
                     b.Property<bool>("IsActive")
                         .HasColumnType("bit");
@@ -627,6 +646,7 @@ namespace QuranCenters.Infrastructure.Migrations
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
+<<<<<<< HEAD:Final Year Project/QuranCentersSystem/QuranCenters.Infrastructure/Migrations/ApplicationDbContextModelSnapshot.cs
                     b.Property<string>("Username")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
@@ -634,6 +654,9 @@ namespace QuranCenters.Infrastructure.Migrations
                     b.HasKey("Id");
 
                     b.ToTable("ApplicationUsers");
+=======
+                    b.HasDiscriminator().HasValue("ApplicationUser");
+>>>>>>> 7097dff658495d1d8b18b5d9bb1a3b0e942784ad:Final Year Project/QuranCentersSystem/QuranCentersSystem/Migrations/ApplicationDbContextModelSnapshot.cs
                 });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRoleClaim<string>", b =>
