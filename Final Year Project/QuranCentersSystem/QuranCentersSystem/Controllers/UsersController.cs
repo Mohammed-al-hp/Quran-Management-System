@@ -19,7 +19,7 @@ namespace QuranCentersSystem.Controllers
 
         public async Task<IActionResult> Index()
         {
-            var users = await _context.ApplicationUsers.ToListAsync();
+            var users = await _context.Users.ToListAsync();
             return View(users);
         }
 
@@ -40,7 +40,7 @@ namespace QuranCentersSystem.Controllers
 
                     // ج- حفظ في جدول العرض المخصص
                     user.IsActive = true;
-                    _context.ApplicationUsers.Add(user);
+                    _context.Users.Add(user);
                     await _context.SaveChangesAsync();
 
                     return RedirectToAction(nameof(Index));
@@ -51,7 +51,7 @@ namespace QuranCentersSystem.Controllers
                     ModelState.AddModelError("", error.Description);
                 }
             }
-            return View("Index", await _context.ApplicationUsers.ToListAsync());
+            return View("Index", await _context.Users.ToListAsync());
         }
     }
 }
