@@ -1,14 +1,15 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
+﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using QuranCentersSystem.Data;
 using QuranCentersSystem.Models;
-using Microsoft.AspNetCore.Authorization;
 using Rotativa.AspNetCore;
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Threading.Tasks;
 
 namespace QuranCentersSystem.Controllers
 {
@@ -16,11 +17,15 @@ namespace QuranCentersSystem.Controllers
     [Authorize(Roles = "Admin")]
     public class StudentsController : Controller
     {
+        // 1. أضف هذا السطر هنا (تعريف المتغيرات)
         private readonly ApplicationDbContext _context;
+        private readonly UserManager<ApplicationUser> _userManager;
 
-        public StudentsController(ApplicationDbContext context)
+        // 2. قم بتعديل هذا الجزء (الـ Constructor) لاستقبال الـ UserManager
+        public StudentsController(ApplicationDbContext context, UserManager<ApplicationUser> userManager)
         {
             _context = context;
+            _userManager = userManager;
         }
 
         public async Task<IActionResult> Index(int? circleId)
@@ -39,60 +44,130 @@ namespace QuranCentersSystem.Controllers
             return View(students);
         }
 
+        // 🌟 دالة عرض تفاصيل الطالب وسجل إنجازاته
+        public async Task<IActionResult> Details(int? id)
+        {
+            if (id == null) return NotFound();
+
+            var student = await _context.Students
+                .Include(s => s.Circle)
+                .Include(s => s.StudentAchievements) // جلب سجل الإنجازات لعرضها في الجدول
+                .FirstOrDefaultAsync(m => m.Id == id);
+
+            if (student == null) return NotFound();
+
+            return View(student);
+        }
+
         public async Task<IActionResult> PrintStudentReport(int id)
         {
             var student = await _context.Students
                 .Include(s => s.Circle)
                 .Include(s => s.Attendances)
-                .Include(s => s.Memorizations)
+                .Include(s => s.StudentAchievements) // تأكد من استخدام الاسم الصحيح للعلاقة (Achievements)
                 .FirstOrDefaultAsync(m => m.Id == id);
 
             if (student == null) return NotFound();
 
             return new ViewAsPdf("StudentReportPDF", student)
             {
-                FileName = "StudentReport.pdf",
+                FileName = $"Report_{student.Name}.pdf",
                 PageSize = Rotativa.AspNetCore.Options.Size.A4,
                 PageOrientation = Rotativa.AspNetCore.Options.Orientation.Portrait,
                 CustomSwitches = "--encoding utf-8"
             };
         }
 
-        // 2. عرض صفحة إضافة طالب جديد (معدل لإرسال قائمة أولياء الأمور)
+        // GET: Students/Create
         public IActionResult Create()
         {
             ViewData["CircleId"] = new SelectList(_context.Circles, "Id", "Name");
-            // 🌟 إضافة قائمة أولياء الأمور
             ViewBag.ParentId = new SelectList(_context.Set<Parent>(), "Id", "Name");
             return View();
         }
 
-        // 3. استقبال بيانات الطالب الجديد (معدل لاستقبال ParentId)
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("Id,Name,Phone,BirthDate,ParentPhoneNumber,AgreedToTerms,CircleId,ParentId")] Student student)
+        public async Task<IActionResult> Create([Bind("Id,Name,Phone,BirthDate,ParentPhoneNumber,AgreedToTerms,CircleId,ParentId,ParentEmail,Username,Password,CurrentSurah,ParentRelation,NewParentName,NewParentPhone")] Student student, IFormFile? StudentPhoto)
         {
-            if (!student.AgreedToTerms)
-            {
-                ModelState.AddModelError("AgreedToTerms", "يجب الموافقة على شروط الانضمام للمركز");
-            }
+            ModelState.Remove("AgreedToTerms");
+            ModelState.Remove("StudentPhoto");
 
             if (ModelState.IsValid)
             {
+                // 1. معالجة الصورة الشخصية
+                if (StudentPhoto != null && StudentPhoto.Length > 0)
+                {
+                    var fileName = Guid.NewGuid().ToString() + Path.GetExtension(StudentPhoto.FileName);
+                    var filePath = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot/uploads/students", fileName);
+                    Directory.CreateDirectory(Path.GetDirectoryName(filePath));
+                    using (var stream = new FileStream(filePath, FileMode.Create))
+                    {
+                        await StudentPhoto.CopyToAsync(stream);
+                    }
+                    student.ImagePath = "/uploads/students/" + fileName;
+                }
+
+                // 2. معالجة ولي الأمر (تحديث: ضمان عدم توقف الحفظ بسبب البريد الإلكتروني)
+                if (!string.IsNullOrEmpty(student.NewParentName))
+                {
+                    var newParent = new Parent
+                    {
+                        Name = student.NewParentName,
+                        Phone = student.NewParentPhone
+                    };
+                    _context.Add(newParent);
+                    await _context.SaveChangesAsync();
+                    student.ParentId = newParent.Id;
+                }
+
                 student.Status = "نشط";
                 student.JoinDate = DateTime.Now;
 
+                // 3. حفظ بيانات الطالب في جدول Students
                 _context.Add(student);
                 await _context.SaveChangesAsync();
+
+                // 4. 🌟 الربط التلقائي: إنشاء حساب مستخدم في Identity 🌟
+                if (!string.IsNullOrEmpty(student.Username) && !string.IsNullOrEmpty(student.Password))
+                {
+                    var userAccount = new ApplicationUser
+                    {
+                        UserName = student.Username,
+                        Email = student.ParentEmail ?? $"{student.Username}@system.com",
+                        EmailConfirmed = true,
+                        IsActive = true,
+                        // ✅ الحل: إعطاء قيمة للحقل المطلوب في قاعدة البيانات لتجنب خطأ NULL
+                        Role = "Student"
+                    };
+
+                    var result = await _userManager.CreateAsync(userAccount, student.Password);
+
+                    if (result.Succeeded)
+                    {
+                        // إسناد الدور رسمياً في نظام الصلاحيات
+                        await _userManager.AddToRoleAsync(userAccount, "Student");
+                    }
+                    else
+                    {
+                        // في حال فشل إنشاء الحساب (مثلاً كلمة المرور ضعيفة)
+                        foreach (var error in result.Errors)
+                        {
+                            ModelState.AddModelError("", "خطأ في إنشاء حساب المستخدم: " + error.Description);
+                        }
+                        // ملاحظة: قد ترغب في حذف سجل الطالب هنا إذا كان حساب المستخدم ضرورياً جداً
+                    }
+                }
+
+                TempData["SuccessMessage"] = $"تمت إضافة الطالب {student.Name} بنجاح!";
                 return RedirectToAction(nameof(Index));
             }
 
             ViewData["CircleId"] = new SelectList(_context.Circles, "Id", "Name", student.CircleId);
-            // 🌟 إعادة إرسال القائمة في حال فشل الـ Validation
             ViewBag.ParentId = new SelectList(_context.Set<Parent>(), "Id", "Name", student.ParentId);
             return View(student);
         }
-
+        // GET: Students/Edit/5
         public async Task<IActionResult> Edit(int? id)
         {
             if (id == null) return NotFound();
@@ -100,35 +175,47 @@ namespace QuranCentersSystem.Controllers
             var student = await _context.Students.FindAsync(id);
             if (student == null) return NotFound();
 
+            // تجهيز القائمة المنسدلة للحلقات لتظهر في صفحة التعديل
             ViewData["CircleId"] = new SelectList(_context.Circles, "Id", "Name", student.CircleId);
-            // 🌟 إضافة قائمة أولياء الأمور عند التعديل
-            ViewBag.ParentId = new SelectList(_context.Set<Parent>(), "Id", "Name", student.ParentId);
             return View(student);
         }
 
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(int id, [Bind("Id,Name,Phone,BirthDate,ParentPhoneNumber,AgreedToTerms,CircleId,ParentId,Status,JoinDate")] Student student)
+        public async Task<IActionResult> Edit(int id, [Bind("Id,Name,ParentPhoneNumber,CircleId,Status,JoinDate")] Student studentForm)
         {
-            if (id != student.Id) return NotFound();
+            if (id != studentForm.Id) return NotFound();
+
+            ModelState.Remove("Phone");
+            ModelState.Remove("BirthDate");
+            ModelState.Remove("ParentId");
+            ModelState.Remove("AgreedToTerms"); // مهم جداً لأننا أزلنا هذا الحقل
 
             if (ModelState.IsValid)
             {
                 try
                 {
-                    _context.Update(student);
+                    var existingStudent = await _context.Students.FindAsync(id);
+                    if (existingStudent == null) return NotFound();
+
+                    existingStudent.Name = studentForm.Name;
+                    existingStudent.CircleId = studentForm.CircleId;
+                    existingStudent.ParentPhoneNumber = studentForm.ParentPhoneNumber;
+                    existingStudent.Status = studentForm.Status;
+                    existingStudent.JoinDate = studentForm.JoinDate;
+
                     await _context.SaveChangesAsync();
                 }
                 catch (DbUpdateConcurrencyException)
                 {
-                    if (!_context.Students.Any(e => e.Id == student.Id)) return NotFound();
+                    if (!_context.Students.Any(e => e.Id == studentForm.Id)) return NotFound();
                     else throw;
                 }
                 return RedirectToAction(nameof(Index));
             }
-            ViewData["CircleId"] = new SelectList(_context.Circles, "Id", "Name", student.CircleId);
-            ViewBag.ParentId = new SelectList(_context.Set<Parent>(), "Id", "Name", student.ParentId);
-            return View(student);
+
+            ViewData["CircleId"] = new SelectList(_context.Circles, "Id", "Name", studentForm.CircleId);
+            return View(studentForm);
         }
 
         [Authorize(Roles = "Admin")]

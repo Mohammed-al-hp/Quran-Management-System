@@ -4,6 +4,28 @@
     ViewData["Title"] = "إضافة حلقة جديدة";
 }
 
+@* ===== إشعار النجاح (مخفي افتراضياً) ===== *@
+<div id="successToast"
+     style="display:none; position:fixed; top:30px; left:50%; transform:translateX(-50%);
+            z-index:9999; min-width:360px; max-width:500px;"
+     dir="rtl">
+    <div class="card border-0 shadow-lg rounded-4 overflow-hidden">
+        <div class="card-body p-0">
+            <div class="bg-success p-4 text-white text-center">
+                <div style="font-size:3rem; animation: bounceIn 0.6s ease;">✅</div>
+                <h5 class="fw-bold mt-2 mb-1">تمّت الإضافة بنجاح!</h5>
+                <p class="mb-0 opacity-75 small">تمت إضافة الحلقة إلى النظام</p>
+            </div>
+            <div class="bg-white p-3 text-center">
+                <div class="progress rounded-pill" style="height:5px;">
+                    <div id="toastProgress" class="progress-bar bg-success" style="width:100%; transition: width 3s linear;"></div>
+                </div>
+                <small class="text-muted mt-2 d-block">سيتم التوجيه تلقائياً...</small>
+            </div>
+        </div>
+    </div>
+</div>
+
 <div class="container-fluid" dir="rtl">
     <div class="card shadow-sm bg-white p-4 rounded border-0">
         <div class="d-flex justify-content-between align-items-center mb-4 border-bottom pb-3">
@@ -15,31 +37,68 @@
 
         <div class="row justify-content-center">
             <div class="col-md-10 col-lg-8">
-                <form asp-action="Create" class="bg-light p-4 rounded shadow-sm">
-                    <div asp-validation-summary="ModelOnly" class="text-danger mb-3"></div>
+                <form asp-action="Create" method="post" class="bg-light p-4 rounded shadow-sm" id="circleForm">
+                    <div asp-validation-summary="All" class="text-danger mb-3"></div>
 
-                    <div class="row">
-                        <div class="col-md-6 mb-3">
-                            <label asp-for="Name" class="form-label fw-bold text-secondary">اسم الحلقة</label>
-                            <div class="input-group">
-                                <span class="input-group-text"><i class="bi bi-mortarboard"></i></span>
-                                <input asp-for="Name" class="form-control" placeholder="أدخل اسم الحلقة..." />
-                            </div>
-                            <span asp-validation-for="Name" class="text-danger small"></span>
+                    @* ===== 1. اسم الحلقة ===== *@
+                    <div class="mb-3">
+                        <label asp-for="Name" class="form-label fw-bold text-secondary">اسم الحلقة</label>
+                        <div class="input-group">
+                            <span class="input-group-text"><i class="bi bi-mortarboard"></i></span>
+                            <input asp-for="Name" class="form-control" placeholder="أدخل اسم الحلقة..." />
                         </div>
-
-                        <div class="col-md-6 mb-3">
-                            <label asp-for="TeacherId" class="form-label fw-bold text-secondary">المحفظ المسؤول</label>
-                            <div class="input-group">
-                                <span class="input-group-text"><i class="bi bi-person-badge"></i></span>
-                                <select asp-for="TeacherId" class="form-select" asp-items="ViewBag.TeacherId">
-                                    <option value="">-- اختر المحفظ --</option>
-                                </select>
-                            </div>
-                            <span asp-validation-for="TeacherId" class="text-danger small"></span>
-                        </div>
+                        <span asp-validation-for="Name" class="text-danger small"></span>
                     </div>
 
+                    @* ===== 2. نوع الحلقة ===== *@
+                    <div class="mb-3">
+                        <label asp-for="CircleType" class="form-label fw-bold text-secondary">نوع الحلقة</label>
+                        <div class="input-group">
+                            <span class="input-group-text"><i class="bi bi-collection"></i></span>
+                            <select asp-for="CircleType" class="form-select">
+                                <option value="">-- اختر نوع الحلقة --</option>
+                                <option value="حلقة عامة">حلقة عامة</option>
+                                <option value="دورة صيفية">دورة صيفية (برسوم اشتراك)</option>
+                            </select>
+                        </div>
+                        <span asp-validation-for="CircleType" class="text-danger small"></span>
+                    </div>
+
+                    @* ===== 3. الفئة (الجنس) ===== *@
+                    <div class="mb-3">
+                        <label asp-for="Gender" class="form-label fw-bold text-secondary">الفئة</label>
+                        <div class="d-flex gap-4 p-3 bg-white rounded border">
+                            <div class="form-check">
+                                <input class="form-check-input" type="radio" asp-for="Gender" value="ذكور" id="genderMale" checked>
+                                <label class="form-check-label fw-bold" for="genderMale">
+                                    <i class="bi bi-gender-male text-primary me-1"></i> ذكور
+                                </label>
+                            </div>
+                            <div class="form-check">
+                                <input class="form-check-input" type="radio" asp-for="Gender" value="إناث" id="genderFemale">
+                                <label class="form-check-label fw-bold" for="genderFemale">
+                                    <i class="bi bi-gender-female text-danger me-1"></i> إناث
+                                </label>
+                            </div>
+                        </div>
+                        <span asp-validation-for="Gender" class="text-danger small"></span>
+                    </div>
+
+                    @* ===== 4. قائمة المحفظين (متعدد الاختيار) ===== *@
+                    <div class="mb-3">
+                        <label class="form-label fw-bold text-secondary">المحفظون المسؤولون</label>
+                        <div class="input-group">
+                            <span class="input-group-text"><i class="bi bi-person-badge"></i></span>
+                            <select name="TeacherIds" class="form-select" multiple style="min-height:110px;"
+                                    asp-items="ViewBag.TeacherId">
+                            </select>
+                        </div>
+                        @* نحتفظ أيضاً بـ TeacherId (أول محفظ مختار) لتوافق الـ Model *@
+                        <small class="text-muted">اضغط Ctrl (أو اضغط باستمرار على الشاشة) لاختيار أكثر من محفظ</small>
+                        <span asp-validation-for="TeacherId" class="text-danger small"></span>
+                    </div>
+
+                    @* ===== 5. مواعيد الحلقة ===== *@
                     <div class="mb-3">
                         <label class="form-label fw-bold text-secondary">أيام الحلقة</label>
                         <div class="d-flex flex-wrap gap-3 p-3 bg-white rounded border">
@@ -73,7 +132,7 @@
                             <div id="prayersSection" class="row g-3">
                                 <div class="col-md-6">
                                     <label class="small text-muted">بداية الحلقة (بعد صلاة)</label>
-                                    <select name="StartPrayer" class="form-select">
+                                    <select asp-for="StartPrayer" class="form-select">
                                         <option>الفجر</option>
                                         <option>الظهر</option>
                                         <option>العصر</option>
@@ -83,7 +142,7 @@
                                 </div>
                                 <div class="col-md-6">
                                     <label class="small text-muted">نهاية الحلقة (إلى صلاة/وقت)</label>
-                                    <select name="EndPrayer" class="form-select">
+                                    <select asp-for="EndPrayer" class="form-select">
                                         <option>الشروق</option>
                                         <option>الظهر</option>
                                         <option>العصر</option>
@@ -96,11 +155,11 @@
                             <div id="hoursSection" class="row g-3" style="display: none;">
                                 <div class="col-md-6">
                                     <label class="small text-muted">وقت البداية</label>
-                                    <input type="time" name="StartTime" class="form-control">
+                                    <input type="time" asp-for="StartTime" class="form-control">
                                 </div>
                                 <div class="col-md-6">
                                     <label class="small text-muted">وقت النهاية</label>
-                                    <input type="time" name="EndTime" class="form-control">
+                                    <input type="time" asp-for="EndTime" class="form-control">
                                 </div>
                             </div>
                         </div>
@@ -126,5 +185,29 @@
             document.getElementById('prayersSection').style.display = isPrayers ? 'flex' : 'none';
             document.getElementById('hoursSection').style.display = isPrayers ? 'none' : 'flex';
         }
+
+        // ===== إشعار النجاح بعد الإرسال =====
+        document.getElementById('circleForm').addEventListener('submit', function (e) {
+            const name = document.querySelector('input[name="Name"]').value.trim();
+            if (!name) return; // دع التحقق الطبيعي يعمل
+
+            e.preventDefault();
+
+            const toast = document.getElementById('successToast');
+            toast.style.display = 'block';
+
+            // إعادة ضبط شريط التقدم للبدء من 100% ثم يتناقص
+            const bar = document.getElementById('toastProgress');
+            bar.style.width = '100%';
+            setTimeout(() => { bar.style.width = '0%'; }, 50);
+
+            // إرسال الفورم فعلياً بعد 3 ثوانٍ
+            setTimeout(() => {
+                e.target.submit();
+            }, 3000);
+        });
     </script>
+    @{
+        await Html.RenderPartialAsync("_ValidationScriptsPartial");
+    }
 }

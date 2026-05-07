@@ -11,15 +11,16 @@ namespace QuranCentersSystem.Models
         [DataType(DataType.Date)]
         public DateTime Date { get; set; } = DateTime.Now.Date;
 
-        public string Status { get; set; } // (حاضر، غائب، مستأذن، متأخر)
+        // جعلنا الحالة تقبل قيمة فارغة برمجياً لتجنب مشاكل التحقق قبل الحفظ
+        public string? Status { get; set; }
 
-        // 🌟 الإضافة الجديدة: لتتبع الانضباط بالدقائق
         public int DelayMinutes { get; set; }
 
-        public string Notes { get; set; }
+        // إضافة علامة الاستفهام لتعريف المودل أنها قد تكون فارغة في الواجهة
+        public string? Notes { get; set; }
 
         [Required]
         public int StudentId { get; set; }
-        public virtual Student Student { get; set; }
+        public virtual Student? Student { get; set; }
     }
 }

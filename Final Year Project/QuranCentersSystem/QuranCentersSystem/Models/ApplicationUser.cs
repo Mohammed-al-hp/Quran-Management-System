@@ -12,5 +12,6 @@ namespace QuranCentersSystem.Models
 
 		[Display(Name = "حالة الحساب")]
 		public bool IsActive { get; set; } = true;
+
 	}
 }

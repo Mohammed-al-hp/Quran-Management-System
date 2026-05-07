@@ -4,120 +4,120 @@
     ViewData["Title"] = "إدارة الطلاب";
 }
 
-<div class="container-fluid py-4" dir="rtl">
-    <div class="card shadow-sm border-0 bg-white p-4 rounded" style="border-radius: 15px !important;">
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 
-        @* العنوان وزر الإضافة *@
-        <div class="d-flex justify-content-between align-items-center mb-4 border-bottom pb-3">
-            <div>
-                <h4 class="m-0 text-success fw-bold">إدارة شؤون الطلاب</h4>
-                <p class="text-muted mb-0 small">عرض وتصفية بيانات طلاب المركز</p>
+<div class="container-fluid py-5" dir="rtl">
+    <div class="card shadow-lg border-0 bg-white p-4 p-md-5" style="border-radius: 20px !important;">
+
+        @* الرأس (نفس كودك الأصلي مع تحسينات بسيطة) *@
+        <div class="row align-items-center mb-5 border-bottom pb-4">
+            <div class="col-md-8 text-center text-md-start mb-3 mb-md-0">
+                <div class="d-flex align-items-center justify-content-center justify-content-md-start gap-3 mb-2">
+                    <div class="p-3 rounded-3" style="background-color: #e8f5e9; border: 1px solid #c8e6c9;">
+                        <i class="bi bi-people-fill" style="font-size: 2.5rem; color: #1a531a;"></i>
+                    </div>
+                    <div>
+                        <h1 class="fw-black m-0" style="font-size: 3rem; color: #1a531a; letter-spacing: -1px;">إدارة شؤون الطلاب</h1>
+                    </div>
+                </div>
+                <p class="text-muted mt-3 mb-0 fs-5 ps-md-5 ms-md-4">عرض وتصفية بيانات طلاب المركز وإدارة سجلاتهم الأكاديمية</p>
             </div>
-            <a asp-controller="Students" asp-action="Create" class="btn btn-success d-flex align-items-center gap-2 px-4 shadow-sm">
-                <i class="bi bi-person-plus-fill"></i> إضافة طالب جديد
-            </a>
+            <div class="col-md-4 text-center text-md-end">
+                <a asp-controller="Students" asp-action="Create" class="btn btn-lg d-inline-flex align-items-center gap-2 px-5 py-3 shadow-sm transition-hover text-white" style="border-radius: 12px; background-color: #1a531a; border: none;">
+                    <i class="bi bi-person-plus-fill fs-4"></i>
+                    <span class="fw-bold">إضافة طالب جديد</span>
+                </a>
+            </div>
         </div>
 
-        @* قسم التصفية والبحث *@
-        <div class="row g-3 mb-4">
-            <div class="col-md-5">
-                <label class="form-label small fw-bold text-muted">البحث السريع:</label>
-                <div class="input-group shadow-sm">
-                    <span class="input-group-text bg-white border-end-0">
-                        <i class="bi bi-search text-muted"></i>
-                    </span>
-                    <input type="text" id="searchInput" class="form-control border-start-0 bg-white" placeholder="ابحث باسم الطالب...">
+        @* قسم التصفية والبحث (كودك الأصلي) *@
+        <div class="p-4 rounded-4 mb-5 border shadow-sm" style="background-color: #fcfdfc;">
+            <div class="row g-4 align-items-end">
+                <div class="col-lg-5">
+                    <label class="form-label small fw-bold text-dark mb-2 ms-1"><i class="bi bi-search ms-1 text-success"></i> البحث السريع:</label>
+                    <div class="input-group input-group-lg shadow-sm">
+                        <span class="input-group-text bg-white border-end-0" style="border-radius: 0 12px 12px 0;"><i class="bi bi-search text-muted"></i></span>
+                        <input type="text" id="searchInput" class="form-control border-start-0 bg-white fs-6" placeholder="اكتب اسم الطالب هنا..." style="border-radius: 12px 0 0 12px; text-align: right;">
+                    </div>
                 </div>
-            </div>
-
-            <div class="col-md-4">
-                <label class="form-label small fw-bold text-muted">تصفية حسب الحلقة:</label>
-                <form method="get" asp-action="Index" id="filterForm">
-                    <select name="circleId" class="form-select bg-white shadow-sm" onchange="document.getElementById('filterForm').submit()">
-                        <option value="">-- عرض جميع الحلقات --</option>
-                        @foreach (var circle in (IEnumerable<QuranCentersSystem.Models.Circle>)ViewBag.Circles)
-                        {
-                            <!option value="@circle.Id" @(ViewBag.SelectedCircle == circle.Id ? "selected" : "")>
-                            @circle.Name
-                            </!option>
-                        }
-                    </select>
-                </form>
-            </div>
-
-            <div class="col-md-3 d-flex align-items-end justify-content-md-end gap-2">
-                <a asp-action="Index" class="btn btn-outline-secondary shadow-sm" title="إعادة تعيين">
-                    <i class="bi bi-arrow-clockwise"></i>
-                </a>
-                <button class="btn btn-outline-dark px-3 shadow-sm" onclick="window.print()">
-                    <i class="bi bi-printer"></i> طباعة
-                </button>
+                <div class="col-lg-4">
+                    <label class="form-label small fw-bold text-dark mb-2 ms-1"><i class="bi bi-filter-circle ms-1 text-success"></i> تصفية حسب الحلقة:</label>
+                    <form method="get" asp-action="Index" id="filterForm">
+                        <select name="circleId" class="form-select form-select-lg bg-white shadow-sm border-2" onchange="document.getElementById('filterForm').submit()" style="border-radius: 12px; direction: rtl;">
+                            <option value="">-- جميع الحلقات --</option>
+                            @if (ViewBag.Circles != null)
+                            {
+                                foreach (var circle in (IEnumerable<QuranCentersSystem.Models.Circle>)ViewBag.Circles)
+                                {
+                                    <!option value="@circle.Id" @(ViewBag.SelectedCircle == circle.Id ? "selected" : "")>@circle.Name</!option>
+                                }
+                            }
+                        </select>
+                    </form>
+                </div>
+                <div class="col-lg-3 d-flex gap-2">
+                    <button class="btn btn-outline-dark btn-lg flex-grow-1 shadow-sm" onclick="window.print()" style="border-radius: 12px;"><i class="bi bi-printer ms-1"></i> طباعة</button>
+                </div>
             </div>
         </div>
 
         @* الجدول *@
-        <div class="table-responsive">
-            <table class="table table-hover align-middle" id="studentsTable">
-                <thead class="table-light">
+        <div class="table-responsive rounded-4 shadow-sm border">
+            <table class="table table-hover align-middle mb-0" id="studentsTable">
+                <thead class="custom-table-header">
                     <tr>
-                        <th class="py-3 px-3">اسم الطالب</th>
-                        <th class="py-3 text-center">تاريخ الانضمام</th>
-                        <th class="py-3 text-center">الحلقة</th>
-                        <th class="py-3 text-center">الحالة</th>
-                        <th class="py-3 text-center" style="min-width: 150px;">الإجراءات</th>
+                        <th class="py-4 px-4 text-white border-0 fw-bold fs-5">اسم الطالب</th>
+                        <th class="py-4 text-center text-white border-0 fw-bold fs-5">تاريخ الانضمام</th>
+                        <th class="py-4 text-center text-white border-0 fw-bold fs-5">الحلقة</th>
+                        <th class="py-4 text-center text-white border-0 fw-bold fs-5">الحالة</th>
+                        <th class="py-4 text-center text-white border-0 fw-bold fs-5" style="min-width: 200px;">الإجراءات</th>
                     </tr>
                 </thead>
-                <tbody>
+                <tbody class="bg-white">
                     @if (!Model.Any())
                     {
-                        <tr class="no-data-row">
-                            <td colspan="5" class="text-center py-5 text-muted">
-                                <i class="bi bi-info-circle d-block mb-2" style="font-size: 2rem;"></i>
-                                لا يوجد طلاب مضافين في هذه الحلقة حالياً.
-                            </td>
-                        </tr>
+                        <tr class="no-data-row"><td colspan="5" class="text-center py-5 text-muted">لا توجد بيانات حالياً</td></tr>
                     }
                     else
                     {
                         @foreach (var item in Model)
                         {
-                            <tr>
-                                <td class="fw-bold text-dark px-3">@item.Name</td>
-                                <td class="text-center text-muted">@item.JoinDate.ToShortDateString()</td>
+                            <tr class="transition-all border-bottom">
+                                <td class="px-4 py-3">
+                                    <div class="d-flex align-items-center gap-3">
+                                        @if (!string.IsNullOrEmpty(item.ImagePath))
+                                        {
+                                            <img src="@item.ImagePath" class="rounded-circle shadow-sm border" width="45" height="45" style="object-fit: cover;" />
+                                        }
+                                        else
+                                        {
+                                            <div class="avatar-circle">@item.Name.Substring(0, 1)</div>
+                                        }
+                                        <span class="fw-bold text-dark fs-6">@item.Name</span>
+                                    </div>
+                                </td>
+                                <td class="text-center text-muted">@item.JoinDate.ToString("yyyy/MM/dd")</td>
                                 <td class="text-center">
-                                    <span class="badge bg-soft-success text-success px-3 py-2 border">
-                                        @(item.Circle?.Name ?? "بدون حلقة")
+                                    <span class="badge bg-soft-success text-success px-3 py-2 rounded-pill border fw-bold">
+                                        @item.Circle?.Name
                                     </span>
                                 </td>
                                 <td class="text-center">
-                                    @if (item.Status == "نشط")
-                                    {
-                                        <span class="badge bg-success rounded-pill px-3 shadow-sm">نشط</span>
-                                    }
-                                    else
-                                    {
-                                        <span class="badge bg-secondary rounded-pill px-3 shadow-sm">غير نشط</span>
-                                    }
+                                    <span class="badge @(item.Status == "نشط" ? "bg-success" : "bg-secondary") px-3 py-2 rounded-pill shadow-sm fw-bold">@item.Status</span>
                                 </td>
-                                <td>
+                                <td class="py-3">
                                     <div class="d-flex justify-content-center gap-2">
-                                        <a asp-action="Edit" asp-route-id="@item.Id" class="btn btn-sm btn-outline-warning rounded-circle" title="تعديل">
-                                            <i class="bi bi-pencil"></i>
-                                        </a>
+                                        <button type="button" class="btn btn-action btn-info shadow-sm text-white"
+                                                onclick="showDetails('@item.Name', '@item.BirthDate.ToShortDateString()', '@(item.Parent?.Name ?? "غير محدد")', '@item.ParentPhoneNumber', '@item.Phone', '@item.Circle?.Name', '@item.CurrentSurah', '@item.ImagePath')"
+                                                title="تفاصيل الطالب" style="background-color: #0d6efd; border-radius: 10px;">
+                                            <i class="bi bi-person-lines-fill"></i>
+                                        </button>
 
-                                        @* 🌟 تعديل الرابط ليعمل مع دالة طباعة الـ PDF *@
-                                        <a asp-controller="Students" asp-action="PrintStudentReport" asp-route-id="@item.Id" class="btn btn-sm btn-outline-info rounded-circle" title="تحميل تقرير PDF">
-                                            <i class="bi bi-file-earmark-pdf"></i>
-                                        </a>
+                                        <a asp-action="Edit" asp-route-id="@item.Id" class="btn btn-action btn-edit shadow-sm" title="تعديل"><i class="bi bi-pencil-square"></i></a>
 
                                         @if (User.IsInRole("Admin") || User.IsInRole("مدير النظام"))
                                         {
-                                            <form asp-action="Delete" asp-route-id="@item.Id" method="post" onsubmit="return confirm('هل أنت متأكد من حذف هذا الطالب نهائياً؟')" class="d-inline">
-                                                @Html.AntiForgeryToken()
-                                                <button type="submit" class="btn btn-sm btn-outline-danger rounded-circle" title="حذف">
-                                                    <i class="bi bi-trash"></i>
-                                                </button>
-                                            </form>
+                                            <button type="button" onclick="confirmDelete(@item.Id, '@item.Name')" class="btn btn-action btn-delete shadow-sm" title="حذف"><i class="bi bi-trash3-fill"></i></button>
                                         }
                                     </div>
                                 </td>
@@ -130,89 +130,168 @@
     </div>
 </div>
 
+<div class="modal fade" id="detailsModal" tabindex="-1" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered modal-lg">
+        <div class="modal-content border-0 shadow-lg" style="border-radius: 25px; overflow: hidden;">
+            <div class="modal-header text-white p-4 border-0" style="background: linear-gradient(135deg, #1a531a 0%, #2e7d32 100%);">
+                <h4 class="modal-title fw-bold mb-0"><i class="bi bi-card-checklist ms-2"></i> ملف بيانات الطالب</h4>
+                <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body p-0">
+                <div class="row g-0">
+                    <div class="col-md-4 text-center p-4 bg-light d-flex flex-column align-items-center justify-content-center border-start">
+                        <img id="dPhoto" src="/images/default-avatar.png" class="rounded-circle shadow border border-4 border-white mb-3" style="width: 160px; height: 160px; object-fit: cover;">
+                        <h5 id="dName" class="fw-bold text-dark"></h5>
+                        <span id="dCircle" class="badge bg-success rounded-pill px-3 py-2 mt-2"></span>
+                    </div>
+                    <div class="col-md-8 p-4 bg-white">
+                        <div class="row g-4 text-end">
+                            <div class="col-md-6"><label class="text-muted small d-block">تاريخ الميلاد</label><span id="dBirth" class="fw-bold"></span></div>
+                            <div class="col-md-6"><label class="text-muted small d-block">السورة الحالية</label><span id="dSurah" class="fw-bold text-success"></span></div>
+                            <div class="col-md-6"><label class="text-muted small d-block">هاتف الطالب</label><span id="dSPhone" class="fw-bold"></span></div>
+                            <div class="col-md-6"><label class="text-muted small d-block">ولي الأمر</label><span id="dPName" class="fw-bold"></span></div>
+                            <div class="col-12"><label class="text-muted small d-block">هاتف ولي الأمر</label><span id="dPPhone" class="fw-bold text-primary"></span></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer border-0 p-3 bg-light">
+                <button type="button" class="btn btn-secondary px-4" style="border-radius: 12px;" data-bs-dismiss="modal">إغلاق</button>
+            </div>
+        </div>
+    </div>
+</div>
+
 <style>
-    /* التنسيقات الناعمة كما تظهر في الصورة */
-    .bg-soft-success {
-        background-color: #e8f5e9 !important;
-        border: 1px solid #c8e6c9 !important;
+    /* دمج كل الـ Styles الأصلية مع تحسينات الأزرار الجديدة */
+    .custom-table-header {
+        background-color: #1a531a !important;
     }
 
-    .table thead th {
-        font-size: 0.9rem;
-        font-weight: 600;
-        color: #495057;
-        background-color: #f8f9fa;
-        border-bottom: 2px solid #e9ecef;
-    }
+        .custom-table-header th {
+            color: #ffffff !important;
+            background-color: #1a531a !important;
+            vertical-align: middle;
+            padding: 20px;
+        }
 
-    .btn-sm.rounded-circle {
-        width: 34px;
-        height: 34px;
+    .avatar-circle {
+        width: 42px;
+        height: 42px;
+        background: #1a531a;
+        color: #fff;
         display: flex;
         align-items: center;
         justify-content: center;
-        transition: all 0.2s;
+        border-radius: 50%;
+        font-weight: bold;
     }
 
-        .btn-sm.rounded-circle:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+    .btn-action {
+        width: 38px;
+        height: 38px;
+        border-radius: 10px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        transition: 0.3s;
+        border: none;
+    }
+
+    .btn-edit {
+        background-color: #fff3cd;
+        color: #856404;
+    }
+
+        .btn-edit:hover {
+            background-color: #ffc107;
+            color: #fff;
+            transform: translateY(-3px);
         }
 
-    /* تحسين شكل الطباعة */
-    @@media print {
-        .btn, .input-group, #filterForm, label, .text-muted {
-            display: none !important;
+    .btn-delete {
+        background-color: #fce8e8;
+        color: #c53030;
+    }
+
+        .btn-delete:hover {
+            background-color: #e53e3e;
+            color: #fff;
+            transform: translateY(-3px);
         }
 
-        .card {
-            border: none !important;
-            box-shadow: none !important;
-            padding: 0 !important;
-        }
+    .bg-soft-success {
+        background-color: #f1f8f1 !important;
+        color: #1a531a !important;
+    }
 
-        .table {
-            width: 100% !important;
-            border: 1px solid #000;
-        }
-
-        th, td {
-            border: 1px solid #dee2e6 !important;
-        }
+    .fw-black {
+        font-weight: 900 !important;
     }
 </style>
 
 @section Scripts {
     <script>
-        // سكريبت البحث السريع المتطور
-        document.getElementById("searchInput").addEventListener("keyup", function () {
-            var filter = this.value.toLowerCase();
-            var rows = document.querySelectorAll("#studentsTable tbody tr:not(.no-data-row):not(.no-result-row)");
-            var visibleCount = 0;
+        // دالة عرض التفاصيل في Modal
+        function showDetails(name, birth, parent, pPhone, sPhone, circle, surah, photo) {
+            document.getElementById('dName').innerText = name;
+            document.getElementById('dBirth').innerText = birth;
+            document.getElementById('dPName').innerText = parent;
+            document.getElementById('dPPhone').innerText = pPhone || "غير مسجل";
+            document.getElementById('dSPhone').innerText = sPhone || "غير مسجل";
+            document.getElementById('dCircle').innerText = circle || "بدون حلقة";
+            document.getElementById('dSurah').innerText = surah || "لم يبدأ بعد";
+            document.getElementById('dPhoto').src = photo || "/images/default-avatar.png";
+            new bootstrap.Modal(document.getElementById('detailsModal')).show();
+        }
 
-            rows.forEach(row => {
-                var nameText = row.cells[0].textContent.toLowerCase();
-                if (nameText.includes(filter)) {
-                    row.style.display = "";
-                    visibleCount++;
-                } else {
-                    row.style.display = "none";
+        // دالة تأكيد الحذف بـ SweetAlert2
+        function confirmDelete(id, name) {
+            Swal.fire({
+                title: 'هل أنت متأكد؟',
+                text: `سيتم حذف الطالب (${name}) نهائياً من المنظومة!`,
+                icon: 'warning',
+                showCancelButton: true,
+                confirmButtonColor: '#1a531a',
+                cancelButtonColor: '#d33',
+                confirmButtonText: 'نعم، احذف',
+                cancelButtonText: 'إلغاء',
+                borderRadius: '15px'
+            }).then((result) => {
+                if (result.isConfirmed) {
+                    const form = document.createElement('form');
+                    form.method = 'post';
+                    form.action = '/Students/Delete/' + id;
+                    const token = document.querySelector('input[name="__RequestVerificationToken"]');
+                    if (token) form.appendChild(token.cloneNode());
+                    document.body.appendChild(form);
+                    form.submit();
                 }
             });
+        }
 
-            // إظهار رسالة "لا توجد نتائج" عند البحث
-            var existingMsg = document.getElementById("noResultMsg");
-            if (visibleCount === 0 && filter !== "") {
-                if (!existingMsg) {
-                    var tbody = document.querySelector("#studentsTable tbody");
-                    var row = tbody.insertRow();
-                    row.id = "noResultMsg";
-                    row.className = "no-result-row";
-                    row.innerHTML = `<td colspan="5" class="text-center py-4 text-danger fw-bold">لا توجد نتائج بحث مطابقة لـ: "${filter}"</td>`;
-                }
-            } else if (existingMsg) {
-                existingMsg.remove();
-            }
+        // إظهار نافذة النجاح بعد الإضافة
+        @if (TempData["SuccessMessage"] != null)
+        {
+                <text>
+                Swal.fire({
+                    icon: 'success',
+                    title: 'تمت الإضافة بنجاح',
+                    text: '@TempData["SuccessMessage"]',
+                    confirmButtonColor: '#1a531a',
+                    timer: 4000
+                });
+                </text>
+        }
+
+        // محرك البحث السريع (كودك الأصلي)
+        document.getElementById("searchInput").addEventListener("keyup", function () {
+            var filter = this.value.toLowerCase();
+            var rows = document.querySelectorAll("#studentsTable tbody tr:not(.no-data-row)");
+            rows.forEach(row => {
+                var nameText = row.querySelector(".fw-bold").textContent.toLowerCase();
+                row.style.display = nameText.includes(filter) ? "" : "none";
+            });
         });
     </script>
 }

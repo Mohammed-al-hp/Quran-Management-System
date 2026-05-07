@@ -19,29 +19,35 @@ namespace QuranCentersSystem.Controllers
 
         public async Task<IActionResult> Index()
         {
+            // جلب قائمة المستخدمين من قاعدة البيانات
             var users = await _context.Users.ToListAsync();
             return View(users);
         }
-
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create(ApplicationUser user, string Password)
+        public async Task<IActionResult> Create(ApplicationUser user, string Password, string Role)
         {
             if (ModelState.IsValid && !string.IsNullOrEmpty(Password))
             {
-                // أ- إنشاء المستخدم في نظام Identity لتشفير كلمة المرور
-                var ApplicationUser = new ApplicationUser { UserName = user.Email, Email = user.Email, EmailConfirmed = true };
-                var result = await _userManager.CreateAsync(ApplicationUser, Password);
+                // 1. إنشاء المستخدم في Identity
+                var newUser = new ApplicationUser
+                {
+                    UserName = user.Email,
+                    Email = user.Email,
+                    EmailConfirmed = true,
+                   // Name = user.Name, // تأكد أن لديك حقل Name في ApplicationUser
+                    IsActive = true
+                };
+
+                var result = await _userManager.CreateAsync(newUser, Password);
 
                 if (result.Succeeded)
                 {
-                    // ب- إسناد الدور المختار (مدير النظام أو محفظ)
-                    await _userManager.AddToRoleAsync(ApplicationUser, user.Role);
-
-                    // ج- حفظ في جدول العرض المخصص
-                    user.IsActive = true;
-                    _context.Users.Add(user);
-                    await _context.SaveChangesAsync();
+                    // 2. إسناد الدور (مدير، محفظ، إلخ)
+                    if (!string.IsNullOrEmpty(Role))
+                    {
+                        await _userManager.AddToRoleAsync(newUser, Role);
+                    }
 
                     return RedirectToAction(nameof(Index));
                 }

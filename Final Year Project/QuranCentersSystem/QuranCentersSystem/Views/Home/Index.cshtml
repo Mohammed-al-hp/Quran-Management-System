@@ -1,4 +1,5 @@
-﻿@{
+﻿@model QuranCentersSystem.Models.DashboardViewModel
+@{
     ViewData["Title"] = "لوحة التحكم";
 }
 
@@ -14,7 +15,7 @@
                 <div class="card-body d-flex align-items-center justify-content-between p-3">
                     <div>
                         <p class="text-muted small fw-bold mb-1">إجمالي الطلاب</p>
-                        <h3 class="fw-bold mb-0 theme-text">@ViewBag.StudentsCount</h3>
+                        <h3 class="fw-bold mb-0 theme-text">@Model.TotalStudents</h3>
                     </div>
                     <div class="bg-success bg-opacity-10 p-3 rounded-circle">
                         <i class="bi bi-people-fill text-success fs-4"></i>
@@ -28,7 +29,7 @@
                 <div class="card-body d-flex align-items-center justify-content-between p-3">
                     <div>
                         <p class="text-muted small fw-bold mb-1">إجمالي المحفظين</p>
-                        <h2 class="fw-bold mb-0 theme-text">@ViewBag.TeachersCount</h2>
+                        <h2 class="fw-bold mb-0 theme-text">@Model.TotalTeachers</h2>
                     </div>
                     <div class="bg-primary bg-opacity-10 p-3 rounded-circle">
                         <i class="bi bi-person-badge-fill text-primary fs-4"></i>
@@ -42,7 +43,7 @@
                 <div class="card-body d-flex align-items-center justify-content-between p-3">
                     <div>
                         <p class="text-muted small fw-bold mb-1">عدد الحلقات</p>
-                        <h2 class="fw-bold mb-0 theme-text">@ViewBag.CirclesCount</h2>
+                        <h2 class="fw-bold mb-0 theme-text">@Model.TotalCircles</h2>
                     </div>
                     <div class="bg-warning bg-opacity-10 p-3 rounded-circle">
                         <i class="bi bi-mortarboard-fill text-warning fs-4"></i>
@@ -56,7 +57,7 @@
                 <div class="card-body d-flex align-items-center justify-content-between p-3">
                     <div>
                         <p class="text-muted small fw-bold mb-1">حضور اليوم</p>
-                        <h2 class="fw-bold mb-0 theme-text">@ViewBag.TodayAttendance</h2>
+                        <h2 class="fw-bold mb-0 theme-text">@Model.TodayAttendance</h2>
                     </div>
                     <div class="bg-danger bg-opacity-10 p-3 rounded-circle">
                         <i class="bi bi-calendar-check-fill text-danger fs-4"></i>
@@ -66,59 +67,39 @@
         </div>
     </div>
 
-    @* إجراءات سريعة *@
-    <h6 class="text-muted fw-normal mb-3">إجراءات سريعة</h6>
-    <div class="row g-3 mb-4">
-        <div class="col-md-4">
-            <a asp-controller="Students" asp-action="Create" class="text-decoration-none shadow-hover">
-                <div class="card border-0 shadow-sm p-3 h-100 action-card">
-                    <div class="d-flex align-items-center justify-content-between">
-                        <div class="d-flex align-items-center">
-                            <i class="bi bi-person-plus text-success fs-5 me-3"></i>
-                            <h6 class="mb-0 fw-bold theme-text">تسجيل طالب جديد</h6>
-                        </div>
-                        <i class="bi bi-chevron-left text-muted small"></i>
-                    </div>
-                </div>
-            </a>
-        </div>
+    @* الصف الثاني: الإجراءات السريعة *@
+    <div class="row mb-4">
+        <div class="col-12">
+            <div class="card border-0 shadow-sm p-4">
+                <h5 class="fw-normal text-muted mb-3">الإجراءات السريعة</h5>
+                <div class="d-flex flex-wrap gap-3">
+                    @* لاحظ إضافة gap-2 هنا وإزالة الهوامش من الأيقونة *@
+                    <a asp-controller="Students" asp-action="Create" class="btn btn-success shadow-sm flex-fill d-flex align-items-center justify-content-center gap-2 py-3">
+                        <i class="bi bi-person-plus fs-4"></i>
+                        <span class="fw-bold">إضافة طالب جديد</span>
+                    </a>
 
-        <div class="col-md-4">
-            <a asp-controller="Attendances" asp-action="GroupAttendance" class="text-decoration-none shadow-hover">
-                <div class="card border-0 shadow-sm p-3 h-100 action-card">
-                    <div class="d-flex align-items-center justify-content-between">
-                        <div class="d-flex align-items-center">
-                            <i class="bi bi-check2-circle text-primary fs-5 me-3"></i>
-                            <h6 class="mb-0 fw-bold theme-text">تسجيل حضور حلقة</h6>
-                        </div>
-                        <i class="bi bi-chevron-left text-muted small"></i>
-                    </div>
-                </div>
-            </a>
-        </div>
+                    <a asp-controller="Circles" asp-action="Create" class="btn btn-warning shadow-sm flex-fill d-flex align-items-center justify-content-center gap-2 py-3 text-dark">
+                        <i class="bi bi-journal-plus fs-4"></i>
+                        <span class="fw-bold">تسجيل حلقة جديدة</span>
+                    </a>
 
-        <div class="col-md-4">
-            <a asp-controller="Memorizations" asp-action="Create" class="text-decoration-none shadow-hover">
-                <div class="card border-0 shadow-sm p-3 h-100 action-card">
-                    <div class="d-flex align-items-center justify-content-between">
-                        <div class="d-flex align-items-center">
-                            <i class="bi bi-journal-plus text-warning fs-5 me-3"></i>
-                            <h6 class="mb-0 fw-bold theme-text">إضافة ورد حفظ</h6>
-                        </div>
-                        <i class="bi bi-chevron-left text-muted small"></i>
-                    </div>
+                    <a asp-controller="Memorizations" asp-action="Create" class="btn btn-primary shadow-sm flex-fill d-flex align-items-center justify-content-center gap-2 py-3">
+                        <i class="bi bi-calendar-check fs-4"></i>
+                        <span class="fw-bold">تسجيل حضور جديد</span>
+                    </a>
                 </div>
-            </a>
+            </div>
         </div>
     </div>
 
-    @* تحليل المستويات *@
-    <div class="row">
+    @* الصف الثالث: الرسم البياني *@
+    <div class="row mb-4">
         <div class="col-12">
-            <div class="card border-0 shadow-sm p-4 mb-4" style="background-color: var(--bg-card);">
-                <h6 class="text-muted fw-bold mb-4">تحليل مستويات الطلاب (التقييمات)</h6>
+            <div class="card border-0 shadow-sm p-4 text-center">
+                <h5 class="text-muted mb-3">تحليل المستويات الحقيقي</h5>
                 <div style="height: 300px;">
-                    <canvas id="gradesChart"></canvas>
+                    <canvas id="levelsChart"></canvas>
                 </div>
             </div>
         </div>
@@ -126,33 +107,42 @@
 </div>
 
 <style>
-    .container-fluid {
-        margin-top: -15px !important;
-    }
-
-    /* استخدام متغيرات الألوان بدلاً من الألوان الثابتة */
-    .theme-text {
-        color: var(--text-main);
-    }
-
+    /* يمكنك إضافة التنسيقات الإضافية الخاصة بك هنا إن وجدت */
     .stat-card {
-        transition: transform 0.2s ease, background-color 0.3s ease;
-        min-height: 100px;
-        background-color: var(--bg-card);
+        transition: transform 0.2s ease-in-out;
     }
 
         .stat-card:hover {
-            transform: translateY(-3px);
-        }
-
-    .action-card {
-        transition: all 0.3s ease;
-        background-color: var(--bg-card);
-    }
-
-        .action-card:hover {
-            transform: translateY(-3px);
-            box-shadow: 0 5px 15px rgba(0,0,0,0.1) !important;
-            background-color: var(--hover-bg) !important;
+            transform: translateY(-5px);
         }
 </style>
+
+@section Scripts {
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script>
+        document.addEventListener("DOMContentLoaded", function() {
+            const ctx = document.getElementById('levelsChart').getContext('2d');
+
+            const levelsChart = new Chart(ctx, {
+                type: 'polarArea',
+                data: {
+                    labels: ['ممتاز', 'جيد جداً', 'جيد', 'مقبول'],
+                    datasets: [{
+                        data: [@Model.ExcellentCount, @Model.VeryGoodCount, @Model.GoodCount, @Model.FairCount],
+                        backgroundColor: [
+                            'rgba(26, 83, 26, 0.7)',
+                            'rgba(42, 117, 42, 0.7)',
+                            'rgba(201, 160, 80, 0.7)',
+                            'rgba(220, 53, 69, 0.7)'
+                        ],
+                        borderWidth: 1
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false
+                }
+            });
+        });
+    </script>
+}

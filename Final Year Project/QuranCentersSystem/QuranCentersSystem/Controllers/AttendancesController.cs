@@ -4,7 +4,6 @@ using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using QuranCentersSystem.Data;
 using QuranCentersSystem.Models;
-using Microsoft.AspNetCore.Mvc.Localization;
 
 namespace QuranCentersSystem.Controllers
 {
@@ -36,6 +35,10 @@ namespace QuranCentersSystem.Controllers
         {
             if (ModelState.IsValid)
             {
+                // تأمين عدم إرسال قيم Null لقاعدة البيانات
+                attendance.Notes = attendance.Notes ?? "";
+                attendance.Status = attendance.Status ?? "حاضر";
+
                 _context.Add(attendance);
                 await _context.SaveChangesAsync();
                 return RedirectToAction(nameof(Index));
@@ -71,9 +74,10 @@ namespace QuranCentersSystem.Controllers
                 foreach (var item in attendanceStatus)
                 {
                     int studentId = item.Key;
-                    string status = item.Value;
-                    string note = notes.ContainsKey(studentId) ? notes[studentId] : "";
-                    int delay = delayMinutes.ContainsKey(studentId) ? delayMinutes[studentId] : 0;
+                    // تعديل مهم: التأكد من أن القيمة ليست Null باستخدام عامل ??
+                    string status = item.Value ?? "حاضر";
+                    string note = (notes != null && notes.ContainsKey(studentId)) ? (notes[studentId] ?? "") : "";
+                    int delay = (delayMinutes != null && delayMinutes.ContainsKey(studentId)) ? delayMinutes[studentId] : 0;
 
                     var existingAttendance = await _context.Attendances
                         .FirstOrDefaultAsync(a => a.StudentId == studentId && a.Date.Date == date.Date);

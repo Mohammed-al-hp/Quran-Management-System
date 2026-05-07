@@ -1,18 +1,12 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
-using Microsoft.AspNetCore.Mvc;
-using Microsoft.AspNetCore.Mvc.Rendering;
+﻿using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using QuranCentersSystem.Data;
 using QuranCentersSystem.Models;
-using Microsoft.AspNetCore.Authorization; // 👈 سطر استدعاء مكتبة الصلاحيات
+using Microsoft.AspNetCore.Authorization;
 
 namespace QuranCentersSystem.Controllers
 {
-    [Authorize(Roles = "Admin,Teacher")] // يسمح للمدير والمحفظ فقط
-    [Authorize] // 👈 قفل الشاشات وجعلها تتطلب تسجيل الدخول
+    [Authorize]
     public class MemorizationsController : Controller
     {
         private readonly ApplicationDbContext _context;
@@ -22,128 +16,126 @@ namespace QuranCentersSystem.Controllers
             _context = context;
         }
 
-        // ==========================================
-        // 1. شاشة الـ Index (التحويل التلقائي)
-        // ==========================================
-        public IActionResult Index()
+        // 1. العرض الرئيسي للمتابعة اليومية
+        public async Task<IActionResult> Index(int? circleId, DateTime? date)
         {
-            return RedirectToAction(nameof(Create));
+            var targetDate = date ?? DateTime.Today;
+            ViewBag.SelectedDate = targetDate;
+            ViewBag.Circles = await _context.Circles.ToListAsync();
+
+            var query = _context.Students
+                .Where(s => s.Status == "نشط")
+                .AsQueryable();
+
+            if (circleId.HasValue)
+            {
+                query = query.Where(s => s.CircleId == circleId);
+                ViewBag.CurrentCircleId = circleId;
+            }
+
+            var students = await query.Select(s => new StudentDailyViewModel
+            {
+                StudentId = s.Id,
+                StudentName = s.Name,
+                // استخدام موديل StudentAchievement الجديد
+                LastAchievement = _context.StudentAchievements
+                    .Where(m => m.StudentId == s.Id)
+                    .OrderByDescending(m => m.Date)
+                    .FirstOrDefault(),
+                // استخدام موديل Attendance
+                IsPresent = _context.Attendances
+                    .Any(a => a.StudentId == s.Id && a.Date.Date == targetDate.Date)
+            }).ToListAsync();
+
+            return View(students);
         }
 
-        // ==========================================
-        // 2. شاشة التسجيل اليومي الافتراضية
-        // ==========================================
-        public IActionResult Create(int? studentId)
+        // 2. حفظ إنجاز التسميع (AJAX)
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> SaveRecord([FromBody] StudentAchievement record)
         {
-            ViewBag.StudentId = new SelectList(_context.Students.Where(s => s.Status == "نشط"), "Id", "Name", studentId);
+            if (record == null || record.StudentId <= 0)
+                return Json(new { success = false, message = "بيانات غير مكتملة" });
 
-            ViewBag.RecentMemorizations = _context.Memorizations
-                .Include(m => m.Student)
+            try
+            {
+                if (record.Date == default) record.Date = DateTime.Today;
+
+                _context.StudentAchievements.Add(record);
+                await _context.SaveChangesAsync();
+
+                return Json(new { success = true, message = "تم تسجيل الإنجاز بنجاح" });
+            }
+            catch (Exception ex)
+            {
+                return Json(new { success = false, message = "خطأ في الخادم: " + ex.Message });
+            }
+        }
+
+        // 3. جلب آخر بيانات الطالب تلقائياً لتسهيل الإدخال
+        [HttpGet]
+        public async Task<IActionResult> GetStudentContext(int studentId)
+        {
+            var lastRecord = await _context.StudentAchievements
+                .Where(m => m.StudentId == studentId)
                 .OrderByDescending(m => m.Date)
-                .Take(10)
-                .ToList();
+                .Select(m => new {
+                    m.SurahEnd,
+                    m.AyahEnd,
+                    m.Type
+                })
+                .FirstOrDefaultAsync();
 
-            return View();
+            return Json(lastRecord);
         }
 
+        // 4. تحديث حالة الحضور السريع
         [HttpPost]
-        [ValidateAntiForgeryToken]
-        public IActionResult Create(Memorization memorization)
+        public async Task<IActionResult> UpdateAttendance(int studentId, bool isPresent)
         {
-            if (ModelState.IsValid)
+            var date = DateTime.Today;
+            var attendance = await _context.Attendances
+                .FirstOrDefaultAsync(a => a.StudentId == studentId && a.Date.Date == date);
+
+            if (isPresent)
             {
-                _context.Memorizations.Add(memorization);
-                _context.SaveChanges();
-
-                TempData["Success"] = "تم تسجيل درجة الحفظ بنجاح!";
-                return RedirectToAction(nameof(Create), new { studentId = memorization.StudentId });
-            }
-
-            ViewBag.StudentId = new SelectList(_context.Students.Where(s => s.Status == "نشط"), "Id", "Name", memorization.StudentId);
-            return View(memorization);
-        }
-
-        // ==========================================
-        // 3. شاشة المتابعة والأسئلة (نظام الأسئلة)
-        // ==========================================
-        public async Task<IActionResult> FollowUp()
-        {
-            ViewBag.Students = await _context.Students.Where(s => s.Status == "نشط").ToListAsync();
-            return View();
-        }
-
-        [HttpPost]
-        [ValidateAntiForgeryToken]
-        public async Task<IActionResult> FollowUp(Memorization memorization, string[] Questions, string[] Answers)
-        {
-            if (ModelState.IsValid)
-            {
-                _context.Add(memorization);
-                await _context.SaveChangesAsync();
-
-                if (Questions != null)
+                if (attendance == null)
                 {
-                    for (int i = 0; i < Questions.Length; i++)
+                    _context.Attendances.Add(new Attendance
                     {
-                        if (!string.IsNullOrEmpty(Questions[i]))
-                        {
-                            var q = new MemorizationQuestion
-                            {
-                                MemorizationId = memorization.Id,
-                                QuestionText = Questions[i],
-                                StudentAnswer = Answers.Length > i ? Answers[i] : ""
-                            };
-                            _context.MemorizationQuestions.Add(q);
-                        }
-                    }
-                    await _context.SaveChangesAsync();
+                        StudentId = studentId,
+                        Date = date,
+                        Status = "حاضر" //
+                    });
                 }
-
-                TempData["Success"] = "تم حفظ جلسة المتابعة والأسئلة بنجاح!";
-                return RedirectToAction(nameof(FollowUp));
             }
-
-            ViewBag.Students = await _context.Students.Where(s => s.Status == "نشط").ToListAsync();
-            return View(memorization);
-        }
-
-        // ==========================================
-        // 4. شاشة التتبيع المباشر (تسميع بدون أسئلة)
-        // ==========================================
-        public async Task<IActionResult> DailyRecord()
-        {
-            ViewBag.Students = await _context.Students.Where(s => s.Status == "نشط").ToListAsync();
-
-            // جلب آخر 5 عمليات حفظ تمت اليوم لقرائتها في يسار الشاشة
-            var today = DateTime.Today;
-            var recentRecords = await _context.Memorizations
-                .Include(m => m.Student)
-                .Where(m => m.Date >= today)
-                .OrderByDescending(m => m.Id)
-                .Take(5)
-                .ToListAsync();
-
-            // إرسال العمليات الأخيرة عبر الـ ViewBag
-            ViewBag.RecentRecords = recentRecords;
-
-            return View();
-        }
-
-        [HttpPost]
-        [ValidateAntiForgeryToken]
-        public async Task<IActionResult> DailyRecord(Memorization memorization)
-        {
-            if (ModelState.IsValid)
+            else if (attendance != null)
             {
-                _context.Add(memorization);
-                await _context.SaveChangesAsync();
-
-                TempData["Success"] = "تم تسجيل التتبيع للحفظ بنجاح!";
-                return RedirectToAction(nameof(DailyRecord));
+                _context.Remove(attendance);
             }
 
-            ViewBag.Students = await _context.Students.Where(s => s.Status == "نشط").ToListAsync();
-            return View(memorization);
+            await _context.SaveChangesAsync();
+            return Json(new { success = true });
         }
+
+        // 5. حفظ الإنجاز الجماعي للحلقة
+        [HttpPost]
+        public async Task<IActionResult> SaveGroupAchievement([FromBody] GroupAchievement groupRecord)
+        {
+            if (groupRecord == null) return Json(new { success = false });
+
+            _context.GroupAchievements.Add(groupRecord); //[cite: 1]
+            await _context.SaveChangesAsync();
+            return Json(new { success = true });
+        }
+    }
+
+    public class StudentDailyViewModel
+    {
+        public int StudentId { get; set; }
+        public string StudentName { get; set; }
+        public StudentAchievement LastAchievement { get; set; }
+        public bool IsPresent { get; set; }
     }
 }

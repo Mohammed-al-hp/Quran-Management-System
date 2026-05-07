@@ -7,6 +7,18 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <Compile Remove="Views\Memorizations\**" />
+    <Content Remove="Views\Memorizations\**" />
+    <EmbeddedResource Remove="Views\Memorizations\**" />
+    <None Remove="Views\Memorizations\**" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Content Remove="Views\Reports\StudentReport.cshtml" />
+    <Content Remove="Views\Students\StudentReportPDF.cshtml" />
+  </ItemGroup>
+
+  <ItemGroup>
     <PackageReference Include="Microsoft.AspNetCore.Authentication.JwtBearer" Version="8.0.0" />
     <PackageReference Include="Microsoft.AspNetCore.Identity.EntityFrameworkCore" Version="8.0.23" />
     <PackageReference Include="Microsoft.AspNetCore.Identity.UI" Version="8.0.23" />
@@ -23,6 +35,7 @@
 
   <ItemGroup>
     <Folder Include="Migrations\" />
+    <Folder Include="Views\Reports\" />
     <Folder Include="wwwroot\Rotativa\" />
   </ItemGroup>
 

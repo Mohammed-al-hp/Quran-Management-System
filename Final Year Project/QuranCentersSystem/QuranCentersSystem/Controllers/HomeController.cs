@@ -4,8 +4,6 @@ using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using QuranCentersSystem.Data;
 using QuranCentersSystem.Models;
-using System.Linq;
-using System.Threading.Tasks;
 
 namespace QuranCentersSystem.Controllers
 {
@@ -26,58 +24,57 @@ namespace QuranCentersSystem.Controllers
             var user = await _userManager.GetUserAsync(User);
             if (user == null) return Challenge();
 
+            // إنشاء الكائن الذي سنرسله للشاشة
+            var model = new DashboardViewModel();
+
             // --- 1. إحصائيات المدير (Admin) ---
             if (User.IsInRole("Admin"))
             {
-                ViewBag.StudentsCount = await _context.Students.CountAsync();
-                ViewBag.TeachersCount = await _context.Teachers.CountAsync();
-                ViewBag.CirclesCount = await _context.Circles.CountAsync();
-                ViewBag.TodayAttendance = await GetTodayAttendanceCount(null);
+                model.TotalStudents = await _context.Students.CountAsync();
+                model.TotalTeachers = await _context.Teachers.CountAsync();
+                model.TotalCircles = await _context.Circles.CountAsync();
+                model.TodayAttendance = await GetTodayAttendanceCount(null);
             }
             // --- 2. إحصائيات المحفظ (Teacher) ---
             else if (User.IsInRole("Teacher"))
             {
-                // نربط المحفظ بحلقاته عن طريق البريد الإلكتروني
                 var teacher = await _context.Teachers
                     .Include(t => t.Circles)
-                    .FirstOrDefaultAsync(t => t.Phone == user.PhoneNumber || t.Name == user.UserName); // تخصيص الربط حسب موديلك
+                    .FirstOrDefaultAsync(t => t.Phone == user.PhoneNumber || t.Name == user.UserName);
 
                 if (teacher != null)
                 {
                     var circleIds = teacher.Circles.Select(c => c.Id).ToList();
-                    ViewBag.StudentsCount = await _context.Students.CountAsync(s => circleIds.Contains(s.CircleId));
-                    ViewBag.CirclesCount = teacher.Circles.Count;
-                    ViewBag.TodayAttendance = await GetTodayAttendanceCount(circleIds);
+                    model.TotalStudents = await _context.Students.CountAsync(s => circleIds.Contains(s.CircleId));
+                    model.TotalCircles = teacher.Circles.Count;
+                    model.TodayAttendance = await GetTodayAttendanceCount(circleIds);
+                    model.TotalTeachers = 1; // المحفظ يرى نفسه فقط
                 }
             }
             // --- 3. إحصائيات ولي الأمر (Parent) ---
             else if (User.IsInRole("Parent"))
             {
-                ViewBag.MyStudentsCount = await _context.Students.CountAsync(s => s.ParentEmail == user.Email);
+                model.TotalStudents = await _context.Students.CountAsync(s => s.ParentEmail == user.Email);
             }
 
-            // بيانات الرسم البياني (عمة للمركز أو مخصصة)
-            await PrepareGradesChartData();
+            // تعبئة بيانات الرسم البياني داخل الموديل
+            model.ExcellentCount = await _context.StudentAchievements.CountAsync(m => m.Grade == "ممتاز");
+            model.VeryGoodCount = await _context.StudentAchievements.CountAsync(m => m.Grade == "جيد جداً");
+            model.GoodCount = await _context.StudentAchievements.CountAsync(m => m.Grade == "جيد");
+            model.FairCount = await _context.StudentAchievements.CountAsync(m => m.Grade == "مقبول");
 
-            return View();
+            // إرسال الموديل بالكامل إلى الشاشة
+            return View(model);
         }
 
-        private async Task<int> GetTodayAttendanceCount(List<int> circleIds)
+        private async Task<int> GetTodayAttendanceCount(List<int>? circleIds)
         {
-            var query = _context.Memorizations.Where(m => m.Date.Date == System.DateTime.Today);
-            if (circleIds != null)
+            var query = _context.StudentAchievements.Where(m => m.Date.Date == System.DateTime.Today);
+            if (circleIds != null && circleIds.Any())
             {
                 query = query.Where(m => circleIds.Contains(m.Student.CircleId));
             }
             return await query.Select(m => m.StudentId).Distinct().CountAsync();
-        }
-
-        private async Task PrepareGradesChartData()
-        {
-            ViewBag.ExcellentCount = await _context.Memorizations.CountAsync(m => m.Grade == "ممتاز");
-            ViewBag.VeryGoodCount = await _context.Memorizations.CountAsync(m => m.Grade == "جيد جداً");
-            ViewBag.GoodCount = await _context.Memorizations.CountAsync(m => m.Grade == "جيد");
-            ViewBag.FairCount = await _context.Memorizations.CountAsync(m => m.Grade == "مقبول");
         }
     }
 }

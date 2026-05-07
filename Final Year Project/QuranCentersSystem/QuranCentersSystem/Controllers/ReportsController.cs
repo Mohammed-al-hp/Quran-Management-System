@@ -22,7 +22,7 @@ namespace QuranCentersSystem.Controllers
                 .Where(a => a.StudentId == id)
                 .ToList();
 
-            var memorization = _context.Memorizations
+            var memorization = _context.StudentAchievements
                 .Where(m => m.StudentId == id)
                 .ToList();
 
@@ -41,7 +41,7 @@ namespace QuranCentersSystem.Controllers
                 .Where(a => a.StudentId == id)
                 .ToList();
 
-            var memorization = _context.Memorizations
+            var memorization = _context.StudentAchievements
                 .Where(m => m.StudentId == id)
                 .ToList();
 

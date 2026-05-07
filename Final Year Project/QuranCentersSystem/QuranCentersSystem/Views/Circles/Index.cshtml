@@ -1,5 +1,10 @@
 ﻿@model IEnumerable<QuranCentersSystem.Models.Circle>
 
+@{
+    var selectedGender = Context.Request.Query["gender"].ToString();
+    var selectedType = Context.Request.Query["circleType"].ToString();
+}
+
 <div class="container-fluid" dir="rtl">
     <div class="card shadow-sm border-0 mb-4 rounded-3">
         <div class="card-body p-4">
@@ -23,17 +28,17 @@
                 <div class="col-md-5">
                     <label class="form-label small fw-bold">نوع الحلقة</label>
                     <select name="circleType" class="form-select border-0 shadow-sm" onchange="this.form.submit()">
-                        <option value="الكل">جميع الأنواع</option>
-                        <option value="1">حلقة 1</option>
-                        <option value="2">حلقة 2</option>
+                        <option value="الكل" selected="@(string.IsNullOrEmpty(selectedType) || selectedType == "الكل")">جميع الأنواع</option>
+                        <option value="حلقة عامة" selected="@(selectedType == "حلقة عامة")">حلقة عامة</option>
+                        <option value="دورة صيفية" selected="@(selectedType == "دورة صيفية")">دورة صيفية</option>
                     </select>
                 </div>
                 <div class="col-md-5">
                     <label class="form-label small fw-bold">الجنس</label>
                     <select name="gender" class="form-select border-0 shadow-sm" onchange="this.form.submit()">
-                        <option value="الكل">الكل</option>
-                        <option value="ذكر">ذكر</option>
-                        <option value="أنثى">أنثى</option>
+                        <option value="الكل" selected="@(string.IsNullOrEmpty(selectedGender) || selectedGender == "الكل")">الكل</option>
+                        <option value="ذكور" selected="@(selectedGender == "ذكور")">ذكور</option>
+                        <option value="إناث" selected="@(selectedGender == "إناث")">إناث</option>
                     </select>
                 </div>
                 <div class="col-md-2 d-flex align-items-end">
@@ -48,6 +53,7 @@
             <thead class="bg-light">
                 <tr class="text-secondary small text-uppercase">
                     <th class="ps-4 py-3">اسم الحلقة</th>
+                    <th>نوع الحلقة</th>
                     <th>المحفظ المسؤول</th>
                     <th class="text-center">عدد الطلاب</th>
                     <th>المواعيد</th>
@@ -65,9 +71,23 @@
                                 </div>
                                 <div>
                                     <div class="fw-bold text-dark">@item.Name</div>
-                                    <span class="badge bg-light text-muted border">@item.CircleType | @item.Gender</span>
+                                    <span class="badge bg-light text-muted border">@item.Gender</span>
                                 </div>
                             </div>
+                        </td>
+                        <td>
+                            @if (item.CircleType == "دورة صيفية")
+                            {
+                                <span class="badge bg-warning text-dark px-3 py-2 rounded-pill">
+                                    <i class="bi bi-sun-fill me-1"></i> دورة صيفية
+                                </span>
+                            }
+                            else
+                            {
+                                <span class="badge bg-success bg-opacity-10 text-success px-3 py-2 rounded-pill border border-success border-opacity-25">
+                                    <i class="bi bi-book-fill me-1"></i> حلقة عامة
+                                </span>
+                            }
                         </td>
                         <td>
                             <div class="d-flex align-items-center">
@@ -76,21 +96,39 @@
                             </div>
                         </td>
                         <td class="text-center">
-                            <div class="h6 mb-0 fw-bold text-primary">@item.Students.Count</div>
-                            <small class="text-muted small-xs">طالب مقيد</small>
+                            <div class="h6 mb-0 fw-bold text-primary">@item.Students?.Count</div>
+                            <small class="text-muted">طالب مقيد</small>
                         </td>
                         <td>
                             <div class="small">
                                 <i class="bi bi-calendar-event text-muted me-1"></i> @item.SelectedDays <br />
                                 <i class="bi bi-clock-history text-muted me-1"></i>
-                                @(item.TimingType == "Prayers" ? "بعد " + item.StartPrayer : item.StartTime?.ToString(@"hh\:mm"))
+                                @if (item.TimingType == "Prayers")
+                                {
+                                    <span>بعد @item.StartPrayer</span>
+                                }
+                                else
+                                {
+                                    <span>@(item.StartTime?.ToString(@"hh\:mm") ?? "--:--")</span>
+                                }
                             </div>
                         </td>
                         <td class="text-center pe-4">
                             <div class="btn-group">
-                                <a href="#" class="btn btn-sm btn-outline-warning border-0"><i class="bi bi-pencil"></i></a>
-                                <a href="#" class="btn btn-sm btn-outline-info border-0"><i class="bi bi-eye"></i></a>
-                                <button class="btn btn-sm btn-outline-danger border-0"><i class="bi bi-trash"></i></button>
+                                <a asp-action="Edit" asp-route-id="@item.Id" class="btn btn-sm btn-outline-warning border-0" title="تعديل">
+                                    <i class="bi bi-pencil"></i>
+                                </a>
+
+                                <button onclick="showDetails(@item.Id)" class="btn btn-sm btn-outline-info border-0" title="عرض">
+                                    <i class="bi bi-eye"></i>
+                                </button>
+
+                                <form asp-action="Delete" asp-route-id="@item.Id" method="post" class="d-inline"
+                                      onsubmit="return confirm('هل أنت متأكد من حذف هذه الحلقة؟');">
+                                    <button type="submit" class="btn btn-sm btn-outline-danger border-0" title="حذف">
+                                        <i class="bi bi-trash"></i>
+                                    </button>
+                                </form>
                             </div>
                         </td>
                     </tr>
@@ -99,3 +137,24 @@
         </table>
     </div>
 </div>
+
+<div class="modal fade" id="detailsModal" tabindex="-1" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content border-0 shadow" id="modalContent">
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    <script>
+        function showDetails(id) {
+            // جلب محتوى Partial View وعرضه داخل الـ Modal
+            $.get('@Url.Action("Details", "Circles")/' + id, function (data) {
+                $('#modalContent').html(data);
+                $('#detailsModal').modal('show');
+            }).fail(function() {
+                alert("حدث خطأ أثناء جلب بيانات الحلقة.");
+            });
+        }
+    </script>
+}

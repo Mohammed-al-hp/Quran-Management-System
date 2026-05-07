@@ -3,6 +3,7 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using QuranCentersSystem.Data;
 
@@ -11,9 +12,11 @@ using QuranCentersSystem.Data;
 namespace QuranCentersSystem.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    partial class ApplicationDbContextModelSnapshot : ModelSnapshot
+    [Migration("20260505094205_MakePhoneNullable")]
+    partial class MakePhoneNullable
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -246,9 +249,11 @@ namespace QuranCentersSystem.Migrations
                         .HasColumnType("int");
 
                     b.Property<string>("Notes")
+                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("Status")
+                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<int>("StudentId")
@@ -313,7 +318,7 @@ namespace QuranCentersSystem.Migrations
                     b.ToTable("Circles");
                 });
 
-            modelBuilder.Entity("QuranCentersSystem.Models.GroupAchievement", b =>
+            modelBuilder.Entity("QuranCentersSystem.Models.Memorization", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
@@ -321,23 +326,80 @@ namespace QuranCentersSystem.Migrations
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
 
-                    b.Property<int>("CircleId")
-                        .HasColumnType("int");
-
-                    b.Property<string>("Content")
+                    b.Property<string>("CurrentSurah")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<DateTime>("Date")
                         .HasColumnType("datetime2");
 
-                    b.Property<string>("Subject")
+                    b.Property<string>("DayName")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<int?>("FromAyah")
+                        .HasColumnType("int");
+
+                    b.Property<string>("Grade")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<int>("MistakesCount")
+                        .HasColumnType("int");
+
+                    b.Property<string>("Notes")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("Scope")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<int>("StudentId")
+                        .HasColumnType("int");
+
+                    b.Property<string>("SurahName")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<int?>("ToAyah")
+                        .HasColumnType("int");
+
+                    b.Property<string>("Type")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.HasKey("Id");
 
-                    b.ToTable("GroupAchievements");
+                    b.HasIndex("StudentId");
+
+                    b.ToTable("Memorizations");
+                });
+
+            modelBuilder.Entity("QuranCentersSystem.Models.MemorizationQuestion", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<int>("MemorizationId")
+                        .HasColumnType("int");
+
+                    b.Property<string>("QuestionText")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("StudentAnswer")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("MemorizationId");
+
+                    b.ToTable("MemorizationQuestions");
                 });
 
             modelBuilder.Entity("QuranCentersSystem.Models.Parent", b =>
@@ -349,6 +411,7 @@ namespace QuranCentersSystem.Migrations
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
 
                     b.Property<string>("Email")
+                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("Name")
@@ -408,7 +471,7 @@ namespace QuranCentersSystem.Migrations
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
 
-                    b.Property<bool?>("AgreedToTerms")
+                    b.Property<bool>("AgreedToTerms")
                         .HasColumnType("bit");
 
                     b.Property<DateTime>("BirthDate")
@@ -416,12 +479,6 @@ namespace QuranCentersSystem.Migrations
 
                     b.Property<int>("CircleId")
                         .HasColumnType("int");
-
-                    b.Property<string>("CurrentSurah")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("ImagePath")
-                        .HasColumnType("nvarchar(max)");
 
                     b.Property<DateTime>("JoinDate")
                         .HasColumnType("datetime2");
@@ -439,17 +496,11 @@ namespace QuranCentersSystem.Migrations
                     b.Property<string>("ParentPhoneNumber")
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<string>("Password")
-                        .HasColumnType("nvarchar(max)");
-
                     b.Property<string>("Phone")
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("Status")
                         .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("Username")
                         .HasColumnType("nvarchar(max)");
 
                     b.HasKey("Id");
@@ -459,51 +510,6 @@ namespace QuranCentersSystem.Migrations
                     b.HasIndex("ParentId");
 
                     b.ToTable("Students");
-                });
-
-            modelBuilder.Entity("QuranCentersSystem.Models.StudentAchievement", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
-
-                    b.Property<int>("AyahEnd")
-                        .HasColumnType("int");
-
-                    b.Property<int>("AyahStart")
-                        .HasColumnType("int");
-
-                    b.Property<DateTime>("Date")
-                        .HasColumnType("datetime2");
-
-                    b.Property<string>("Grade")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<int>("StudentId")
-                        .HasColumnType("int");
-
-                    b.Property<string>("SurahEnd")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("SurahStart")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("TeacherNotes")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<int>("Type")
-                        .HasColumnType("int");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("StudentId");
-
-                    b.ToTable("StudentAchievements");
                 });
 
             modelBuilder.Entity("QuranCentersSystem.Models.Teacher", b =>
@@ -640,6 +646,28 @@ namespace QuranCentersSystem.Migrations
                     b.Navigation("Teacher");
                 });
 
+            modelBuilder.Entity("QuranCentersSystem.Models.Memorization", b =>
+                {
+                    b.HasOne("QuranCentersSystem.Models.Student", "Student")
+                        .WithMany("Memorizations")
+                        .HasForeignKey("StudentId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Student");
+                });
+
+            modelBuilder.Entity("QuranCentersSystem.Models.MemorizationQuestion", b =>
+                {
+                    b.HasOne("QuranCentersSystem.Models.Memorization", "Memorization")
+                        .WithMany("Questions")
+                        .HasForeignKey("MemorizationId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Memorization");
+                });
+
             modelBuilder.Entity("QuranCentersSystem.Models.Payment", b =>
                 {
                     b.HasOne("QuranCentersSystem.Models.Student", "Student")
@@ -668,17 +696,6 @@ namespace QuranCentersSystem.Migrations
                     b.Navigation("Parent");
                 });
 
-            modelBuilder.Entity("QuranCentersSystem.Models.StudentAchievement", b =>
-                {
-                    b.HasOne("QuranCentersSystem.Models.Student", "Student")
-                        .WithMany("StudentAchievements")
-                        .HasForeignKey("StudentId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.Navigation("Student");
-                });
-
             modelBuilder.Entity("TeacherAttendance", b =>
                 {
                     b.HasOne("QuranCentersSystem.Models.Teacher", "Teacher")
@@ -695,13 +712,18 @@ namespace QuranCentersSystem.Migrations
                     b.Navigation("Students");
                 });
 
+            modelBuilder.Entity("QuranCentersSystem.Models.Memorization", b =>
+                {
+                    b.Navigation("Questions");
+                });
+
             modelBuilder.Entity("QuranCentersSystem.Models.Student", b =>
                 {
                     b.Navigation("Attendances");
 
-                    b.Navigation("Payments");
+                    b.Navigation("Memorizations");
 
-                    b.Navigation("StudentAchievements");
+                    b.Navigation("Payments");
                 });
 
             modelBuilder.Entity("QuranCentersSystem.Models.Teacher", b =>

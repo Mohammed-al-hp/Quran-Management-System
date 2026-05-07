@@ -4,110 +4,158 @@
     ViewData["Title"] = "إدارة المحفظين";
 }
 
-<div class="container-fluid py-4" dir="rtl">
-    <div class="card shadow-sm bg-white p-4 rounded-3 border-0">
+<div class="container-fluid py-5" dir="rtl">
+    <div class="card shadow-lg border-0 bg-white p-4 p-md-5" style="border-radius: 20px !important;">
 
-        <div class="d-flex justify-content-between align-items-center mb-4 border-bottom pb-3">
-            <div>
-                <h4 class="m-0 text-success fw-bold">إدارة المحفظين</h4>
-                <p class="text-muted small mb-0">عرض وتعديل بيانات المحفظين والحلقات</p>
+        @* الرأس: العنوان باللون الأخضر وزر الإضافة *@
+        <div class="row align-items-center mb-5 border-bottom pb-4">
+            <div class="col-md-8 text-center text-md-start mb-3 mb-md-0">
+                <div class="d-flex align-items-center justify-content-center justify-content-md-start gap-3 mb-2">
+                    <!-- أيقونة خضراء داكنة داخل خلفية ناعمة -->
+                    <div class="p-3 rounded-3" style="background-color: #e8f5e9; border: 1px solid #c8e6c9;">
+                        <i class="bi bi-person-workspace" style="font-size: 2.5rem; color: #1a531a;"></i>
+                    </div>
+                    <div>
+                        <!-- العنوان باللون الأخضر الداكن (إتقان) وخط ضخم -->
+                        <h1 class="fw-black m-0" style="font-size: 3rem; color: #1a531a; letter-spacing: -1px;">إدارة المحفظين</h1>
+                    </div>
+                </div>
+                <p class="text-muted mt-3 mb-0 fs-5 ps-md-5 ms-md-4">عرض وتصفية بيانات المحفظين وإدارة سجلاتهم المهنية</p>
             </div>
-            <a asp-controller="Teachers" asp-action="Create" class="btn btn-success px-4">
-                <i class="bi bi-person-plus-fill"></i> إضافة محفظ جديد
-            </a>
+            <div class="col-md-4 text-center text-md-end">
+                <a asp-controller="Teachers" asp-action="Create" class="btn btn-lg d-inline-flex align-items-center gap-2 px-5 py-3 shadow-sm transition-hover text-white" style="border-radius: 12px; background-color: #1a531a; border: none;">
+                    <i class="bi bi-person-plus-fill fs-4"></i>
+                    <span class="fw-bold">إضافة محفظ جديد</span>
+                </a>
+            </div>
         </div>
 
-        <form asp-action="Index" method="get" class="row g-3 mb-4">
-            <div class="col-md-5">
-                <div class="input-group">
-                    <input type="text" name="searchTerm" class="form-control" placeholder="ابحث باسم المحفظ أو المؤهل..." value="@ViewBag.CurrentSearch">
-                    <button class="btn btn-outline-success" type="submit">
-                        <i class="bi bi-search"></i>
-                    </button>
-                </div>
-            </div>
-            <div class="col-md-3">
-                <select name="sortBy" class="form-select border-success-subtle" onchange="this.form.submit()">
-                    <option value="newest" selected="@(ViewBag.CurrentSort == "newest")">الترتيب: الأحدث أولاً</option>
-                    <option value="oldest" selected="@(ViewBag.CurrentSort == "oldest")">الترتيب: الأقدم أولاً</option>
-                    <option value="students" selected="@(ViewBag.CurrentSort == "students")">الأكثر عدداً للطلاب</option>
-                    <option value="alphabetical" selected="@(ViewBag.CurrentSort == "alphabetical")">ترتيب أبجدي (أ-ي)</option>
-                </select>
-            </div>
-            @if (!string.IsNullOrEmpty(ViewBag.CurrentSearch))
-            {
-                <div class="col-md-2">
-                    <a asp-action="Index" class="btn btn-link text-decoration-none text-muted mt-1">إلغاء البحث</a>
-                </div>
-            }
-        </form>
+        @* قسم التصفية والبحث *@
+        <div class="p-4 rounded-4 mb-5 border shadow-sm" style="background-color: #fcfdfc;">
+            <form method="get" asp-action="Index" id="filterForm">
+                <div class="row g-4 align-items-end">
+                    <div class="col-lg-5">
+                        <label class="form-label small fw-bold text-dark mb-2 ms-1">
+                            <i class="bi bi-search ms-1 text-success"></i> البحث السريع:
+                        </label>
+                        <div class="input-group input-group-lg shadow-sm">
+                            <span class="input-group-text bg-white border-end-0" style="border-radius: 0 12px 12px 0;">
+                                <i class="bi bi-search text-muted"></i>
+                            </span>
+                            <input type="text" name="searchTerm" id="searchInput" class="form-control border-start-0 bg-white fs-6" placeholder="ابحث باسم المحفظ أو المؤهل..." value="@ViewBag.CurrentSearch" style="border-radius: 12px 0 0 12px; text-align: right;">
+                        </div>
+                    </div>
 
-        <div class="table-responsive">
-            <table class="table table-hover align-middle">
-                <thead class="table-light">
+                    <div class="col-lg-4">
+                        <label class="form-label small fw-bold text-dark mb-2 ms-1">
+                            <i class="bi bi-sort-down ms-1 text-success"></i> ترتيب النتائج:
+                        </label>
+                        <select name="sortBy" class="form-select form-select-lg bg-white shadow-sm border-2" onchange="this.form.submit()" style="border-radius: 12px; direction: rtl;">
+                            <option value="newest" selected="@(ViewBag.CurrentSort == "newest")">الأحدث أولاً</option>
+                            <option value="oldest" selected="@(ViewBag.CurrentSort == "oldest")">الأقدم أولاً</option>
+                            <option value="students" selected="@(ViewBag.CurrentSort == "students")">الأكثر عدداً للطلاب</option>
+                            <option value="alphabetical" selected="@(ViewBag.CurrentSort == "alphabetical")">ترتيب أبجدي (أ-ي)</option>
+                        </select>
+                    </div>
+
+                    <div class="col-lg-3 d-flex gap-2">
+                        <a asp-action="Index" class="btn btn-outline-secondary btn-lg flex-grow-1 shadow-sm transition-hover" style="border-radius: 12px;" title="إعادة تعيين">
+                            <i class="bi bi-arrow-clockwise"></i>
+                        </a>
+                        <button type="button" class="btn btn-outline-dark btn-lg flex-grow-1 shadow-sm transition-hover" onclick="window.print()" style="border-radius: 12px;">
+                            <i class="bi bi-printer ms-1"></i> طباعة
+                        </button>
+                    </div>
+                </div>
+            </form>
+        </div>
+
+        @* الجدول الاحترافي *@
+        <div class="table-responsive rounded-4 shadow-sm border">
+            <table class="table table-hover align-middle mb-0" id="teachersTable">
+                <thead class="custom-table-header">
                     <tr>
-                        <th class="text-center" style="width: 50px;">#</th>
-                        <th>اسم المحفظ</th>
-                        <th>رقم الهاتف</th>
-                        <th>الحلقة التابعة</th>
-                        <th class="text-center">عدد الطلاب</th>
-                        <th>المؤهل / الإجازة</th>
-                        <th class="text-center">الإجراءات</th>
+                        <th class="py-4 px-4 text-white border-0 fw-bold fs-5" style="border-radius: 0 15px 0 0; text-align: right;">اسم المحفظ</th>
+                        <th class="py-4 text-center text-white border-0 fw-bold fs-5">الهاتف</th>
+                        <th class="py-4 text-center text-white border-0 fw-bold fs-5">الحلقات</th>
+                        <th class="py-4 text-center text-white border-0 fw-bold fs-5">المؤهل</th>
+                        <th class="py-4 text-center text-white border-0 fw-bold fs-5">الحالة</th>
+                        <th class="py-4 text-center text-white border-0 fw-bold fs-5" style="border-radius: 15px 0 0 0; min-width: 180px;">الإجراءات</th>
                     </tr>
                 </thead>
-                <tbody>
-                    @{
-                        int rowNo = 1;
-                    }
-                    @foreach (var item in Model)
+                <tbody class="bg-white">
+                    @if (!Model.Any())
                     {
-                        <tr>
-                            <td class="text-center fw-bold text-muted">@rowNo</td>
-                            <td class="fw-bold text-dark">@item.Name</td>
-                            <td>@item.Phone</td>
-                            <td>
-                                @if (item.Circles != null && item.Circles.Any())
-                                {
-                                    @foreach (var circle in item.Circles)
-                                    {
-                                        <span class="badge bg-light text-primary border mb-1">@circle.Name</span>
-                                    }
-                                }
-                                else
-                                {
-                                    <span class="text-muted small">غير مسند لحلقة</span>
-                                }
-                            </td>
-                            <td class="text-center">
-                                <span class="badge rounded-pill bg-success px-3">
-                                    @(item.Circles?.Sum(c => c.Students?.Count()) ?? 0) طلاب
-                                </span>
-                            </td>
-                            <td>
-                                <span class="badge bg-warning text-dark px-2">@item.Qualification</span>
-                            </td>
-                            <td class="text-center">
-                                <div class="d-flex justify-content-center gap-2">
-                                    <a asp-action="Details" asp-route-id="@item.Id" class="btn btn-sm btn-outline-info rounded-circle" title="تفاصيل">
-                                        <i class="bi bi-eye"></i>
-                                    </a>
-                                    <a asp-action="Edit" asp-route-id="@item.Id" class="btn btn-sm btn-outline-warning rounded-circle" title="تعديل">
-                                        <i class="bi bi-pencil"></i>
-                                    </a>
-
-                                    @if (User.Identity.Name == "admin@example.com" || User.IsInRole("Admin"))
-                                    {
-                                        <form asp-action="Delete" asp-route-id="@item.Id" method="post" onsubmit="return confirm('هل أنت متأكد؟')" style="display:inline;">
-                                            @Html.AntiForgeryToken()
-                                            <button type="submit" class="btn btn-sm btn-outline-danger rounded-circle">
-                                                <i class="bi bi-trash"></i>
-                                            </button>
-                                        </form>
-                                    }
-                                </div>
+                        <tr class="no-data-row">
+                            <td colspan="6" class="text-center py-5 text-muted border-0">
+                                <i class="bi bi-emoji-frown d-block mb-3" style="font-size: 3rem; opacity: 0.3;"></i>
+                                <span class="fs-5 fw-bold">لا توجد سجلات للمحفظين حالياً.</span>
                             </td>
                         </tr>
-                        rowNo++;
+                    }
+                    else
+                    {
+                        int rowNo = 1;
+                        foreach (var item in Model)
+                        {
+                            <tr class="transition-all border-bottom">
+                                <td class="px-4 py-3">
+                                    <div class="d-flex align-items-center gap-3">
+                                        <div class="avatar-circle">@rowNo</div>
+                                        <span class="fw-bold text-dark fs-6">@item.Name</span>
+                                    </div>
+                                </td>
+                                <td class="text-center text-muted fw-medium">@item.Phone</td>
+                                <td class="text-center">
+                                    @if (item.Circles != null && item.Circles.Any())
+                                    {
+                                        foreach (var circle in item.Circles)
+                                        {
+                                            <span class="badge bg-soft-success text-success px-2 py-1 rounded-pill border fw-bold small mb-1">
+                                                <i class="bi bi-bookmark-check"></i> @circle.Name
+                                            </span>
+                                        }
+                                    }
+                                    else
+                                    {
+                                        <span class="text-muted small">غير مسند</span>
+                                    }
+                                </td>
+                                <td class="text-center">
+                                    <span class="badge bg-soft-warning text-warning px-3 py-2 rounded-3 border fw-bold">
+                                        @item.Qualification
+                                    </span>
+                                </td>
+                                <td class="text-center">
+                                    <span class="badge bg-success px-3 py-2 rounded-pill shadow-sm fw-bold">
+                                        <i class="bi bi-check-circle ms-1"></i> نشط
+                                    </span>
+                                    <div class="text-muted x-small mt-1" style="font-size: 0.75rem;">@(item.Circles?.Sum(c => c.Students?.Count()) ?? 0) طالباً</div>
+                                </td>
+                                <td class="py-3">
+                                    <div class="d-flex justify-content-center gap-2">
+                                        <a asp-action="Edit" asp-route-id="@item.Id" class="btn btn-action btn-edit shadow-sm" title="تعديل">
+                                            <i class="bi bi-pencil-square"></i>
+                                        </a>
+
+                                        <a asp-action="Details" asp-route-id="@item.Id" class="btn btn-action btn-pdf shadow-sm" title="تفاصيل">
+                                            <i class="bi bi-file-earmark-text-fill"></i>
+                                        </a>
+
+                                        @if (User.IsInRole("Admin") || User.IsInRole("مدير النظام"))
+                                        {
+                                            <form asp-action="Delete" asp-route-id="@item.Id" method="post" onsubmit="return confirm('تنبيه: سيتم حذف المحفظ نهائياً، هل أنت متأكد؟')" class="d-inline">
+                                                @Html.AntiForgeryToken()
+                                                <button type="submit" class="btn btn-action btn-delete shadow-sm" title="حذف">
+                                                    <i class="bi bi-trash3-fill"></i>
+                                                </button>
+                                            </form>
+                                        }
+                                    </div>
+                                </td>
+                            </tr>
+                            rowNo++;
+                        }
                     }
                 </tbody>
             </table>
@@ -116,22 +164,123 @@
 </div>
 
 <style>
-    .btn-sm.rounded-circle {
-        width: 32px;
-        height: 32px;
+    /* توحيد التنسيقات مع صفحة الطلاب */
+    .custom-table-header {
+        background-color: #1a531a !important;
+    }
+
+        .custom-table-header th {
+            color: #ffffff !important;
+            background-color: #1a531a !important;
+            border: none !important;
+            vertical-align: middle;
+        }
+
+    .fw-black {
+        font-weight: 900 !important;
+    }
+
+    .bg-soft-success {
+        background-color: #f1f8f1 !important;
+        border-color: #c8e6c9 !important;
+    }
+
+    .bg-soft-warning {
+        background-color: #fffbef !important;
+        border-color: #ffeebc !important;
+        color: #856404 !important;
+    }
+
+    .avatar-circle {
+        width: 38px;
+        height: 38px;
+        background: #1a531a;
+        color: #fff;
         display: flex;
         align-items: center;
         justify-content: center;
+        border-radius: 50%;
+        font-weight: bold;
+        font-size: 0.9rem;
     }
 
-    .table thead th {
-        font-weight: 600;
-        color: #495057;
-        border-bottom-width: 1px;
+    .btn-action {
+        width: 38px;
+        height: 38px;
+        border-radius: 10px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        transition: all 0.3s ease;
+        border: none;
     }
 
-    .form-select:focus {
-        border-color: #198754;
-        box-shadow: 0 0 0 0.25rem rgba(25, 135, 84, 0.25);
+    .btn-edit {
+        background-color: #fff3cd;
+        color: #856404;
+    }
+
+        .btn-edit:hover {
+            background-color: #ffc107;
+            color: #fff;
+            transform: translateY(-3px);
+        }
+
+    .btn-pdf {
+        background-color: #e1f5fe;
+        color: #0288d1;
+    }
+
+        .btn-pdf:hover {
+            background-color: #03a9f4;
+            color: #fff;
+            transform: translateY(-3px);
+        }
+
+    .btn-delete {
+        background-color: #fce8e8;
+        color: #c53030;
+    }
+
+        .btn-delete:hover {
+            background-color: #e53e3e;
+            color: #fff;
+            transform: translateY(-3px);
+        }
+
+    .transition-hover:hover {
+        transform: translateY(-3px);
+        filter: brightness(1.1);
+        transition: 0.3s;
+    }
+
+    .table-hover tbody tr:hover {
+        background-color: #fcfdfc !important;
+    }
+
+    @@media print {
+        .btn, .input-group, #filterForm, label, .avatar-circle {
+            display: none !important;
+        }
+
+        .card {
+            border: none !important;
+            box-shadow: none !important;
+            padding: 0 !important;
+        }
+
+        .table {
+            width: 100% !important;
+            border: 1px solid #333 !important;
+        }
+
+        thead tr {
+            background-color: #1a531a !important;
+            -webkit-print-color-adjust: exact;
+        }
+
+        thead th {
+            color: #fff !important;
+        }
     }
 </style>

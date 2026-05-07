@@ -1,66 +1,51 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
 
 namespace QuranCentersSystem.Models
 {
-    public class Memorization
+    public class StudentAchievement
     {
         public int Id { get; set; }
 
         [Required]
         public int StudentId { get; set; }
-        public Student Student { get; set; }
 
-        [Required(ErrorMessage = "يرجى تحديد التاريخ")]
+        [ForeignKey("StudentId")]
+        public virtual Student Student { get; set; }
+
+        [Display(Name = "التاريخ")]
         [DataType(DataType.Date)]
-        public DateTime Date { get; set; } = DateTime.Now;
+        public DateTime Date { get; set; } = DateTime.Today;
 
-        [Display(Name = "اليوم")]
-        public string DayName { get; set; }
-
-        // 🌟 الإضافة الأولى: نوع التسميع (مهم جداً لفرز البيانات لاحقاً)
         [Display(Name = "نوع الإنجاز")]
-        public string Type { get; set; } // (حفظ جديد، مراجعة قريبة، مراجعة بعيدة)
+        public AchievementType Type { get; set; }
 
-        [Display(Name = "اسم السورة")]
-        public string SurahName { get; set; }
+        [Required(ErrorMessage = "اسم السورة مطلوب")]
+        [Display(Name = "من سورة")]
+        public string SurahStart { get; set; }
 
-        [Display(Name = "آية البداية")]
-        public int? FromAyah { get; set; }
+        [Display(Name = "من آية")]
+        public int AyahStart { get; set; }
 
-        [Display(Name = "آية النهاية")]
-        public int? ToAyah { get; set; }
+        [Required(ErrorMessage = "اسم السورة مطلوب")]
+        [Display(Name = "إلى سورة")]
+        public string SurahEnd { get; set; }
 
-        [Display(Name = "السورة الحالية")]
-        public string CurrentSurah { get; set; }
+        [Display(Name = "إلى آية")]
+        public int AyahEnd { get; set; }
 
-        [Display(Name = "مقدار المتابعة")]
-        public string Scope { get; set; }
+        [Display(Name = "التقدير/العلامة")]
+        public string Grade { get; set; } // مثال: ممتاز، جيد جداً
 
-        [Required(ErrorMessage = "يرجى تحديد التقييم")]
-        [Display(Name = "التقييم")]
-        public string Grade { get; set; }
-
-        // 🌟 الإضافة الثانية: لتوليد رسوم بيانية دقيقة عن تطور الطالب
-        [Display(Name = "عدد الأخطاء")]
-        public int MistakesCount { get; set; }
-
-        [Display(Name = "ملاحظات المعلم")]
-        public string Notes { get; set; }
-
-        public List<MemorizationQuestion> Questions { get; set; } = new List<MemorizationQuestion>();
+        [Display(Name = "ملاحظات المحفظ")]
+        public string? TeacherNotes { get; set; }
     }
 
-    public class MemorizationQuestion
+    public enum AchievementType
     {
-        public int Id { get; set; }
-        public int MemorizationId { get; set; }
-        public Memorization Memorization { get; set; }
-
-        [Required(ErrorMessage = "يرجى كتابة نص السؤال")]
-        public string QuestionText { get; set; }
-
-        public string StudentAnswer { get; set; }
+        [Display(Name = "حفظ جديد")] Memorization,
+        [Display(Name = "مراجعة صغرى")] MinorRevision,
+        [Display(Name = "مراجعة كبرى")] MajorRevision
     }
 }

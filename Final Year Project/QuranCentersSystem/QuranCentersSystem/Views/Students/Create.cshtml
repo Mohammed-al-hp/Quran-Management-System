@@ -5,100 +5,146 @@
 }
 
 <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/flatpickr/dist/flatpickr.min.css">
-<link rel="stylesheet" type="text/css" href="https://npmcdn.com/flatpickr/dist/themes/material_blue.css">
+<link rel="stylesheet" type="text/css" href="https://npmcdn.com/flatpickr/dist/themes/material_green.css">
+<link href="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/css/select2.min.css" rel="stylesheet" />
 
-<div class="container-fluid py-4" dir="rtl">
+<style>
+    /* تنسيق لضمان محاذاة النصوص والعناوين لليمين بشكل صارم */
+    .text-end {
+        text-align: right !important;
+    }
 
-    <div class="mb-4">
-        <h3 class="text-dark mb-1 fw-bold">إدارة الطلاب</h3>
-        <p class="text-muted mb-0">إضافة طالب جديد للمنظومة وتنسيبه لحلقة معينة</p>
-    </div>
+    .form-label {
+        display: block;
+        text-align: right;
+        width: 100%;
+        margin-bottom: 8px;
+    }
 
-    <div class="row">
-        <div class="col-lg-10 mx-auto">
-            <div class="card border-0 shadow-sm" style="border-radius: 15px;">
-                <div class="card-body p-4 p-md-5">
+    /* تعديل لبرواز Select2 ليدعم العربية والارتفاع المتناسق */
+    .select2-container--default .select2-selection--single {
+        border: 2px solid #dee2e6 !important;
+        border-radius: 12px !important;
+        height: 45px !important;
+        line-height: 45px !important;
+    }
 
-                    <div class="d-flex align-items-center mb-4">
-                        <div class="bg-light p-3 rounded-circle ms-3">
-                            <i class="bi bi-person-plus text-primary fs-3"></i>
+    .select2-container[dir="rtl"] .select2-selection--single .select2-selection__arrow {
+        left: 10px !important;
+        right: auto !important;
+    }
+</style>
+
+<div class="container py-5" dir="rtl">
+    <div class="row justify-content-center">
+        <div class="col-lg-10">
+            <div class="card border-0 shadow-lg" style="border-radius: 20px; overflow: hidden;">
+                <div class="card-header border-0 py-4 text-white text-center" style="background-color: #1a531a;">
+                    <h3 class="fw-bold mb-0"><i class="bi bi-person-plus-fill ms-2"></i> إضافة طالب جديد للمنظومة</h3>
+                </div>
+
+                <div class="card-body p-4 p-md-5 bg-white">
+                    <form asp-action="Create" method="post" enctype="multipart/form-data" id="createForm">
+                        @Html.AntiForgeryToken()
+                        <div asp-validation-summary="All" class="text-danger mb-3 text-end fw-bold"></div>
+
+                        <div class="mb-5">
+                            <h5 class="fw-bold text-success border-bottom pb-2 mb-4 text-end">
+                                <i class="bi bi-shield-lock ms-2"></i> بيانات الحساب (للدخول للنظام)
+                            </h5>
+                            <div class="row g-4">
+                                <div class="col-md-6 text-end">
+                                    <label class="form-label fw-bold">اسم المستخدم <span class="text-danger">*</span></label>
+                                    <input asp-for="Username" id="generatedUsername" class="form-control form-control-lg border-2 shadow-sm" style="border-radius:12px" placeholder="يتم التوليد تلقائياً..." required />
+                                    <span asp-validation-for="Username" class="text-danger small"></span>
+                                </div>
+                                <div class="col-md-6 text-end">
+                                    <label class="form-label fw-bold">كلمة المرور <span class="text-danger">*</span></label>
+                                    <input asp-for="Password" id="generatedPassword" type="text" class="form-control form-control-lg border-2 shadow-sm" style="border-radius:12px" placeholder="يتم التوليد تلقائياً..." required />
+                                    <span asp-validation-for="Password" class="text-danger small"></span>
+                                </div>
+                            </div>
                         </div>
-                        <div>
-                            <h5 class="mb-0 fw-bold">بيانات الطالب الأساسية</h5>
-                            <small class="text-muted">يرجى ملء كافة الخانات المميزة بعلامة مطلوبة</small>
+
+                        <div class="mb-5">
+                            <h5 class="fw-bold text-success border-bottom pb-2 mb-4 text-end">
+                                <i class="bi bi-person-badge ms-2"></i> بيانات الطالب الشخصية
+                            </h5>
+                            <div class="row g-4">
+                                <div class="col-md-8 text-end">
+                                    <label asp-for="Name" class="form-label fw-bold">اسم الطالب الرباعي <span class="text-danger">*</span></label>
+                                    <input asp-for="Name" class="form-control form-control-lg border-2" style="border-radius:12px" placeholder="الاسم الكامل" />
+                                </div>
+                                <div class="col-md-4 text-end">
+                                    <label class="form-label fw-bold">السورة الحالية</label>
+                                    <input asp-for="CurrentSurah" class="form-control form-control-lg border-2" style="border-radius:12px" placeholder="مثلاً: سورة البقرة" />
+                                </div>
+                                <div class="col-md-6 text-end">
+                                    <label asp-for="Phone" class="form-label fw-bold">رقم هاتف الطالب</label>
+                                    <input asp-for="Phone" class="form-control form-control-lg border-2" style="border-radius:12px" />
+                                </div>
+                                <div class="col-md-6 text-end">
+                                    <label asp-for="BirthDate" class="form-label fw-bold">تاريخ الميلاد <span class="text-danger">*</span></label>
+                                    <input asp-for="BirthDate" type="text" id="birthDatePicker" class="form-control form-control-lg border-2 bg-white" style="border-radius:12px" readonly />
+                                </div>
+                                <div class="col-md-12 text-end">
+                                    <label asp-for="CircleId" class="form-label fw-bold">الحلقة التنسيبية <span class="text-danger">*</span></label>
+                                    <select asp-for="CircleId" class="form-select form-select-lg border-2" style="border-radius:12px" asp-items="ViewBag.CircleId">
+                                        <option value="">-- اختر الحلقة --</option>
+                                    </select>
+                                </div>
+                            </div>
                         </div>
-                    </div>
 
-                    <form asp-action="Create" method="post">
-                        <div asp-validation-summary="ModelOnly" class="text-danger mb-3"></div>
+                        <div class="mb-5 p-4 rounded-4" style="background-color: #f8fcf8; border: 1px dashed #1a531a;">
+                            <h5 class="fw-bold text-success mb-4 text-end"><i class="bi bi-people ms-2"></i> بيانات ولي الأمر</h5>
 
-                        <div class="row g-4 mb-4">
-                            <div class="col-md-6">
-                                <label asp-for="Name" class="form-label text-secondary fw-bold">اسم الطالب كاملاً</label>
-                                <input asp-for="Name" class="form-control" placeholder="مثلاً: محمد أحمد علي" style="border-radius: 8px;" />
-                                <span asp-validation-for="Name" class="text-danger small"></span>
-                            </div>
-
-                            <div class="col-md-6">
-                                <label asp-for="Phone" class="form-label text-secondary fw-bold">رقم هاتف الطالب</label>
-                                <input asp-for="Phone" class="form-control" placeholder="0912345678" style="border-radius: 8px;" />
-                                <span asp-validation-for="Phone" class="text-danger small"></span>
-                            </div>
-
-                            <div class="col-md-6">
-                                <label asp-for="BirthDate" class="form-label text-secondary fw-bold">تاريخ ميلاد الطالب (المواليد)</label>
-                                <input asp-for="BirthDate" type="text" id="birthDatePicker" class="form-control" placeholder="اختر تاريخ الميلاد..." style="border-radius: 8px; background-color: #fff;" readonly />
-                                <span asp-validation-for="BirthDate" class="text-danger small"></span>
-                            </div>
-
-                            <div class="mb-3">
-                                <label class="form-label">ولي الأمر</label>
-                                <select asp-for="ParentId" class="form-control" asp-items="ViewBag.ParentId">
-                                    <option value="">-- اختر ولي الأمر --</option>
+                            <div id="existingParentDiv" class="mb-4 text-end">
+                                <label class="form-label fw-bold">البحث عن ولي أمر مسجل مسبقاً</label>
+                                <select asp-for="ParentId" class="form-select select2-parent" asp-items="ViewBag.ParentId">
+                                    <option value="">-- ابحث بالاسم أو الرقم --</option>
                                 </select>
                             </div>
 
-                            <div class="col-md-6">
-                                <label asp-for="ParentPhoneNumber" class="form-label text-secondary fw-bold">رقم هاتف ولي الأمر</label>
-                                <input asp-for="ParentPhoneNumber" class="form-control" placeholder="0912345678" style="border-radius: 8px;" />
-                                <span asp-validation-for="ParentPhoneNumber" class="text-danger small"></span>
+                            <div class="text-center mb-4">
+                                <button type="button" class="btn btn-sm btn-outline-success rounded-pill" onclick="toggleParentForm()">
+                                    <i class="bi bi-plus-circle ms-1"></i> إضافة ولي أمر جديد غير موجود بالقائمة
+                                </button>
                             </div>
 
-                            <div class="col-md-12">
-                                <label asp-for="CircleId" class="form-label text-secondary fw-bold">الحلقة التنسيبية</label>
-                                <select asp-for="CircleId" class="form-select" style="border-radius: 8px;" asp-items="ViewBag.CircleId">
-                                    <option value="">-- اختر الحلقة لتنسيب الطالب --</option>
-                                </select>
-                                <span asp-validation-for="CircleId" class="text-danger small"></span>
-                            </div>
-                        </div>
-
-                        <div class="bg-light p-4 mb-4" style="border-radius: 12px; border-right: 4px solid var(--accent-gold);">
-                            <h6 class="text-dark fw-bold mb-3"><i class="bi bi-shield-check ms-1"></i> شروط الانتساب والالتزام بالمركز</h6>
-                            <ul class="text-muted small mb-3">
-                                <li>الالتزام التام بالمواعيد المحددة لحلقات التحفيظ.</li>
-                                <li>المحافظة على الهدوء والآداب العامة داخل المركز.</li>
-                                <li>متابعة ولي الأمر المستمرة لتطور الطالب مع المحفظ.</li>
-                            </ul>
-
-                            <div class="form-check">
-                                <input class="form-check-input" type="checkbox" asp-for="AgreedToTerms" id="agreeCheck">
-                                <label class="form-check-label fw-bold text-dark" for="agreeCheck">
-                                    أقر أنا الطالب وولي أمري بالموافقة على شروط الانضمام للمركز والالتزام بها.
-                                </label>
-                                <br />
-                                <span asp-validation-for="AgreedToTerms" class="text-danger small"></span>
+                            <div id="newParentForm" style="display:none;" class="bg-white p-3 rounded-3 shadow-sm border text-end">
+                                <h6 class="fw-bold mb-3 text-primary">تعبئة بيانات ولي أمر جديد:</h6>
+                                <div class="row g-3">
+                                    <div class="col-md-5">
+                                        <input name="NewParentName" class="form-control" placeholder="اسم ولي الأمر" />
+                                    </div>
+                                    <div class="col-md-4">
+                                        <input name="NewParentPhone" class="form-control" placeholder="رقم الهاتف" />
+                                    </div>
+                                    <div class="col-md-3">
+                                        <select name="ParentRelation" class="form-select text-muted">
+                                            <option value="">صلة القرابة</option>
+                                            <option value="أب">أب</option>
+                                            <option value="أم">أم</option>
+                                            <option value="قريب">قريب / وصي</option>
+                                        </select>
+                                    </div>
+                                </div>
                             </div>
                         </div>
 
-                        <div class="d-flex justify-content-end gap-2">
-                            <a asp-action="Index" class="btn btn-outline-secondary px-4 py-2" style="border-radius: 8px;">
-                                <i class="bi bi-arrow-right-short"></i> إلغاء ورجوع
-                            </a>
-                            <button type="submit" class="btn btn-primary px-5 py-2 d-flex align-items-center gap-2" style="border-radius: 8px; background-color: var(--primary-green); border-color: var(--primary-green);">
-                                <i class="bi bi-save"></i>
-                                حفظ البيانات
+                        <div class="mb-5 text-end">
+                            <h5 class="fw-bold text-success border-bottom pb-2 mb-4"><i class="bi bi-image ms-2"></i> صورة الطالب (اختيارية)</h5>
+                            <div class="input-group">
+                                <input type="file" name="StudentPhoto" class="form-control form-control-lg border-2 shadow-sm" style="border-radius:12px" accept="image/*" />
+                            </div>
+                        </div>
+
+                        <div class="d-flex gap-3 mt-4 justify-content-end">
+                            <button type="submit" class="btn btn-lg text-white px-5 shadow-sm" style="background-color: #1a531a; border-radius: 12px; min-width: 200px;">
+                                <i class="bi bi-save ms-2"></i> حفظ الطالب
                             </button>
+                            <a asp-action="Index" class="btn btn-lg btn-outline-secondary px-4 shadow-sm" style="border-radius: 12px;">إلغاء</a>
                         </div>
                     </form>
 
@@ -108,21 +154,63 @@
     </div>
 </div>
 
-<script src="https://cdn.jsdelivr.net/npm/flatpickr"></script>
-<script src="https://cdn.jsdelivr.net/npm/flatpickr/dist/l10n/ar.js"></script>
-
-<script>
-    document.addEventListener("DOMContentLoaded", function() {
-        flatpickr("#birthDatePicker", {
-            locale: "ar", // تفعيل اللغة العربية
-            dateFormat: "Y-m-d", // صيغة التاريخ
-            maxDate: "today", // لا يسمح باختيار تاريخ في المستقبل
-            disableMobile: "true"
-        });
-    });
-</script>
-
 @section Scripts {
+    <script src="https://cdn.jsdelivr.net/npm/flatpickr"></script>
+    <script src="https://npmcdn.com/flatpickr/dist/l10n/ar.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js"></script>
+
+    <script>
+        $(document).ready(function() {
+            // توليد بيانات الحساب تلقائياً
+            generateAccountDefaults();
+
+            // تفعيل Select2 لولي الأمر
+            $('.select2-parent').select2({
+                placeholder: "ابحث عن ولي الأمر...",
+                dir: "rtl",
+                width: '100%'
+            });
+
+            // تفعيل Flatpickr للتاريخ
+            flatpickr("#birthDatePicker", {
+                locale: "ar",
+                dateFormat: "Y-m-d",
+                maxDate: "today",
+                disableMobile: true
+            });
+        });
+
+        function generateAccountDefaults() {
+            const randomNum = Math.floor(1000 + Math.random() * 9000);
+            const currentYear = new Date().getFullYear();
+            const usernameField = document.getElementById('generatedUsername');
+            const passwordField = document.getElementById('generatedPassword');
+
+            if (usernameField && !usernameField.value) {
+                usernameField.value = "student_" + currentYear + "_" + randomNum;
+            }
+
+            if (passwordField && !passwordField.value) {
+                passwordField.value = "St" + String.fromCharCode(64) + randomNum;
+            }
+        }
+
+        function toggleParentForm() {
+            var form = document.getElementById('newParentForm');
+            var selectDiv = document.getElementById('existingParentDiv');
+            var selectElement = $('.select2-parent');
+
+            if (form.style.display === "none" || form.style.display === "") {
+                form.style.display = "block";
+                selectDiv.style.opacity = "0.5";
+                selectElement.val(null).trigger('change');
+            } else {
+                form.style.display = "none";
+                selectDiv.style.opacity = "1";
+            }
+        }
+    </script>
+
     @{
         await Html.RenderPartialAsync("_ValidationScriptsPartial");
     }

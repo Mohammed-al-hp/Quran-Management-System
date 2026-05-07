@@ -13,35 +13,48 @@ namespace QuranCentersSystem.Models
         [Display(Name = "اسم الطالب")]
         public string Name { get; set; }
 
-        // أضف هذا الحقل لحل مشكلة FullName في التقرير
         [Display(Name = "الاسم الكامل")]
         public string FullName => Name;
 
         [Display(Name = "رقم الهاتف")]
-        public string Phone { get; set; }
+        public string? Phone { get; set; }
 
+        [Required(ErrorMessage = "تاريخ الميلاد مطلوب")]
         [DataType(DataType.Date)]
         [Display(Name = "تاريخ الميلاد")]
         public DateTime BirthDate { get; set; }
 
         [Display(Name = "رقم هاتف ولي الأمر")]
-        public string ParentPhoneNumber { get; set; }
+        public string? ParentPhoneNumber { get; set; }
 
-        public bool AgreedToTerms { get; set; }
+        // تم تعديله ليكون اختيارياً لعدم عرقلة الحفظ
+        public bool? AgreedToTerms { get; set; }
+
         public string Status { get; set; } = "نشط";
         public DateTime JoinDate { get; set; } = DateTime.Now;
 
+        [Required(ErrorMessage = "يجب اختيار حلقة")]
         public int CircleId { get; set; }
-        public virtual Circle Circle { get; set; }
-        public int? ParentId { get; set; } // جعلناه اختياري لضمان عدم تعطل البيانات القديمة
-        [ForeignKey("ParentId")]
-        public virtual Parent Parent { get; set; }
-        // أضف هذا السطر لحل أخطاء "Payments" في الـ Controller والـ Index
-        public virtual ICollection<Payment> Payments { get; set; }
+        public virtual Circle? Circle { get; set; }
 
-        // 🌟 الحل الرئيسي: إضافة هذه الأسطر لربط الجداول
-        public string? ParentEmail { get; set; } // أضف هذا السطر لربط الطالب بحساب ولي الأمر
+        public int? ParentId { get; set; }
+        [ForeignKey("ParentId")]
+        public virtual Parent? Parent { get; set; }
+
+        public virtual ICollection<Payment>? Payments { get; set; }
+        public string? ParentEmail { get; set; }
+
+        public string? ImagePath { get; set; }
+        public string? Username { get; set; }
+        public string? Password { get; set; }
+        public string? CurrentSurah { get; set; }
+
+        [NotMapped]
+        public string? NewParentName { get; set; }
+        [NotMapped]
+        public string? NewParentPhone { get; set; }
+
         public virtual ICollection<Attendance> Attendances { get; set; } = new List<Attendance>();
-        public virtual ICollection<Memorization> Memorizations { get; set; } = new List<Memorization>();
+        public virtual ICollection<StudentAchievement> StudentAchievements { get; set; } = new List<StudentAchievement>();
     }
 }

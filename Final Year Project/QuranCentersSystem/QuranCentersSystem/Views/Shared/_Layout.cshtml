@@ -9,6 +9,11 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>@ViewData["Title"] - منظومة إتقان للتحفيظ</title>
 
+    <!-- إضافة خط Cairo من جوجل -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@300;400;600;700&display=swap" rel="stylesheet">
+
     <script>
         const storedTheme = localStorage.getItem('theme');
         const systemTheme = window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light';
@@ -24,7 +29,7 @@
         /* تنسيقات الهيكل (Layout) المتغيرة */
         .sidebar {
             width: 260px;
-            min-height: 100vh;
+            height: 100vh; /* تغيير إلى height بدل min-height لضبط التمرير */
             background-color: var(--sidebar-bg);
             color: white;
             position: fixed;
@@ -32,7 +37,27 @@
             top: 0;
             z-index: 1000;
             transition: background-color 0.3s ease;
+            overflow-y: auto; /* إضافة خاصية التمرير العمودي */
+            overscroll-behavior: contain; /* أضف هذا السطر هنا */
         }
+
+            /* تخصيص شكل شريط التمرير للقائمة الجانبية ليكون أنيقاً */
+            .sidebar::-webkit-scrollbar {
+                width: 6px;
+            }
+
+            .sidebar::-webkit-scrollbar-track {
+                background: transparent;
+            }
+
+            .sidebar::-webkit-scrollbar-thumb {
+                background: rgba(255, 255, 255, 0.2);
+                border-radius: 10px;
+            }
+
+                .sidebar::-webkit-scrollbar-thumb:hover {
+                    background: rgba(255, 255, 255, 0.4);
+                }
 
             .sidebar a {
                 color: #bdc3c7;
@@ -81,6 +106,7 @@
             color: var(--text-main) !important;
         }
     </style>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 </head>
 <body>
     <div class="d-flex">
@@ -120,17 +146,10 @@
                     </a>
 
                     <li class="nav-item list-unstyled">
-                        <a class="nav-link collapsed" href="#" data-bs-toggle="collapse" data-bs-target="#memorizationMenu" aria-expanded="false">
+                        <a class="nav-link" asp-controller="FollowUp" asp-action="Index">
                             <i class="bi bi-journal-check ms-2"></i>
-                            <span>متابعة الحفظ</span>
-                            <i class="bi bi-chevron-down me-auto dropdown-arrow"></i>
+                            <span>متابعة الحفظ والمراجعة</span>
                         </a>
-                        <div id="memorizationMenu" class="collapse">
-                            <div class="py-2 collapse-inner rounded mx-2 mt-1">
-                                <a class="collapse-item nav-link" asp-controller="Memorizations" asp-action="FollowUp">نظام الأسئلة</a>
-                                <a class="collapse-item nav-link" asp-controller="Memorizations" asp-action="DailyRecord">التتبيع المباشر</a>
-                            </div>
-                        </div>
                     </li>
                 }
 
@@ -245,5 +264,20 @@
     </script>
 
     @await RenderSectionAsync("Scripts", required: false)
+
+    <script>
+        const sidebar = document.querySelector('.sidebar');
+        sidebar.addEventListener('wheel', (e) => {
+            const scrollTop = sidebar.scrollTop;
+            const scrollHeight = sidebar.scrollHeight;
+            const height = sidebar.clientHeight;
+            const delta = e.deltaY;
+
+            // إذا وصل للسحب لأعلى البداية أو أسفل النهاية، نمنع الصفحة من التحرك
+            if ((delta < 0 && scrollTop <= 0) || (delta > 0 && scrollTop + height >= scrollHeight)) {
+                e.preventDefault();
+            }
+        }, { passive: false });
+    </script>
 </body>
 </html>

@@ -1,0 +1,308 @@
+﻿@model IEnumerable<QuranCentersSystem.Models.Student>
+@{
+    ViewData["Title"] = "لوحة متابعة الحلقات";
+}
+
+<div class="container-fluid mt-4" dir="rtl">
+    <div class="card shadow-sm border-0 mb-4">
+        <div class="card-header bg-success text-white d-flex justify-content-between align-items-center">
+            <h4 class="mb-0"><i class="fas fa-users-class"></i> متابعة الحلقات اليومية</h4>
+            <span id="currentDate" class="badge bg-light text-dark p-2">@DateTime.Now.ToString("dd/MM/yyyy")</span>
+        </div>
+        <div class="card-body bg-light">
+            <div class="row g-3 align-items-end">
+                <div class="col-md-4">
+                    <label class="form-label fw-bold">اختر الحلقة:</label>
+                    <select id="circleSelect" class="form-select border-success" asp-items="ViewBag.Circles">
+                        <option value="">-- اختر حلقة لعرض الطلاب --</option>
+                    </select>
+                </div>
+                <div class="col-md-4">
+                    <button class="btn btn-outline-success w-100" onclick="openGroupAchievementModal()">
+                        <i class="fas fa-book-reader"></i> تسجيل إنجاز الحلقة الجماعي
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div id="studentsContainer" class="card shadow-sm border-0 d-none">
+        <div class="card-body p-0">
+            <table class="table table-hover align-middle mb-0 text-center">
+                <thead class="table-success">
+                    <tr>
+                        <th>#</th>
+                        <th class="text-end">اسم الطالب</th>
+                        <th>الحضور والغياب</th>
+                        <th>الإنجاز الفردي</th>
+                        <th>السجل</th>
+                    </tr>
+                </thead>
+                <tbody id="studentsList">
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+
+<div class="modal fade" id="achievementModal" tabindex="-1" aria-hidden="true">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content border-success">
+            <div class="modal-header bg-success text-white">
+                <h5 class="modal-title">تسجيل إنجاز للطالب: <span id="targetStudentName"></span></h5>
+                <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
+            </div>
+            <div class="modal-body">
+                <input type="hidden" id="targetStudentId" />
+                <div class="row g-3">
+                    <div class="col-md-12">
+                        <label class="form-label fw-bold">نوع الإنجاز</label>
+                        <select id="achType" class="form-select">
+                            <option value="0">حفظ جديد</option>
+                            <option value="1">مراجعة صغرى</option>
+                            <option value="2">مراجعة كبرى</option>
+                        </select>
+                    </div>
+                    <div class="row g-3">
+                        <div class="col-md-6">
+                            <label class="form-label fw-bold text-success">من سورة:</label>
+                            <select id="surahStart" class="form-select select2-enable"></select>
+                        </div>
+                        <div class="col-md-6">
+                            <label class="form-label fw-bold text-success">من آية:</label>
+                            <select id="ayahStart" class="form-select"></select>
+                        </div>
+
+                        <div class="col-md-6">
+                            <label class="form-label fw-bold text-primary">إلى سورة:</label>
+                            <select id="surahEnd" class="form-select select2-enable"></select>
+                        </div>
+                        <div class="col-md-6">
+                            <label class="form-label fw-bold text-primary">إلى آية:</label>
+                            <select id="ayahEnd" class="form-select"></select>
+                        </div>
+                    </div>
+                    <div class="col-md-6">
+                        <label class="form-label">التقدير/العلامة</label>
+                        <select id="grade" class="form-select">
+                            <option value="ممتاز">ممتاز</option>
+                            <option value="جيد جداً">جيد جداً</option>
+                            <option value="جيد">جيد</option>
+                        </select>
+                    </div>
+                    <div class="col-md-6">
+                        <label class="form-label">ملاحظات المحفظ</label>
+                        <textarea id="notes" class="form-control" rows="1"></textarea>
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">إلغاء</button>
+                <button type="button" class="btn btn-success" onclick="submitAchievement()">حفظ الإنجاز</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="modal fade" id="groupAchievementModal" tabindex="-1" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content border-primary">
+            <div class="modal-header bg-primary text-white">
+                <h5 class="modal-title">تسجيل درس جماعي للحلقة</h5>
+                <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
+            </div>
+            <div class="modal-body">
+                <div class="mb-3">
+                    <label class="form-label fw-bold">المادة (تجويد، تفسير، تلقين..)</label>
+                    <input type="text" id="groupSubject" class="form-control" placeholder="مثلاً: أحكام النون الساكنة">
+                </div>
+                <div class="mb-3">
+                    <label class="form-label fw-bold">محتوى الدرس</label>
+                    <textarea id="groupContent" class="form-control" rows="3" placeholder="اكتب ملخصاً لما تم شرحه"></textarea>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">إلغاء</button>
+                <button type="button" class="btn btn-primary" onclick="submitGroupAchievement()">حفظ الدرس</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    <script>
+        // 1. قاعدة بيانات القرآن (تأكد من إكمال القائمة لتشمل 114 سورة)
+        const quranData = [
+            { id: 1, name: "الفاتحة", ayahs: 7 },
+            { id: 2, name: "البقرة", ayahs: 286 },
+            { id: 3, name: "آل عمران", ayahs: 200 },
+            { id: 4, name: "النساء", ayahs: 176 },
+            { id: 5, name: "المائدة", ayahs: 120 },
+            { id: 6, name: "الأنعام", ayahs: 165 },
+            { id: 7, name: "الأعراف", ayahs: 206 },
+            { id: 8, name: "الأنفال", ayahs: 75 },
+            { id: 9, name: "التوبة", ayahs: 129 },
+            { id: 10, name: "يونس", ayahs: 109 },
+            { id: 11, name: "هود", ayahs: 123 },
+            { id: 12, name: "يوسف", ayahs: 111 },
+            { id: 78, name: "النبأ", ayahs: 40 },
+            { id: 114, name: "الناس", ayahs: 6 }
+            // يمكنك إضافة باقي السور هنا بنفس النمط
+        ];
+
+        $(document).ready(function () {
+            // ملء قوائم السور عند تحميل الصفحة
+            populateSurahs();
+
+            // عند اختيار حلقة
+            $('#circleSelect').change(function () {
+                var circleId = $(this).val();
+                if (circleId) {
+                    loadStudents(circleId);
+                } else {
+                    $('#studentsContainer').addClass('d-none');
+                }
+            });
+
+            // منطق تحديث الآيات بناءً على السورة المختارة (من)
+            $('#surahStart').change(function() {
+                const ayahsCount = $(this).find(':selected').data('ayahs');
+                updateAyahDropdown('#ayahStart', ayahsCount);
+            });
+
+            // منطق تحديث الآيات بناءً على السورة المختارة (إلى)
+            $('#surahEnd').change(function() {
+                const ayahsCount = $(this).find(':selected').data('ayahs');
+                updateAyahDropdown('#ayahEnd', ayahsCount);
+            });
+        });
+
+        // دالة ملء السور
+        function populateSurahs() {
+            let options = '<option value="">-- اختر السورة --</option>';
+            quranData.forEach(s => {
+                options += `<option value="${s.name}" data-ayahs="${s.ayahs}">${s.id}. ${s.name}</option>`;
+            });
+            $('#surahStart, #surahEnd').html(options);
+        }
+
+        // دالة تحديث قائمة الآيات
+        function updateAyahDropdown(targetId, count) {
+            let options = '<option value="">-- اختر الآية --</option>';
+            if (count) {
+                for (let i = 1; i <= count; i++) {
+                    options += `<option value="${i}">${i}</option>`;
+                }
+            }
+            $(targetId).html(options);
+        }
+
+        function loadStudents(circleId) {
+            $.get('/FollowUp/GetStudents', { circleId: circleId }, function (data) {
+                var html = '';
+                $.each(data, function (i, student) {
+                    html += `<tr id="student-row-${student.id}">
+                        <td>${i + 1}</td>
+                        <td class="text-end fw-bold">${student.name}</td>
+                        <td>
+                            <div class="btn-group btn-group-sm">
+                                <button class="btn btn-outline-success" onclick="markAttendance(${student.id}, 'حاضر')">حاضر</button>
+                                <button class="btn btn-outline-danger" onclick="markAttendance(${student.id}, 'غائب')">غائب</button>
+                                <button class="btn btn-outline-warning" onclick="markAttendance(${student.id}, 'مستأذن')">مستأذن</button>
+                            </div>
+                        </td>
+                        <td>
+                            <button class="btn btn-sm btn-primary" onclick="openAchModal(${student.id}, '${student.name}')">
+                                <i class="fas fa-edit"></i> تسجيل إنجاز
+                            </button>
+                        </td>
+                        <td>
+                            <a href="/Students/Details/${student.id}" class="btn btn-sm btn-light border"><i class="fas fa-history"></i></a>
+                        </td>
+                    </tr>`;
+                });
+                $('#studentsList').html(html);
+                $('#studentsContainer').removeClass('d-none');
+            });
+        }
+
+        function markAttendance(studentId, status) {
+            $.post('/FollowUp/SaveAttendance', { studentId: studentId, status: status }, function (res) {
+                if(res.success) {
+                    alert(res.message);
+                    $(`#student-row-${studentId}`).removeClass('table-success table-danger table-warning');
+                    if(status === 'حاضر') $(`#student-row-${studentId}`).addClass('table-success');
+                    if(status === 'غائب') $(`#student-row-${studentId}`).addClass('table-danger');
+                    if(status === 'مستأذن') $(`#student-row-${studentId}`).addClass('table-warning');
+                }
+            });
+        }
+
+        function openAchModal(id, name) {
+            $('#targetStudentId').val(id);
+            $('#targetStudentName').text(name);
+            $('#achievementModal').modal('show');
+        }
+
+        function submitAchievement() {
+            var data = {
+                StudentId: $('#targetStudentId').val(),
+                Type: parseInt($('#achType').val()),
+                SurahStart: $('#surahStart').val(),
+                SurahEnd: $('#surahEnd').val(),
+                AyahStart: parseInt($('#ayahStart').val() || 0),
+                AyahEnd: parseInt($('#ayahEnd').val() || 0),
+                Grade: $('#grade').val(),
+                TeacherNotes: $('#notes').val()
+            };
+
+            $.ajax({
+                url: '/FollowUp/SaveAchievement',
+                type: 'POST',
+                contentType: 'application/json',
+                data: JSON.stringify(data),
+                success: function (res) {
+                    if (res.success) {
+                        alert(res.message);
+                        $('#achievementModal').modal('hide');
+                        // إعادة تصفير الحقول بعد الحفظ
+                        $('#achievementModal select').val('');
+                        $('#achievementModal textarea').val('');
+                        $(`#student-row-${data.StudentId}`).addClass('table-info');
+                    }
+                }
+            });
+        }
+
+        function openGroupAchievementModal() {
+            var circleId = $('#circleSelect').val();
+            if (!circleId) {
+                alert("يرجى اختيار حلقة أولاً");
+                return;
+            }
+            $('#groupAchievementModal').modal('show');
+        }
+
+        function submitGroupAchievement() {
+            var data = {
+                CircleId: parseInt($('#circleSelect').val()),
+                Subject: $('#groupSubject').val(),
+                Content: $('#groupContent').val()
+            };
+
+            $.ajax({
+                url: '/FollowUp/SaveGroupAchievement',
+                type: 'POST',
+                contentType: 'application/json',
+                data: JSON.stringify(data),
+                success: function (res) {
+                    if (res.success) {
+                        alert(res.message);
+                        $('#groupAchievementModal').modal('hide');
+                        $('#groupSubject, #groupContent').val('');
+                    }
+                }
+            });
+        }
+    </script>
+}

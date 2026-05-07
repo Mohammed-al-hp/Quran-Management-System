@@ -4,7 +4,6 @@ using QuranCentersSystem.Models;
 
 namespace QuranCentersSystem.Data
 {
-    // التعديل 1: أضف <ApplicationUser> هنا
     public class ApplicationDbContext : IdentityDbContext<ApplicationUser>
     {
         public ApplicationDbContext(DbContextOptions<ApplicationDbContext> options)
@@ -16,27 +15,35 @@ namespace QuranCentersSystem.Data
         public DbSet<Teacher> Teachers { get; set; }
         public DbSet<Circle> Circles { get; set; }
         public DbSet<Attendance> Attendances { get; set; }
-        // التعديل 2: يفضل حذف هذا السطر لأن IdentityDbContext يعرفه تلقائياً كـ Users
-        // public DbSet<ApplicationUser> ApplicationUsers { get; set; } 
-
-        public DbSet<MemorizationQuestion> MemorizationQuestions { get; set; }
         public DbSet<Payment> Payments { get; set; }
         public DbSet<TeacherAttendance> TeacherAttendances { get; set; }
-        public DbSet<Memorization> Memorizations { get; set; }
 
-        // التعديل 3: إضافة هذه الدالة بالكامل لحل مشكلة الـ Discriminator
+        // التعديل الأساسي: استخدام سجل الإنجاز الجديد
+        public DbSet<StudentAchievement> StudentAchievements { get; set; }
+
+        // إذا كنت لا تزال تستخدم جدول الأسئلة المنفصل
+      //  public DbSet<StudentAchievementQuestion> StudentAchievementQuestions { get; set; }
+
+        public DbSet<GroupAchievement> GroupAchievements { get; set; }
+
         protected override void OnModelCreating(ModelBuilder builder)
         {
             base.OnModelCreating(builder);
 
-            // حل مشكلة الخطأ: Invalid column name 'Discriminator'
-            builder.Entity<ApplicationUser>()
-                .HasBaseType((Type)null);
-
-            // اختياري: يمكنك هنا تحديد أسماء الجداول لتكون بسيطة (مثل Users بدل AspNetUsers)
-            builder.Entity<ApplicationUser>(entity => {
+            // حل مشكلة الـ Discriminator وتخصيص جداول Identity
+            builder.Entity<ApplicationUser>(entity =>
+            {
                 entity.ToTable(name: "Users");
+                entity.HasBaseType((Type)null); // لضمان عدم البحث عن Discriminator
             });
+
+            // ضبط علاقات الطلاب مع الإنجازات (حذف تلقائي عند حذف الطالب)
+            // داخل OnModelCreating
+            builder.Entity<StudentAchievement>()
+                .HasOne(s => s.Student)
+                .WithMany(a => a.StudentAchievements) // تأكد أن هذا الاسم مطابق لما هو موجود في موديل Student
+                .HasForeignKey(s => s.StudentId)
+                .OnDelete(DeleteBehavior.Cascade);
         }
     }
 }

@@ -11,6 +11,6 @@ namespace QuranCentersSystem.Models
 
         public string Phone { get; set; }
         // أضف هذا السطر لحل خطأ السطر 32 في الـ Controller
-        public string Email { get; set; }
+        public string? Email { get; set; } // إضافة علامة الاستفهام تجعله اختيارياً في قاعدة البيانات
     }
 }

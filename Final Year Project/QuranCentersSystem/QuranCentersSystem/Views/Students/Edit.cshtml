@@ -41,6 +41,12 @@
                         <span asp-validation-for="CircleId" class="text-danger small"></span>
                     </div>
 
+                    <div class="mb-3">
+                        <label asp-for="ParentPhoneNumber" class="form-label">رقم هاتف ولي الأمر</label>
+                        <input asp-for="ParentPhoneNumber" class="form-control" />
+                        <span asp-validation-for="ParentPhoneNumber" class="text-danger"></span>
+                    </div>
+
                     @* تاريخ الانضمام *@
                     <div class="mb-3">
                         <label asp-for="JoinDate" class="form-label fw-bold text-secondary">تاريخ الانضمام</label>

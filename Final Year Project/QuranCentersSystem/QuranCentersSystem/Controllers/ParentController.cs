@@ -77,8 +77,7 @@ namespace QuranCentersSystem.Controllers
 
             var myChildren = await _context.Students
                 .Where(s => s.ParentId == parentProfile.Id)
-                .Include(s => s.Attendances)
-                .Include(s => s.Memorizations)
+                .Include(s => s.StudentAchievements)
                 .Include(s => s.Payments)
                 .ToListAsync();
 
@@ -91,7 +90,7 @@ namespace QuranCentersSystem.Controllers
             var currentUser = await _userManager.GetUserAsync(User);
             var student = await _context.Students
                 .Include(s => s.Attendances)
-                .Include(s => s.Memorizations)
+                .Include(s => s.StudentAchievements)
                 .Include(s => s.Payments)
                 .FirstOrDefaultAsync(s => s.Id == id);
 

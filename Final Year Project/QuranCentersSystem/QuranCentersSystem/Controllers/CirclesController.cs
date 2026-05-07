@@ -19,20 +19,21 @@ namespace QuranCentersSystem.Controllers
             _context = context;
         }
 
-        // 1. عرض قائمة الحلقات مع الفلترة والبحث
+        // 1. عرض قائمة الحلقات مع الفلترة
         public async Task<IActionResult> Index(string gender, string circleType)
         {
-            // جلب الحلقات مع تضمين بيانات المحفظين والطلاب لحساب العدد
             var query = _context.Circles
                 .Include(c => c.Teacher)
                 .Include(c => c.Students)
                 .AsQueryable();
 
+            // فلترة الجنس - القيم المتوقعة: "ذكور" أو "إناث"
             if (!string.IsNullOrEmpty(gender) && gender != "الكل")
             {
                 query = query.Where(c => c.Gender == gender);
             }
 
+            // فلترة نوع الحلقة - القيم المتوقعة: "حلقة عامة" أو "دورة صيفية"
             if (!string.IsNullOrEmpty(circleType) && circleType != "الكل")
             {
                 query = query.Where(c => c.CircleType == circleType);
@@ -44,7 +45,6 @@ namespace QuranCentersSystem.Controllers
         // 2. عرض صفحة إضافة حلقة جديدة
         public IActionResult Create()
         {
-            // تجهيز قائمة المحفظين للاختيار منها في الواجهة
             ViewBag.TeacherId = new SelectList(_context.Teachers, "Id", "Name");
             return View();
         }
@@ -52,9 +52,12 @@ namespace QuranCentersSystem.Controllers
         // 3. معالجة حفظ الحلقة الجديدة (POST)
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("Id,Name,TeacherId,CircleType,Gender,TimingType,StartPrayer,EndPrayer,StartTime,EndTime")] Circle circle, string[] SelectedDays)
+        public async Task<IActionResult> Create(
+            [Bind("Id,Name,CircleType,Gender,TeacherId,TimingType,StartPrayer,EndPrayer,StartTime,EndTime")]
+            Circle circle,
+            string[] SelectedDays,
+            int[] TeacherIds)
         {
-            // إزالة التحقق من الكائنات المرتبطة لضمان مرور ModelState.IsValid
             ModelState.Remove("Teacher");
             ModelState.Remove("Students");
             ModelState.Remove("SelectedDays");
@@ -63,32 +66,33 @@ namespace QuranCentersSystem.Controllers
             {
                 try
                 {
-                    // تحويل مصفوفة الأيام المختارة إلى نص مفصول بفاصلة لحفظها
-                    if (SelectedDays != null && SelectedDays.Length > 0)
+                    // الأيام المختارة
+                    circle.SelectedDays = (SelectedDays != null && SelectedDays.Length > 0)
+                        ? string.Join(", ", SelectedDays)
+                        : "لم يتم تحديد أيام";
+
+                    // أول محفظ مختار يُخزَّن في TeacherId (للتوافق مع الـ Model الحالي)
+                    if (TeacherIds != null && TeacherIds.Length > 0)
                     {
-                        circle.SelectedDays = string.Join(", ", SelectedDays);
+                        circle.TeacherId = TeacherIds[0];
                     }
 
                     _context.Add(circle);
                     await _context.SaveChangesAsync();
 
-                    // العودة للقائمة بعد النجاح
                     return RedirectToAction(nameof(Index));
                 }
                 catch (Exception ex)
                 {
-                    // إضافة خطأ في حال فشل الحفظ في قاعدة البيانات
-                    ModelState.AddModelError("", "حدث خطأ أثناء الاتصال بقاعدة البيانات: " + ex.Message);
+                    ModelState.AddModelError("", "حدث خطأ أثناء الحفظ: " + ex.Message);
                 }
             }
 
-            // إذا وصلنا هنا، فهذا يعني وجود خطأ في البيانات المدخلة
-            // نعيد ملء قائمة المحفظين لكي لا تظهر فارغة في الواجهة
             ViewBag.TeacherId = new SelectList(_context.Teachers, "Id", "Name", circle.TeacherId);
             return View(circle);
         }
 
-        // 4. حذف الحلقة (إضافي للتكامل)
+        // 4. حذف الحلقة
         [HttpPost, ActionName("Delete")]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> DeleteConfirmed(int id)
@@ -100,6 +104,64 @@ namespace QuranCentersSystem.Controllers
                 await _context.SaveChangesAsync();
             }
             return RedirectToAction(nameof(Index));
+        }
+
+        // 1. عرض صفحة التعديل (GET)
+        public async Task<IActionResult> Edit(int? id)
+        {
+            if (id == null) return NotFound();
+
+            var circle = await _context.Circles.FindAsync(id);
+            if (circle == null) return NotFound();
+
+            ViewBag.TeacherId = new SelectList(_context.Teachers, "Id", "Name", circle.TeacherId);
+            return View(circle);
+        }
+
+        // 2. معالجة حفظ التعديل (POST)
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> Edit(int id, [Bind("Id,Name,CircleType,Gender,TeacherId,TimingType,StartPrayer,EndPrayer,StartTime,EndTime")] Circle circle, string[] SelectedDays)
+        {
+            if (id != circle.Id) return NotFound();
+
+            ModelState.Remove("Teacher");
+            ModelState.Remove("Students");
+
+            if (ModelState.IsValid)
+            {
+                try
+                {
+                    circle.SelectedDays = (SelectedDays != null && SelectedDays.Length > 0)
+                        ? string.Join(", ", SelectedDays) : "لم يتم تحديد أيام";
+
+                    _context.Update(circle);
+                    await _context.SaveChangesAsync();
+                    return RedirectToAction(nameof(Index));
+                }
+                catch (DbUpdateConcurrencyException)
+                {
+                    if (!_context.Circles.Any(e => e.Id == circle.Id)) return NotFound();
+                    else throw;
+                }
+            }
+            ViewBag.TeacherId = new SelectList(_context.Teachers, "Id", "Name", circle.TeacherId);
+            return View(circle);
+        }
+
+        // 3. دالة جلب التفاصيل لعرضها في الـ Modal
+        public async Task<IActionResult> Details(int? id)
+        {
+            if (id == null) return NotFound();
+
+            var circle = await _context.Circles
+                .Include(c => c.Teacher)
+                .Include(c => c.Students)
+                .FirstOrDefaultAsync(m => m.Id == id);
+
+            if (circle == null) return NotFound();
+
+            return PartialView("_DetailsPartial", circle);
         }
     }
 }

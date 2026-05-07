@@ -1,39 +1,134 @@
 ﻿@model QuranCentersSystem.Models.Student
 
 @{
-    ViewData["Title"] = "Details";
+    ViewData["Title"] = "ملف الطالب: " + Model.Name;
 }
 
-<h1>Details</h1>
+<div class="container mt-4" dir="rtl">
+    <div class="card shadow-sm border-0 mb-4">
+        <div class="card-header bg-dark text-white d-flex justify-content-between align-items-center">
+            <h4 class="mb-0"><i class="bi bi-person-badge"></i> ملف الطالب: @Model.Name</h4>
+            <div>
+                <a asp-action="Edit" asp-route-id="@Model.Id" class="btn btn-sm btn-outline-light">تعديل البيانات</a>
+                <a asp-action="Index" class="btn btn-sm btn-outline-light">العودة للقائمة</a>
+            </div>
+        </div>
+        <div class="card-body">
+            <div class="row text-center">
+                <div class="col-md-4 border-start">
+                    <h6 class="text-muted">تاريخ الانضمام</h6>
+                    <p class="fw-bold">@Model.JoinDate.ToString("yyyy/MM/dd")</p>
+                </div>
+                <div class="col-md-4 border-start">
+                    <h6 class="text-muted">الحالة</h6>
+                    <span class="badge @(Model.Status == "نشط" ? "bg-success" : "bg-danger")">@Model.Status</span>
+                </div>
+                <div class="col-md-4">
+                    <h6 class="text-muted">إجمالي الإنجازات</h6>
+                    <p class="fw-bold text-primary">@Model.StudentAchievements?.Count() درس مسجل</p>
+                </div>
+            </div>
+        </div>
+    </div>
 
-<div>
-    <h4>Student</h4>
-    <hr />
-    <dl class="row">
-        <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.Name)
-        </dt>
-        <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.Name)
-        </dd>
-        <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.JoinDate)
-        </dt>
-        <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.JoinDate)
-        </dd>
-        <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.Status)
-        </dt>
-        <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.Status)
-        </dd>
-    </dl>
+    <div class="card shadow-sm border-0">
+        <div class="card-header bg-primary text-white d-flex justify-content-between align-items-center">
+            <h5 class="mb-0 px-2"><i class="bi bi-journal-text"></i> سجل الحفظ والمراجعة</h5>
+            <a asp-action="PrintStudentReport" asp-route-id="@Model.Id" class="btn btn-light btn-sm text-danger fw-bold">
+                <i class="bi bi-file-pdf"></i> تحميل تقرير PDF
+            </a>
+        </div>
+        <div class="card-body p-0">
+            <div class="table-responsive">
+                <table class="table table-hover align-middle mb-0 text-center">
+                    <thead class="table-light">
+                        <tr>
+                            <th>التاريخ</th>
+                            <th>نوع الإنجاز</th>
+                            <th>من سورة/آية</th>
+                            <th>إلى سورة/آية</th>
+                            <th>التقدير</th>
+                            <th>ملاحظات المحفظ</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @if (Model.StudentAchievements != null && Model.StudentAchievements.Any())
+                        {
+                            @foreach (var item in Model.StudentAchievements.OrderByDescending(a => a.Date))
+                            {
+                                <tr>
+                                    <td class="text-muted" style="font-size: 0.9rem;">
+                                        @item.Date.ToString("yyyy/MM/dd")
+                                    </td>
+                                    <td>
+                                        @if ((int)item.Type == 0) // حفظ جديد
+                                        {
+                                            <span class="badge bg-success-subtle text-success border border-success">حفظ جديد</span>
+                                        }
+                                        else if ((int)item.Type == 1) // مراجعة صغرى
+                                        {
+                                            <span class="badge bg-primary-subtle text-primary border border-primary">مراجعة صغرى</span>
+                                        }
+                                        else // مراجعة كبرى
+                                        {
+                                            <span class="badge bg-warning-subtle text-warning border border-warning">مراجعة كبرى</span>
+                                        }
+                                    </td>
+                                    <td class="fw-bold text-dark">
+                                        @item.SurahStart <br />
+                                        <small class="text-muted">آية: @item.AyahStart</small>
+                                    </td>
+                                    <td class="fw-bold text-dark">
+                                        @item.SurahEnd <br />
+                                        <small class="text-muted">آية: @item.AyahEnd</small>
+                                    </td>
+                                    <td>
+                                        <span class="badge rounded-pill bg-light text-dark border">@item.Grade</span>
+                                    </td>
+                                    <td class="text-muted small">
+                                        @(string.IsNullOrEmpty(item.TeacherNotes) ? "-" : item.TeacherNotes)
+                                    </td>
+                                </tr>
+                            }
+                        }
+                        else
+                        {
+                            <tr>
+                                <td colspan="6" class="py-4 text-muted">لا توجد إنجازات مسجلة لهذا الطالب حتى الآن.</td>
+                            </tr>
+                        }
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
 </div>
-<div>
-    <a asp-action="Edit" asp-route-id="@Model?.Id">Edit</a> |
-    <a asp-action="Index">Back to List</a>
-    <a asp-action="PrintStudentReport" asp-route-id="@Model.Id" class="btn btn-danger">
-        <i class="bi bi-file-pdf"></i> تحميل تقرير PDF
-    </a>
-</div>
+
+<style>
+    /* لمسات جمالية بسيطة */
+    .card {
+        border-radius: 12px;
+        overflow: hidden;
+    }
+
+    .table thead th {
+        font-weight: 600;
+        font-size: 0.9rem;
+    }
+
+    .badge {
+        padding: 0.5em 0.8em;
+    }
+
+    .bg-success-subtle {
+        background-color: #e1f7e9;
+    }
+
+    .bg-primary-subtle {
+        background-color: #e7f0ff;
+    }
+
+    .bg-warning-subtle {
+        background-color: #fff8e1;
+    }
+</style>

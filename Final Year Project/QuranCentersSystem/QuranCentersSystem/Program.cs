@@ -1,4 +1,6 @@
-﻿using Microsoft.AspNetCore.Identity;
+﻿using System.Text.Encodings.Web;
+using System.Text.Unicode;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using QuranCentersSystem.Data;
 using QuranCentersSystem.Models;
@@ -34,7 +36,6 @@ var key = Encoding.UTF8.GetBytes(keyString);
 
 builder.Services.AddAuthentication(options =>
 {
-    // الافتراضي للمتصفح (MVC) هو الكوكيز
     options.DefaultScheme = IdentityConstants.ApplicationScheme;
     options.DefaultAuthenticateScheme = IdentityConstants.ApplicationScheme;
     options.DefaultChallengeScheme = IdentityConstants.ApplicationScheme;
@@ -73,6 +74,11 @@ builder.Services.AddControllersWithViews()
 
 builder.Services.AddRazorPages();
 
+builder.Services.AddSingleton<System.Text.Encodings.Web.HtmlEncoder>(
+    System.Text.Encodings.Web.HtmlEncoder.Create(allowedRanges: new[] {
+        System.Text.Unicode.UnicodeRanges.All
+    }));
+
 var app = builder.Build();
 
 // --- 5. إعدادات Middleware ---
@@ -85,10 +91,7 @@ if (!app.Environment.IsDevelopment())
 app.UseHttpsRedirection();
 app.UseStaticFiles();
 app.UseRouting();
-
-// تفعيل CORS قبل الـ Authentication
 app.UseCors("AllowFlutter");
-
 app.UseAuthentication();
 app.UseAuthorization();
 
@@ -99,15 +102,15 @@ app.MapControllerRoute(
     pattern: "{controller=Home}/{action=Index}/{id?}");
 app.MapRazorPages();
 
-// --- 6. بذر البيانات (Seed Data) المطور والنهائي ---
+// --- 6. بذر البيانات (Seed Data) المصحح ---
 using (var scope = app.Services.CreateScope())
 {
     var services = scope.ServiceProvider;
     var userManager = services.GetRequiredService<UserManager<ApplicationUser>>();
     var roleManager = services.GetRequiredService<RoleManager<IdentityRole>>();
 
-    // التأكد من وجود الأدوار (Admin, Teacher, Parent)
-    string[] roleNames = { "Admin", "Teacher", "Parent" };
+    // ✅ التعديل هنا: أضفنا "Student" و "Supervisor" لضمان عدم حدوث خطأ عند الربط
+    string[] roleNames = { "Admin", "Teacher", "Parent", "Student", "Supervisor" };
     foreach (var roleName in roleNames)
     {
         if (!await roleManager.RoleExistsAsync(roleName))
@@ -117,8 +120,6 @@ using (var scope = app.Services.CreateScope())
     }
 
     var adminEmail = "admin@quransystems.com";
-
-    // البحث عن المستخدم بدقة لمنع خطأ الـ Duplicate Key Row
     var existingUser = await userManager.FindByEmailAsync(adminEmail);
 
     if (existingUser == null)
@@ -132,7 +133,6 @@ using (var scope = app.Services.CreateScope())
             IsActive = true
         };
 
-        // استخدام Try-Catch كطبقة حماية إضافية أثناء الحفظ في قاعدة البيانات
         try
         {
             var result = await userManager.CreateAsync(admin, "Admin@123");
@@ -143,7 +143,6 @@ using (var scope = app.Services.CreateScope())
         }
         catch (Exception ex)
         {
-            // تسجيل الخطأ في الـ Console بدلاً من توقف التطبيق
             Console.WriteLine($"[Seed Data Error]: {ex.Message}");
         }
     }

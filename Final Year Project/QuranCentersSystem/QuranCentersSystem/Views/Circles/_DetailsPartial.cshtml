@@ -1,0 +1,45 @@
+﻿@model QuranCentersSystem.Models.Circle
+
+<div class="modal-header bg-light">
+    <h5 class="modal-title"><i class="bi bi-info-circle me-2"></i> تفاصيل الحلقة: @Model.Name</h5>
+    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+</div>
+<div class="modal-body">
+    <div class="row g-3">
+        <div class="col-6">
+            <label class="text-muted small d-block">نوع الحلقة</label>
+            <span class="fw-bold">@Model.CircleType</span>
+        </div>
+        <div class="col-6">
+            <label class="text-muted small d-block">الجنس</label>
+            <span class="badge @(Model.Gender == "ذكور" ? "bg-primary" : "bg-danger")">@Model.Gender</span>
+        </div>
+        <div class="col-12">
+            <hr class="my-1">
+        </div>
+        <div class="col-6">
+            <label class="text-muted small d-block">المحفظ المسؤول</label>
+            <span class="fw-bold text-success">@(Model.Teacher?.Name ?? "غير محدد")</span>
+        </div>
+        <div class="col-6">
+            <label class="text-muted small d-block">عدد الطلاب</label>
+            <span class="badge bg-secondary">@(Model.Students?.Count ?? 0) طالب</span>
+        </div>
+        <div class="col-12 bg-light p-2 rounded">
+            <label class="text-muted small d-block">أيام الحلقة</label>
+            <p class="mb-0 text-primary">@Model.SelectedDays</p>
+        </div>
+        <div class="col-12">
+            <label class="text-muted small d-block">توقيت الحلقة</label>
+            <p class="mb-0">
+                <i class="bi bi-clock me-1"></i>
+                من @Model.StartTime?.ToString(@"hh\:mm") إلى @Model.EndTime?.ToString(@"hh\:mm")
+                (@Model.TimingType)
+            </p>
+        </div>
+    </div>
+</div>
+<div class="modal-footer">
+    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">إغلاق</button>
+    <a asp-action="Edit" asp-route-id="@Model.Id" class="btn btn-warning">تعديل البيانات</a>
+</div>
