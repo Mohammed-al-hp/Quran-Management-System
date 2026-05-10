@@ -16,6 +16,74 @@
     "ReturnTypes": []
   },
   {
+    "ContainingType": "QuranCentersSystem.Controllers.FlutterApiController",
+    "Method": "GetChildDetails",
+    "RelativePath": "api/flutter/parent/child/{studentId}",
+    "HttpMethod": "GET",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [
+      {
+        "Name": "studentId",
+        "Type": "System.Int32",
+        "IsRequired": true
+      }
+    ],
+    "ReturnTypes": []
+  },
+  {
+    "ContainingType": "QuranCentersSystem.Controllers.FlutterApiController",
+    "Method": "GetMyParentData",
+    "RelativePath": "api/flutter/parent/me",
+    "HttpMethod": "GET",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [],
+    "ReturnTypes": []
+  },
+  {
+    "ContainingType": "QuranCentersSystem.Controllers.FlutterApiController",
+    "Method": "GetStudentNotifications",
+    "RelativePath": "api/flutter/student/{studentId}/notifications",
+    "HttpMethod": "GET",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [
+      {
+        "Name": "studentId",
+        "Type": "System.Int32",
+        "IsRequired": true
+      }
+    ],
+    "ReturnTypes": []
+  },
+  {
+    "ContainingType": "QuranCentersSystem.Controllers.FlutterApiController",
+    "Method": "GetSchedule",
+    "RelativePath": "api/flutter/student/{studentId}/schedule",
+    "HttpMethod": "GET",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [
+      {
+        "Name": "studentId",
+        "Type": "System.Int32",
+        "IsRequired": true
+      }
+    ],
+    "ReturnTypes": []
+  },
+  {
+    "ContainingType": "QuranCentersSystem.Controllers.FlutterApiController",
+    "Method": "GetMyStudentData",
+    "RelativePath": "api/flutter/student/me",
+    "HttpMethod": "GET",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [],
+    "ReturnTypes": []
+  },
+  {
     "ContainingType": "TeachersApiController",
     "Method": "GetTeachers",
     "RelativePath": "api/TeachersApi",

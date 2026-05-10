@@ -1,3 +1,4 @@
+import 'services/api_service.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'dart:math' as math;
@@ -681,25 +682,34 @@ class _LoginScreenState extends State<LoginScreen>
       return;
     }
     setState(() => _isLoading = true);
-    await Future.delayed(const Duration(milliseconds: 1500));
+
+    final apiService = ApiService();
+    final result = await apiService.login(
+      _usernameCtrl.text.trim(),
+      _passwordCtrl.text,
+    );
 
     if (!mounted) return;
     setState(() => _isLoading = false);
 
-    // توجيه حسب الدور (بيانات تجريبية)
-    Widget target = _isStudent
-        ? StudentDashboard(name: _usernameCtrl.text)
-        : ParentDashboard(name: _usernameCtrl.text);
+    if (result['success'] == true) {
+      final role = result['role'] ?? 'Student';
+      Widget target = role == 'Parent'
+          ? ParentDashboard(name: _usernameCtrl.text)
+          : StudentDashboard(name: _usernameCtrl.text);
 
-    Navigator.pushReplacement(
-      context,
-      PageRouteBuilder(
-        pageBuilder: (_, __, ___) => target,
-        transitionsBuilder: (_, anim, __, child) =>
-            FadeTransition(opacity: anim, child: child),
-        transitionDuration: const Duration(milliseconds: 500),
-      ),
-    );
+      Navigator.pushReplacement(
+        context,
+        PageRouteBuilder(
+          pageBuilder: (_, __, ___) => target,
+          transitionsBuilder: (_, anim, __, child) =>
+              FadeTransition(opacity: anim, child: child),
+          transitionDuration: const Duration(milliseconds: 500),
+        ),
+      );
+    } else {
+      _showSnack(result['message'] ?? 'بيانات الدخول غير صحيحة', isError: true);
+    }
   }
 
   void _showSnack(String msg, {bool isError = false}) {
