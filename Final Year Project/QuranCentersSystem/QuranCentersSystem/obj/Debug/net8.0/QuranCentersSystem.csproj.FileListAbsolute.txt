@@ -897,3 +897,5 @@ C:\New folder (2)\Quran-Management-System\Final Year Project\QuranCentersSystem\
 C:\New folder (2)\Quran-Management-System\Final Year Project\QuranCentersSystem\QuranCentersSystem\bin\Debug\net8.0\System.Diagnostics.DiagnosticSource.dll
 C:\New folder (2)\Quran-Management-System\Final Year Project\QuranCentersSystem\QuranCentersSystem\bin\Debug\net8.0\System.Net.ServerSentEvents.dll
 C:\New folder (2)\Quran-Management-System\Final Year Project\QuranCentersSystem\QuranCentersSystem\bin\Debug\net8.0\System.Threading.Channels.dll
+C:\New folder (2)\Quran-Management-System\Final Year Project\QuranCentersSystem\QuranCentersSystem\obj\Debug\net8.0\staticwebassets.upToDateCheck.txt
+C:\New folder (2)\Quran-Management-System\Final Year Project\QuranCentersSystem\QuranCentersSystem\bin\Debug\net8.0\wwwroot\Rotativa\wkhtmltopdf.exe

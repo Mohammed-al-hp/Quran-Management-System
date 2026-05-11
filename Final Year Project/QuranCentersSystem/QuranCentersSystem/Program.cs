@@ -165,8 +165,11 @@ app.UseCors("AllowFlutter");
 app.UseAuthentication();
 app.UseAuthorization();
 
-RotativaConfiguration.Setup(app.Environment.WebRootPath, "Rotativa");
+// تحديد مسار الـ wwwroot يدوياً إذا لم يتعرف عليه النظام تلقائياً
+var rootPath = app.Environment.WebRootPath ?? Path.Combine(Directory.GetCurrentDirectory(), "wwwroot");
+var rotativaPath = Path.Combine(rootPath, "Rotativa");
 
+RotativaConfiguration.Setup(rootPath, "Rotativa");
 app.MapControllerRoute(name: "default", pattern: "{controller=Home}/{action=Index}/{id?}");
 app.MapRazorPages();
 app.MapHub<NotificationHub>("/notificationHub");
