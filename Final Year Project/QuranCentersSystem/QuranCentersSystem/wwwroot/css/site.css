@@ -1,44 +1,128 @@
-﻿/* تعريف متغيرات الألوان للوضع الفاتح (الافتراضي) */
+﻿/* =========================================================
+   تحميل الخط وضمان تطبيقه
+========================================================= */
+
+@import url('https://fonts.googleapis.com/css2?family=Cairo:wght@300;400;500;600;700;800&display=swap');
+
+/* فرض خط Cairo على كامل المنظومة */
+*,
+*::before,
+*::after {
+    font-family: 'Cairo', sans-serif !important;
+    box-sizing: border-box;
+}
+
+/* استثناء الخطوط البرمجية */
+code,
+kbd,
+pre,
+samp {
+    font-family: SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace !important;
+}
+
+/* =========================================================
+   متغيرات الوضع الفاتح
+========================================================= */
+
 :root {
     --primary-green: #1a531a;
     --secondary-green: #2a752a;
     --accent-gold: #c9a050;
-    --bg-body: #f4f7f6; /* خلفية الصفحة */
-    --bg-card: #ffffff; /* خلفية البطاقات والجدول */
-    --text-main: #2c3e50; /* لون النصوص الأساسية */
+    --bg-body: #f4f7f6;
+    --bg-card: #ffffff;
+    --text-main: #2c3e50;
+    --text-muted: #64748b;
     --sidebar-bg: #1e293b;
     --border-color: #e2e8f0;
     --hover-bg: #f8f9fa;
+    --active-bg: rgba(26, 83, 26, 0.1);
+    --active-text: #1a531a;
+    --shadow-sm: 0 2px 5px rgba(0,0,0,0.05);
+    --shadow-md: 0 4px 12px rgba(0,0,0,0.08);
+    --transition: all 0.3s ease;
 }
 
-/* تعريف متغيرات الألوان للوضع المظلم */
+/* =========================================================
+   الوضع المظلم
+========================================================= */
+
 [data-bs-theme="dark"] {
-    --primary-green: #2a752a; /* تفتيح الأخضر قليلاً ليناسب الظلام */
+    --primary-green: #2a752a;
     --secondary-green: #3b913b;
     --accent-gold: #d4af37;
-    --bg-body: #0f172a; /* خلفية داكنة للصفحة */
-    --bg-card: #1e293b; /* خلفية البطاقات داكنة */
-    --text-main: #f8fafc; /* نصوص بيضاء */
-    --sidebar-bg: #0b1120; /* قائمة جانبية أكثر دكنة */
+    --bg-body: #0f172a;
+    --bg-card: #1e293b;
+    --text-main: #f8fafc;
+    --text-muted: #cbd5e1;
+    --sidebar-bg: #0b1120;
     --border-color: #334155;
     --hover-bg: #334155;
+    --active-bg: rgba(212, 175, 55, 0.1);
+    --active-text: #d4af37;
+}
+
+/* =========================================================
+   إعدادات عامة
+========================================================= */
+
+html {
+    scroll-behavior: smooth;
 }
 
 body {
     background-color: var(--bg-body);
-    font-family: 'Cairo', sans-serif; /* تم تغيير الخط هنا ليكون Cairo */
     color: var(--text-main);
     direction: rtl;
     transition: background-color 0.3s ease, color 0.3s ease;
 }
 
-/* تنسيقات الجدول */
+/* =========================================================
+   العناوين
+========================================================= */
+
+h1,
+h2,
+h3,
+h4,
+h5,
+h6 {
+    font-weight: 700 !important;
+    color: var(--text-main);
+}
+
+.fw-bold {
+    font-weight: 700 !important;
+}
+
+.fw-800 {
+    font-weight: 800 !important;
+}
+
+/* =========================================================
+   النصوص
+========================================================= */
+
+.text-muted {
+    color: var(--text-muted) !important;
+}
+
+/* =========================================================
+   الجداول
+========================================================= */
+
+.table-container {
+    background: var(--bg-card);
+    border-radius: 14px;
+    padding: 10px;
+    box-shadow: var(--shadow-sm);
+    overflow-x: auto;
+}
+
 .table {
     background-color: var(--bg-card);
-    border-radius: 8px;
-    overflow: hidden;
-    box-shadow: 0 2px 5px rgba(0,0,0,0.05);
     color: var(--text-main);
+    border-radius: 10px;
+    overflow: hidden;
 }
 
     .table thead th {
@@ -46,6 +130,8 @@ body {
         color: var(--text-main);
         border-bottom: 2px solid var(--border-color);
         text-align: center;
+        vertical-align: middle;
+        font-weight: 700;
     }
 
     .table tbody td {
@@ -55,7 +141,46 @@ body {
         color: var(--text-main);
     }
 
-/* تنسيقات الأزرار بالألوان الجديدة */
+    .table tbody tr {
+        transition: var(--transition);
+    }
+
+        .table tbody tr:hover {
+            background-color: var(--hover-bg);
+        }
+
+/* =========================================================
+   البطاقات
+========================================================= */
+
+.card,
+.modal-content {
+    background-color: var(--bg-card);
+    color: var(--text-main);
+    border-color: var(--border-color);
+}
+
+.card-stats {
+    border: none;
+    border-radius: 14px;
+    transition: var(--transition);
+    background-color: var(--bg-card);
+}
+
+    .card-stats:hover {
+        transform: translateY(-5px);
+        box-shadow: var(--shadow-md);
+    }
+
+/* =========================================================
+   الأزرار
+========================================================= */
+
+.btn {
+    transition: var(--transition);
+    font-weight: 600;
+}
+
 .btn-primary {
     background-color: var(--primary-green);
     border-color: var(--primary-green);
@@ -69,8 +194,8 @@ body {
 
 .btn-gold {
     background-color: var(--accent-gold);
-    color: white;
     border: none;
+    color: white;
 }
 
     .btn-gold:hover {
@@ -78,22 +203,133 @@ body {
         color: white;
     }
 
-/* تنسيق الكروت في الـ Dashboard */
-.card-stats {
-    border: none;
-    border-radius: 10px;
-    transition: transform 0.2s;
-    background-color: var(--bg-card);
+/* =========================================================
+   الفورمات
+========================================================= */
+
+.form-control,
+.form-select {
+    border-radius: 10px !important;
+    transition: var(--transition);
 }
 
-    .card-stats:hover {
-        transform: translateY(-5px);
+    .form-control:focus,
+    .form-select:focus {
+        border-color: var(--primary-green);
+        box-shadow: 0 0 0 0.15rem rgba(26,83,26,.15);
     }
 
-/* كود تمييز الزر النشط في القائمة الجانبية */
-.nav-item .nav-link.active, .collapse-item.active {
-    background-color: var(--hover-bg) !important;
-    color: #0d6efd !important;
-    font-weight: bold;
-    border-right: 4px solid #0d6efd;
+[data-bs-theme="dark"] .form-control,
+[data-bs-theme="dark"] .form-select {
+    background-color: #1e293b;
+    border-color: #334155;
+    color: #f8fafc;
+}
+
+    [data-bs-theme="dark"] .form-control::placeholder {
+        color: #94a3b8;
+    }
+
+/* =========================================================
+   القائمة الجانبية
+========================================================= */
+
+.sidebar {
+    background-color: var(--sidebar-bg);
+}
+
+.nav-item .nav-link.active,
+.collapse-item.active {
+    background-color: var(--active-bg) !important;
+    color: var(--active-text) !important;
+    font-weight: 700;
+    border-right: 4px solid var(--active-text);
+    border-radius: 8px;
+}
+
+.nav-link:hover {
+    background-color: var(--hover-bg);
+}
+
+/* =========================================================
+   Dropdown
+========================================================= */
+
+.dropdown-menu {
+    border-radius: 12px;
+    border-color: var(--border-color);
+    box-shadow: var(--shadow-md);
+}
+
+.dropdown-item {
+    transition: var(--transition);
+}
+
+    .dropdown-item:hover {
+        background-color: var(--hover-bg);
+    }
+
+/* =========================================================
+   Modal
+========================================================= */
+
+.modal-content {
+    border-radius: 16px;
+}
+
+/* =========================================================
+   Breadcrumb
+========================================================= */
+
+.breadcrumb-item + .breadcrumb-item::before {
+    float: right;
+    padding-left: 0.5rem;
+    color: #6c757d;
+    content: "/";
+}
+
+/* =========================================================
+   Loading Bar
+========================================================= */
+
+#loading-bar {
+    position: fixed;
+    top: 0;
+    right: 0;
+    height: 3px;
+    width: 0;
+    background: linear-gradient(to left, var(--accent-gold), var(--primary-green));
+    z-index: 9999;
+    transition: width 0.4s ease;
+}
+
+/* =========================================================
+   Responsive
+========================================================= */
+
+@media (max-width: 992px) {
+
+    .sidebar {
+        right: -260px;
+        transition: right 0.3s ease-in-out;
+    }
+
+    .main-content {
+        margin-right: 0 !important;
+        width: 100% !important;
+    }
+
+    body.sidebar-open .sidebar {
+        right: 0;
+        box-shadow: -5px 0 15px rgba(0,0,0,0.2);
+    }
+
+    body.sidebar-open .main-content {
+        pointer-events: none;
+        opacity: 0.5;
+    }
+
+    .table {
+        min-width: 800px;
+    }
 }
