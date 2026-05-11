@@ -361,3 +361,42 @@ MigrationBackup/
 
 # Fody - auto-generated XML schema
 FodyWeavers.xsd
+# ---------------------------------------------------------
+# Flutter & Dart (اضافات لمشروع الموبايل)
+# ---------------------------------------------------------
+# تذكر: ملفات الـ build في فلاتر تأخذ مساحة ضخمة جداً
+**/build/
+**/.dart_tool/
+**/.packages
+**/.pub-cache/
+**/.pub/
+**/.flutter-plugins
+**/.flutter-plugins-dependencies
+**/.metadata
+**/generated_plugin_registrant.dart
+
+# ملفات الـ Log والـ Crash
+flutter_01.log
+flutter_*.log
+
+# ---------------------------------------------------------
+# Visual Studio Code (بيئة عمل الموبايل)
+# ---------------------------------------------------------
+.vscode/*
+!.vscode/settings.json
+!.vscode/tasks.json
+!.vscode/launch.json
+!.vscode/extensions.json
+*.code-workspace
+
+# ---------------------------------------------------------
+# Android & iOS Specific
+# ---------------------------------------------------------
+**/android/app/debug/
+**/android/app/release/
+**/ios/.generated/
+**/ios/Flutter/Generated.xcconfig
+**/ios/Flutter/flutter_export_environment.sh
+**/ios/ServiceDefinitions.json
+**/*.symbols
+**/*.vclog
