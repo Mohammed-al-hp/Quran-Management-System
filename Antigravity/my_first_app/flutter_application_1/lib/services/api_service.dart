@@ -3,7 +3,8 @@ import 'package:http/http.dart' as http;
 
 class ApiService {
   static const String baseUrl = "https://localhost:7174/api";
-
+  static String? _username;
+  static String? _email;
   // تخزين بسيط في الذاكرة (يعمل على الويب)
   static String? _token;
   static String? _userRole;
@@ -14,7 +15,10 @@ class ApiService {
     String role,
     String userId,
     String studentId,
-  ) async => _userRole = role;
+  ) async {
+    _userRole = role;
+  }
+
   static Future<String?> getUserRole() async => _userRole;
   static Future<bool> isLoggedIn() async => _token != null;
   static Future<void> logout() async {
@@ -42,6 +46,8 @@ class ApiService {
         final data = json.decode(response.body);
         if (data['token'] != null) {
           await saveToken(data['token']);
+          _username = username;
+          _email = username;
           await saveUserInfo(
             data['role'] ?? 'Student',
             data['userId'] ?? '',
@@ -62,9 +68,10 @@ class ApiService {
 
   Future<Map<String, dynamic>> getStudentData() async {
     try {
+      final username = _username ?? '';
       final response = await http
           .get(
-            Uri.parse('$baseUrl/flutter/student/me'),
+            Uri.parse('$baseUrl/flutter/student/me?username=$username'),
             headers: _authHeaders(),
           )
           .timeout(const Duration(seconds: 15));
@@ -78,8 +85,12 @@ class ApiService {
 
   Future<Map<String, dynamic>> getParentData() async {
     try {
+      final email = _email ?? '';
       final response = await http
-          .get(Uri.parse('$baseUrl/flutter/parent/me'), headers: _authHeaders())
+          .get(
+            Uri.parse('$baseUrl/flutter/parent/me?email=$email'),
+            headers: _authHeaders(),
+          )
           .timeout(const Duration(seconds: 15));
 
       if (response.statusCode == 200) return json.decode(response.body);

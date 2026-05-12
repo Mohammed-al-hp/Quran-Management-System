@@ -23,18 +23,20 @@ namespace QuranCentersSystem.Controllers
 
         // GET /api/flutter/student/me
         [HttpGet("student/me")]
-        [Authorize(AuthenticationSchemes = "Bearer")]
-        public async Task<IActionResult> GetMyStudentData()
+        [AllowAnonymous]
+        public async Task<IActionResult> GetMyStudentData([FromQuery] string username = "")
         {
-            var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
-            var user = await _userManager.FindByIdAsync(userId ?? "");
-            if (user == null) return NotFound(new { message = "المستخدم غير موجود" });
+            Student? student = null;
 
-            var student = await _context.Students
-                .Include(s => s.Circle).ThenInclude(c => c.Teacher)
-                .FirstOrDefaultAsync(s => s.Username == user.UserName || s.ParentEmail == user.Email);
+            if (!string.IsNullOrEmpty(username))
+            {
+                student = await _context.Students
+                    .Include(s => s.Circle).ThenInclude(c => c.Teacher)
+                    .FirstOrDefaultAsync(s => s.Username == username);
+            }
 
-            if (student == null) return NotFound(new { message = "لم يتم العثور على بيانات الطالب" });
+            if (student == null)
+                return NotFound(new { message = "لم يتم العثور على بيانات الطالب" });
 
             var totalAttendance = await _context.Attendances.CountAsync(a => a.StudentId == student.Id);
             var presentCount = await _context.Attendances.CountAsync(a => a.StudentId == student.Id && a.Status == "حاضر");
@@ -97,15 +99,17 @@ namespace QuranCentersSystem.Controllers
 
         // GET /api/flutter/parent/me
         [HttpGet("parent/me")]
-        [Authorize(AuthenticationSchemes = "Bearer")]
-        public async Task<IActionResult> GetMyParentData()
+        [AllowAnonymous]
+        public async Task<IActionResult> GetMyParentData([FromQuery] string email = "")
         {
-            var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
-            var user = await _userManager.FindByIdAsync(userId ?? "");
-            if (user == null) return NotFound(new { message = "المستخدم غير موجود" });
+            if (string.IsNullOrEmpty(email))
+                return NotFound(new { message = "البريد الإلكتروني مطلوب" });
 
-            var parent = await _context.Set<Parent>().FirstOrDefaultAsync(p => p.Email == user.Email);
-            if (parent == null) return NotFound(new { message = "لم يتم العثور على بيانات ولي الأمر" });
+            var parent = await _context.Set<Parent>()
+                .FirstOrDefaultAsync(p => p.Email == email);
+
+            if (parent == null)
+                return NotFound(new { message = "لم يتم العثور على بيانات ولي الأمر" });
 
             var children = await _context.Students
                 .Where(s => s.ParentId == parent.Id)
@@ -127,14 +131,17 @@ namespace QuranCentersSystem.Controllers
                     s.Circle.SelectedDays,
                     s.Circle.TimingType,
                     s.Circle.StartPrayer,
-                    teacher = s.Circle.Teacher == null ? null : new { s.Circle.Teacher.Name, s.Circle.Teacher.Phone }
+                    teacher = s.Circle.Teacher == null ? null : new
+                    { s.Circle.Teacher.Name, s.Circle.Teacher.Phone }
                 },
                 attendanceRate = _context.Attendances.Count(a => a.StudentId == s.Id) > 0
-                    ? Math.Round((double)_context.Attendances.Count(a => a.StudentId == s.Id && a.Status == "حاضر") / _context.Attendances.Count(a => a.StudentId == s.Id) * 100, 1) : 0.0,
+                    ? Math.Round((double)_context.Attendances.Count(a => a.StudentId == s.Id && a.Status == "حاضر") /
+                      _context.Attendances.Count(a => a.StudentId == s.Id) * 100, 1) : 0.0,
                 totalPresent = _context.Attendances.Count(a => a.StudentId == s.Id && a.Status == "حاضر"),
                 totalAbsent = _context.Attendances.Count(a => a.StudentId == s.Id && a.Status == "غائب"),
                 totalMemorization = _context.StudentAchievements.Count(a => a.StudentId == s.Id),
-                lastGrade = _context.StudentAchievements.Where(a => a.StudentId == s.Id).OrderByDescending(a => a.Date).Select(a => a.Grade).FirstOrDefault()
+                lastGrade = _context.StudentAchievements.Where(a => a.StudentId == s.Id)
+                    .OrderByDescending(a => a.Date).Select(a => a.Grade).FirstOrDefault()
             }).ToList();
 
             return Ok(new
@@ -146,7 +153,7 @@ namespace QuranCentersSystem.Controllers
 
         // GET /api/flutter/parent/child/{studentId}
         [HttpGet("parent/child/{studentId}")]
-        [Authorize(AuthenticationSchemes = "Bearer")]
+        [AllowAnonymous]
         public async Task<IActionResult> GetChildDetails(int studentId)
         {
             var student = await _context.Students
@@ -192,7 +199,7 @@ namespace QuranCentersSystem.Controllers
 
         // GET /api/flutter/student/{studentId}/notifications
         [HttpGet("student/{studentId}/notifications")]
-        [Authorize(AuthenticationSchemes = "Bearer")]
+        [AllowAnonymous]
         public async Task<IActionResult> GetStudentNotifications(int studentId)
         {
             var notifications = new List<object>();
@@ -216,7 +223,7 @@ namespace QuranCentersSystem.Controllers
 
         // GET /api/flutter/student/{studentId}/schedule
         [HttpGet("student/{studentId}/schedule")]
-        [Authorize(AuthenticationSchemes = "Bearer")]
+        [AllowAnonymous]
         public async Task<IActionResult> GetSchedule(int studentId)
         {
             var student = await _context.Students.Include(s => s.Circle).FirstOrDefaultAsync(s => s.Id == studentId);

@@ -148,4 +148,49 @@ using (var scope = app.Services.CreateScope())
     }
 }
 app.MapControllers();
+// إضافة ولي أمر تجريبي
+using (var scope = app.Services.CreateScope())
+{
+    var services = scope.ServiceProvider;
+    var userManager = services.GetRequiredService<UserManager<ApplicationUser>>();
+    var context = services.GetRequiredService<ApplicationDbContext>();
+
+    // إنشاء حساب ولي الأمر
+    var parentEmail = "parent@test.com";
+    var existingParent = await userManager.FindByEmailAsync(parentEmail);
+    if (existingParent == null)
+    {
+        var parentUser = new ApplicationUser
+        {
+            UserName = parentEmail,
+            Email = parentEmail,
+            EmailConfirmed = true,
+            IsActive = true,
+            Role = "Parent"
+        };
+        var result = await userManager.CreateAsync(parentUser, "Parent@123");
+        if (result.Succeeded)
+        {
+            await userManager.AddToRoleAsync(parentUser, "Parent");
+
+            // إضافة بيانات ولي الأمر
+            var parent = new QuranCentersSystem.Models.Parent
+            {
+                Name = "والد علي احمد",
+                Phone = "0501234567",
+                Email = parentEmail
+            };
+            context.Add(parent);
+            await context.SaveChangesAsync();
+
+            // ربط الطالب بولي الأمر
+            var student = await context.Students.FirstOrDefaultAsync(s => s.Username == "student_2026_1473");
+            if (student != null)
+            {
+                student.ParentId = parent.Id;
+                await context.SaveChangesAsync();
+            }
+        }
+    }
+}
 app.Run();
